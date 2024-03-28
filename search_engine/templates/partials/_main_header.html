@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div
+      class="statistics-details d-flex align-items-center justify-content-between"
+    >
+      <div>
+        <p class="statistics-title">Total</p>
+        <h3 class="rate-percentage" id="total_guests">
+          {{ flight_details['total_items'] | default(0, true) }}
+        </h3>
+      </div>
+      <div>
+        <p class="statistics-title">Checked</p>
+        <h3 class="rate-percentage" id="total_checked">
+          {{ flight_details['total_checked'] | default(0, true) }}
+        </h3>
+      </div>
+      <div>
+        <p class="statistics-title">Unchecked</p>
+        <h3 class="rate-percentage" id="total_unchecked">
+          {{ flight_details['total_unchecked'] | default(0, true) }}
+        </h3>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Add New User{% endblock %}
+
+{% block notification %}{% endblock %}
+{% block body %}
+<div class="container mt-5">
+    <h2>Add User</h2>
+    
+    <form method="POST" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.username.label(class="form-label") }}
+            {{ form.username(class="form-control") }}
+            {% if form.username.errors %}
+            <div class="alert alert-warning" role="alert">
+                {{ form.username.errors[0] }}
+            </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control") }}
+            {% if form.password.errors %}
+            <div class="alert alert-warning" role="alert">
+                {{ form.password.errors[0] }}
+            </div>
+            {% endif %}
+        </div>
+        <div class="mb-3 form-check">
+            {{ form.is_admin(class="form-check-input") }}
+            {{ form.is_admin.label(class="form-check-label") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Add User</button>
+    </form>
+</div>
+{% endblock %}

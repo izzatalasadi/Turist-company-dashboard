@@ -1,0 +1,94 @@
+{% extends "base.html" %} {% block title %}DMC Guests Search Engine{% endblock
+%} {% block body %}
+<div class="container mt-5">
+  <div class="row">{% include 'partials/_main_header.html' %}</div>
+
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-12">
+      <div class="container mb-5">
+        <form
+          method="POST"
+          action="{{ url_for('search') }}"
+          class="input-group"
+        >
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <input
+            type="text"
+            class="form-control"
+            id="search_query"
+            name="search_query"
+            placeholder="Search for guests, flights, or booking numbers..."
+            aria-label="Search"
+          />
+          <button class="btn btn-outline-secondary" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+      </div>
+      <div class="mb-4 d-flex flex-wrap justify-content-center">
+        {% for flight, color in (flight_colors|default({})).items() %}
+        <a
+          href="{{ url_for('search', search_query=request.args.get('search_query', ''), flight=flight) }}"
+          class="btn flight-filter-btn m-1"
+          style="background-color: {{ color }}; color: #fff;"
+          >{{ flight }}</a
+        >
+        {% endfor %}
+      </div>
+      <div class="row">
+        {% for entry in filtered_data %}
+        <div class="col-12 col-sm-6 col-lg-3 mb-4">
+          <div
+            class="card search-result-card"
+            data-booking-number="{{ entry.booking }}"
+          >
+            <div class="card-body">
+              <h5 class="card-title">
+                {{ entry.last_name }}, {{ entry.first_name }}
+              </h5>
+              <p class="card-text">
+                <strong>Flight:</strong> {{ entry.flight }}
+              </p>
+              <p class="card-text">
+                <strong>Departure:</strong> {{ entry.departure_from }}
+              </p>
+              <p class="card-text">
+                <strong>Arrival Time:</strong> {{ entry.arrival_time }}
+              </p>
+              <p class="card-text">
+                <strong>Booking Number:</strong> {{ entry.booking }}
+              </p>
+              <p class="card-text">
+                <strong>Transportation:</strong> {{ entry.transportation }}
+              </p>
+              <p class="card-text">
+                <strong>Comments:</strong> {{ entry.comments }}
+              </p>
+            </div>
+            <div class="card-footer">
+              <button
+                class="btn btn-info btn-sm add-btn"
+                data-booking-number="{{ entry.booking }}"
+              >
+                Mark as Checked
+              </button>
+              <button
+                class="btn btn-secondary btn-sm remove-btn"
+                data-booking-number="{{ entry.booking }}"
+                style="display: none"
+              >
+                Unmark
+              </button>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center">
+          <p>No results found. Please adjust your search criteria.</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

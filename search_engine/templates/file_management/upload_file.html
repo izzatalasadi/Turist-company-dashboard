@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Import Excel{% endblock %}
+
+{% if current_user.is_admin %}
+{% block body %}
+<!-- Import File Card -->
+<div class="col-md-6 col-lg-4 mb-4">
+    <h5>Import File</h5>
+    <p >Upload and excel file to import the data to databse.</p>
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+        action="{{ url_for('auth.import_file') }}"
+        class="d-inline-block mt-2">
+        <input
+            type="hidden"
+            name="csrf_token"
+            value="{{ csrf_token() }}" />
+        <input
+            type="file"
+            class="form-control-file"
+            id="file"
+            name="file"
+            required />
+        <button type="submit" class="btn btn-info mt-2">Upload</button>
+    </form>
+</div>
+{% endblock %}
+{% endif %}

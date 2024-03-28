@@ -1,0 +1,115 @@
+/* Primary Button Customization */
+.btn.btn-primary {
+  background-color: rgb(250, 169, 19); /* Custom orange */
+  border-color: rgb(250, 169, 19);
+}
+.btn.btn-primary:hover {
+  background-color: darkorange;
+  border-color: darkorange;
+}
+
+/* Logo and Navbar Enhancements */
+.logo-container {
+  text-align: center;
+  padding: 15px 0;
+}
+.logo-container img.logo {
+  height: auto;
+  max-width: 100%;
+  max-height: 80px;
+  width: auto;
+  transition: transform 0.3s ease;
+}
+.logo-invert {
+  filter: invert(1);
+}
+
+/* Card and Detail View Customization */
+.card {
+  border-radius: 8px; /* Adds rounded corners to the card */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for 3D effect */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for interactions */
+}
+.card:hover {
+  transform: translateY(-5px); /* Slightly raise the card on hover for a 3D effect */
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+}
+.card-body {
+  padding: 15px; /* Adjust padding for content within the card */
+}
+.card-title {
+  margin-bottom: 15px; /* Space between title and content */
+}
+.card-text:last-child {
+  margin-bottom: 0; /* Removes margin from the last text element to tighten up spacing */
+}
+.card-footer {
+  background-color: white; /* Ensures footer background matches card */
+  border-top: 1px solid #eee; /* Adds a subtle divider */
+  padding: 10px 15px; /* Padding within the footer */
+}
+
+/* Button Customization for Cards */
+.card .btn-sm {
+  font-size: 14px; /* Smaller font size for buttons within cards */
+  padding: 5px 10px; /* Smaller padding for a more compact look */
+}
+
+/* Enhances visibility and interactivity on touch devices */
+.card-clickable {
+  cursor: pointer; /* Changes cursor to indicate clickable area */
+}
+.card-clickable:hover {
+  background-color: #f8f9fa; /* Slightly changes background to indicate interactiveness */
+}
+
+/* Search Bar and Filter Buttons */
+.search-bar .input-group {
+  max-width: auto;
+  margin: auto;
+}
+.search-bar .form-control, .search-bar .btn-outline-secondary {
+  border-radius: 0; /* Unified border radius for search bar components */
+}
+.flight-filter-btn {
+  transition: background-color 0.3s ease;
+}
+.flight-filter-btn:hover {
+  background-color: #0062cc;
+  color: #fff;
+}
+.search-result-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.search-result-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+}
+
+/* Responsive Design Adjustments */
+@media (max-width: 768px) {
+  .search-bar .input-group, .card-footer {
+    padding: 0 15px; /* Adjust padding for better spacing on smaller screens */
+  }
+  .logo-container img.logo {
+    max-height: 60px; /* Reduce logo size for better header display */
+  }
+}
+
+@media (max-width: 576px) {
+  .search-bar .input-group {
+    flex-direction: column; /* Stack search input and button vertically */
+  }
+  .search-bar .btn-outline-secondary {
+    width: 100%;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-top: -1px; /* Align button directly below the search input */
+  }
+  .card, .card-footer {
+    padding: 0 10px; /* Slightly reduce padding to accommodate narrower screens */
+  }
+  .logo-container img.logo {
+    max-height: 50px; /* Further reduce logo size for very small screens */
+  }
+}

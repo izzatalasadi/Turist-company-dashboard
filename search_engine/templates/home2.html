@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}CRM Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Welcome, {{ current_user.username }}</h2>
+    <div class="row justify-content-center">
+        {% if current_user.is_authenticated %}
+            {% if current_user.is_admin %}
+                {% include 'partials/user_management.html' %}
+            {% endif %}
+            {% include 'partials/search_service.html' %}
+        {% else %}
+            <div class="col-12">
+                <p class="text-center">Please log in to access dashboard operations.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

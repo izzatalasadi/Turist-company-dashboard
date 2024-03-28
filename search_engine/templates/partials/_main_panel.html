@@ -1,0 +1,40 @@
+<div class="home-tab">
+  <div class="tab-content tab-content-basic">
+    <div
+      class="tab-pane fade show active"
+      id="overview"
+      role="tabpanel"
+      aria-labelledby="overview"
+    >
+      <div class="row">{% include 'partials/_main_header.html' %}</div>
+      <div class="row">
+        <div class="col-lg-8 d-flex flex-column">
+          <!-- partial:partials/_leave_report.html -->
+          {% include 'partials/_leave_report.html' %}
+          <!-- partial -->
+
+          <div class="row flex-grow">
+            <!-- partial:partials/_events.html -->
+            {% include 'partials/_events.html' %}
+            <!-- partial -->
+            <!-- partial:partials/_activities.html -->
+            {% include 'partials/_activities.html' %}
+            <!-- partial -->
+          </div>
+        
+        </div>
+        <div class="col-lg-4 d-flex flex-column">
+          
+          <!-- partial:partials/_todo_list.html -->
+          {% include 'partials/_todo_list.html' %}
+          <!-- partial -->
+
+          <!-- partial:partials/_top.html -->
+          {% include 'partials/_top.html' %}
+          <!-- partial -->
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
