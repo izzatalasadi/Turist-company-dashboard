@@ -10,6 +10,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{% block title %}Title{% endblock %}</title>
     <!-- plugins:css -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest/manifest.json') }}">
+
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='vendors/feather/feather.css') }}"
@@ -79,16 +81,18 @@
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-sm-12">
-                          {% block notification %} {% endblock %}
-                          {% with messages = get_flashed_messages(with_categories=true) %}
-                              {% if messages %}
-                              {% for category, message in messages %}
-                              <div class="alert alert-{{ category }}" role="alert">
-                                  {{ message }}
-                              </div>
-                              {% endfor %}
-                              {% endif %}
-                          {% endwith %}
+                          <button id="installButton" style="display:none;">Install App</button>
+                          {% block notification %} 
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                                {% if messages %}
+                                {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}" role="alert">
+                                    {{ message }}
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                          {% endblock %}
                           {% block body %}{% endblock %}
                         </div>
                     </div>
@@ -121,7 +125,11 @@
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
       <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
       <!-- Custom Scripts -->
-      <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/scripts.js') }}" defer></script>
+      <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+      <script src="lazysizes.min.js" async=""></script>
+
+
 
     {% endblock %}
   </body>

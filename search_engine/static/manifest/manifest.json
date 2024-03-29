@@ -1,0 +1,16 @@
+{
+    "name": "DMC Nordic",
+    "short_name": "App",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#000000",
+    "description": "A description of your app",
+    "icons": [
+      {
+        "src": "/static/images/logo.svg",
+        "sizes": "48x48",
+        "type": "image/svg"
+      }
+    ]
+  }
+  

@@ -1,7 +1,49 @@
 $(document).ready(function () {
-    restoreButtonStates()
-    fetchAndDisplayStats();
-    updateLocalStateAndUI();
+    // Connect to Socket.IO server
+    var socket = io();
+    let deferredPrompt; // Step 1: Declare deferredPrompt variable
+
+    window.addEventListener('beforeinstallprompt', (e) => { // Listen for the event
+        e.preventDefault(); // Prevent the mini-infobar from appearing on mobile
+        deferredPrompt = e; // Save the event so it can be triggered later
+        // Update UI notify the user they can add to home screen
+        $('#installButton').show(); // Assuming you have an 'installButton' in your HTML
+    });
+
+    $('#installButton').click(function() { // Step 3 & 4: Prompt the user to install
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the A2HS prompt');
+                } else {
+                    console.log('User dismissed the A2HS prompt');
+                }
+                deferredPrompt = null; // Reset the deferred prompt variable
+                $('#installButton').hide(); // Optionally hide the install button
+            });
+        }
+    });
+    
+    socket.on('status_changed', function(data) {
+        console.log('Status change received:', data);
+        const bookingNumber = data.booking_number;
+        const newStatus = data.new_status;
+    
+        // Find the buttons for this booking number
+        const addBtn = $(`.add-btn[data-booking-number="${bookingNumber}"]`);
+        const removeBtn = $(`.remove-btn[data-booking-number="${bookingNumber}"]`);
+    
+        // Toggle button visibility based on the new status
+        if (newStatus === "Checked") {
+            addBtn.hide();
+            removeBtn.show();
+        } else {
+            addBtn.show();
+            removeBtn.hide();
+        }
+
+    });
 
     // Setup CSRF token for AJAX requests
     $.ajaxSetup({
@@ -11,15 +53,21 @@ $(document).ready(function () {
             }
         }
     });
+    $('#fullscreenBtn').click(function() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch((err) => {
+                console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+            });
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch((err) => {
+                    console.error(`Error attempting to disable full-screen mode: ${err.message} (${err.name})`);
+                });
+            }
+        }
+    });
     
-    // Function to restore the state of buttons from local storage
-    function restoreButtonStates() {
-        const buttonStates = JSON.parse(localStorage.getItem('buttonStates') || '{}');
-        Object.entries(buttonStates).forEach(([bookingNumber, state]) => {
-            toggleButtons(bookingNumber, state.status);
-            // Consider whether you need to sync the local state with the server here
-        });
-    }
+    
 
     // Function to save the state of a button to local storage
     function saveButtonState(bookingNumber, status) {
@@ -40,8 +88,9 @@ $(document).ready(function () {
             success: function(response) {
                 if (callback) callback(); // Call callback function if provided
                 // Toggle button visibility based on the updated status
+                socket.emit('update_status', { bookingNumber: bookingNumber, status: status });
                 toggleButtons(bookingNumber, status);
-                fetchAndDisplayStats();
+
                 if(response.message && response.category) {
                     displayFlashMessages(response.message, response.category);
                 }
@@ -71,50 +120,28 @@ $(document).ready(function () {
         setTimeout(() => { $(".flash-messages").fadeOut(); }, 2000); // Auto-hide after 5 seconds
     }
 
-    // Function to fetch and display statistics
     function fetchAndDisplayStats() {
         fetch('/dashboard_stats')
             .then(response => response.json())
             .then(data => {
-                // these IDs in your HTML
+                // Update stats in your HTML
                 document.getElementById('total_guests').textContent = `${data.total_guests}`;
                 document.getElementById('total_checked').textContent = `${data.total_checked}`;
                 document.getElementById('total_unchecked').textContent = `${data.total_unchecked}`;
             })
             .catch(error => console.error('Error fetching stats:', error));
     }
-    function updateLocalStateAndUI() {
-        $.ajax({
-            url: '/api/guests/status',
-            type: 'GET',
-            success: function(response) {
-                // Update local storage and UI for each guest
-                Object.entries(response).forEach(([bookingNumber, status]) => {
-                    localStorage.setItem(bookingNumber, status); // Update local storage
-                    toggleButtons(bookingNumber, status); // Update UI
-                });
-            },
-            error: function(xhr, status, error) {
-                console.error("Error fetching guest status: " + error);
-            }
-        });
-    }
 
-
+    
     // Handler for both "Mark as Checked" and "Unmark" buttons
     $(".add-btn, .remove-btn").click(function () {
         var bookingNumber = $(this).data("booking-number");
         var status = $(this).hasClass("add-btn") ? "Checked" : "Unchecked";
-        //updateStatus(bookingNumber, status, $(this));
-        //saveButtonState(bookingNumber, status, $(this));
-        //toggleButtons(bookingNumber, status, $(this));
+        updateStatus(bookingNumber, status, $(this));
+        saveButtonState(bookingNumber, status, $(this));
+        toggleButtons(bookingNumber, status, $(this));
+        fetchAndDisplayStats();
 
-        updateStatus(bookingNumber, status, function() {
-            localStorage.setItem(bookingNumber, status); // Update local storage
-            updateStatus(bookingNumber, status, $(this));
-            saveButtonState(bookingNumber, status, $(this));
-            toggleButtons(bookingNumber, status, $(this));
-        });
     });
 
     $('.dropdown-toggle').click(function(e) {
@@ -131,24 +158,35 @@ $(document).ready(function () {
         var modal = $(this);
         modal.find('.modal-footer #modalUsername').val(username);
     });
-
-    // Make the whole card clickable for marking as checked or unchecked
-    document.querySelectorAll('.card-clickable').forEach(card => {
-        card.addEventListener('click', (e) => {
-            // Prevent interaction with buttons inside the card from triggering this event
-            if (!e.target.classList.contains('btn')) {
-                var bookingNumber = card.getAttribute('data-booking-number');
-                // Simulate click on "Mark as Checked" or "Unmark" button based on visibility
-                var addButton = card.querySelector('.add-btn');
-                var removeButton = card.querySelector('.remove-btn');
-                if (getComputedStyle(addButton).display !== 'none') {
-                    addButton.click();
-                } else if (getComputedStyle(removeButton).display !== 'none') {
-                    removeButton.click();
-                }
-            }
-        });
-    });
-
     
+
+    $(document).ready(function () {
+        // Make the whole card clickable for marking as checked or unchecked
+        document.querySelectorAll('.card-clickable').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Prevent interaction with buttons inside the card from triggering this event
+                if (!e.target.classList.contains('btn') && !e.target.closest('.btn')) {
+                    var bookingNumber = this.getAttribute('data-booking-number');
+                    // Simulate click on "Mark as Checked" or "Unmark" button based on visibility
+                    var addButton = this.querySelector('.add-btn');
+                    var removeButton = this.querySelector('.remove-btn');
+                    if (getComputedStyle(addButton).display !== 'none') {
+                        addButton.click();
+                    } else if (getComputedStyle(removeButton).display !== 'none') {
+                        removeButton.click();
+                    }
+                }
+            });
+        });
+    });  
 });
+// Service Worker registration code
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/static/sw.js').then(registration => {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      }, err => {
+        console.log('ServiceWorker registration failed: ', err);
+      });
+    });
+  }

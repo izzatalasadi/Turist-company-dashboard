@@ -32,7 +32,7 @@ class Guest(db.Model):
     arrival_time = db.Column(db.String(100))
     transportation = db.Column(db.String(100))
     status = db.Column(db.String(100))  # Checked, Unchecked
-    checked_time = db.Column(db.DateTime, default=datetime.utcnow)
+    checked_time = db.Column(db.DateTime, default=None)
     checked_by = db.Column(db.Integer, db.ForeignKey('user.id'))
     comments = db.Column(db.Text)
 

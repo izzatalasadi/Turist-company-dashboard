@@ -1,3 +1,7 @@
-<svg width="300" height="100" xmlns="http://www.w3.org/2000/svg">
-  <text x="0" y="66" font-family="Arial" font-size="52" fill="black">DMC Nordic</text>
+<svg width="170" height="130" xmlns="http://www.w3.org/2000/svg">
+  <!-- DMC Text -->
+  <text x="10" y="66" font-family="Arial" font-size="72" fill="black" font-weight="bold">DMC</text>
+  
+  <!-- Nordic Text -->
+  <text x="10" y="120" font-family="Arial" font-size="52" fill="green">Nordic</text>
 </svg>

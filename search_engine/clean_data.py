@@ -9,6 +9,12 @@ class ExcelProcessor:
         ]
     # After df = df.ffill()
 
+    def extract_transportation(self,row):
+        # Split the 'Transportation' column on space and take the last part which should be "VAN" or "BUS"
+        transportation_parts = str(row['Transportation']).split()
+        # Assuming the last word is the mode of transportation and it's always present
+        return transportation_parts[-1] if transportation_parts else ''
+
     def read_and_process_excel(self):
         df = pd.read_excel(self.file, skiprows=3, skipfooter=2)
         df.dropna(how='all', axis=0, inplace=True)
@@ -26,6 +32,8 @@ class ExcelProcessor:
         df['FLIGHT'] = df['FLIGHT'].apply(lambda x: x.replace(" ",''))
         df['TIME'] = pd.to_datetime(df['TIME'], errors='coerce').dt.time
         df['TIME'] = df['TIME'].apply(lambda x: x.strftime('%H:%M') if x is not pd.NaT else '')
+        df['TRANSPORTATION'] = df['TRANSPORTATION'].str.split().str[-1]
+        df['TRANSPORTATION'] = df['TRANSPORTATION'].str.replace('BUSES', 'BUS', regex=False)
     
         
         return df

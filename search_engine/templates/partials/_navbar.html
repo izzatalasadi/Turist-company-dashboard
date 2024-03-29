@@ -18,12 +18,14 @@
       <a class="navbar-brand brand-logo" href="{{ url_for('home') }}">
         <img
           src="{{ url_for('static', filename='images/logo.svg') }}"
+          loading="lazy"
           alt="logo"
         />
       </a>
       <a class="navbar-brand brand-logo-mini" href="{{ url_for('home') }}">
         <img
           src="{{ url_for('static', filename='images/logo.svg') }}"
+          loading="lazy"
           alt="logo"
         />
       </a>
@@ -41,7 +43,7 @@
     <ul class="navbar-nav ms-auto">
       <!--Search bar -->
       <li class="nav-item">
-        <form class="search-form" action="#">
+        <form class="search-form" id='search_page'  action="#" >
           <i class="icon-search"></i>
           <input
             type="search"
@@ -138,7 +140,8 @@
           <a class="dropdown-item preview-item">
             <div class="preview-thumbnail">
               <img
-                src="{{ url_for('static', filename='images/faces/face1.jpg') }}"
+                src="{{ url_for('static', filename='images/faces/face1.jpeg') }}"
+                loading="lazy"
                 alt="image"
                 class="img-sm profile-pic"
               />
@@ -153,7 +156,8 @@
           <a class="dropdown-item preview-item">
             <div class="preview-thumbnail">
               <img
-                src="{{ url_for('static', filename='images/faces/face2.jpg') }}"
+                src="{{ url_for('static', filename='images/faces/face1.jpeg') }}"
+                loading="lazy"
                 alt="image"
                 class="img-sm profile-pic"
               />
@@ -168,7 +172,8 @@
           <a class="dropdown-item preview-item">
             <div class="preview-thumbnail">
               <img
-                src="{{ url_for('static', filename='images/faces/face1.jpg') }}"
+                src="{{ url_for('static', filename='images/faces/face1.jpeg') }}"
+                loading="lazy"
                 alt="image"
                 class="img-sm profile-pic"
               />
@@ -194,7 +199,8 @@
         >
           <img
             class="img-xs rounded-circle"
-            src="{{ url_for('static', filename='images/faces/face8.jpg') }}"
+            src="{{ url_for('static', filename='images/faces/face1.jpeg') }}"
+            loading="lazy"
             alt="Profile image"
           />
         </a>
@@ -205,7 +211,8 @@
           <div class="dropdown-header text-center">
             <img
               class="img-md rounded-circle"
-              src="{{ url_for('static', filename='images/faces/face8.jpg') }}"
+              src="{{ url_for('static', filename='images/faces/face1.jpeg') }}"
+              loading="lazy"
               alt="Profile image"
             />
             <p class="mb-1 mt-3 font-weight-semibold">Allen Moreno</p>

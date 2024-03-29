@@ -1,10 +1,14 @@
 {% extends "base.html" %} {% block title %}DMC Guests Search Engine{% endblock
-%} {% block body %}
+%} 
+{% block notification %} {% endblock %}
+{% block body %}
 <div class="container mt-5">
-  <div class="row">{% include 'partials/_main_header.html' %}</div>
+  <div class="row justify-content-center">
+    {% include 'partials/_main_header.html' %}
+  </div>
 
   <div class="row justify-content-center">
-    <div class="col-12 col-md-10 col-lg-12">
+    <div class="col">
       <div class="container mb-5">
         <form
           method="POST"
@@ -37,31 +41,38 @@
       </div>
       <div class="row">
         {% for entry in filtered_data %}
-        <div class="col-12 col-sm-6 col-lg-3 mb-4">
+        <div class="col-6 grid-margin stretch-card">
           <div
             class="card search-result-card"
             data-booking-number="{{ entry.booking }}"
           >
             <div class="card-body">
               <h5 class="card-title">
-                {{ entry.last_name }}, {{ entry.first_name }}
+                <i class="mdi mdi-account m-auto text-primary"></i> {{
+                entry.last_name }}, {{ entry.first_name }}
               </h5>
               <p class="card-text">
+                <i class="mdi mdi-airplane m-auto text-primary"></i>
                 <strong>Flight:</strong> {{ entry.flight }}
               </p>
               <p class="card-text">
+                <i class="mdi mdi-home-map-marker m-auto text-primary"></i>
                 <strong>Departure:</strong> {{ entry.departure_from }}
               </p>
               <p class="card-text">
+                <i class="mdi mdi-clock-end m-auto text-primary"></i>
                 <strong>Arrival Time:</strong> {{ entry.arrival_time }}
               </p>
               <p class="card-text">
+                <i class="mdi mdi-book-open m-auto text-primary"></i>
                 <strong>Booking Number:</strong> {{ entry.booking }}
               </p>
               <p class="card-text">
+                <i class="mdi mdi-bus m-auto text-primary"></i>
                 <strong>Transportation:</strong> {{ entry.transportation }}
               </p>
               <p class="card-text">
+                <i class="mdi mdi-comment-processing m-auto text-primary"></i>
                 <strong>Comments:</strong> {{ entry.comments }}
               </p>
             </div>
@@ -69,13 +80,14 @@
               <button
                 class="btn btn-info btn-sm add-btn"
                 data-booking-number="{{ entry.booking }}"
+                style="{{ 'display: none;' if entry.status == 'Checked' }}"
               >
                 Mark as Checked
               </button>
               <button
                 class="btn btn-secondary btn-sm remove-btn"
                 data-booking-number="{{ entry.booking }}"
-                style="display: none"
+                style="{{ 'display: none;' if entry.status != 'Checked' }}"
               >
                 Unmark
               </button>
@@ -83,7 +95,7 @@
           </div>
         </div>
         {% else %}
-        <div class="col-12 text-center">
+        <div class="col text-center">
           <p>No results found. Please adjust your search criteria.</p>
         </div>
         {% endfor %}
