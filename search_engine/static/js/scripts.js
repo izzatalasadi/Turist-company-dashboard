@@ -220,7 +220,8 @@ $(document).ready(function () {
         updateStatus(bookingNumber, status, $(this));
         saveButtonState(bookingNumber, status, $(this));
         toggleButtons(bookingNumber, status, $(this));
-        fetchAndDisplayStats();
+        //fetchAndDisplayStats();
+        location.reload();
 
     });
 

@@ -1,14 +1,13 @@
-# config.py
 import os
 
 class Config(object):
     # General Config
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-should-change-this'
+    SECRET_KEY = os.environ.get('SECRET_KEY')
     FLASK_APP = 'run.py'
     FLASK_ENV = 'development'
 
     # Database
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///mydatabase.db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///mydatabase.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Session
@@ -38,7 +37,7 @@ class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
     # Define production database URI
-    SQLALCHEMY_DATABASE_URI = os.environ.get('PROD_DATABASE_URL')
+    #SQLALCHEMY_DATABASE_URI = os.environ.get('PROD_DATABASE_URL')
     SESSION_COOKIE_SECURE = True
 
 # You can add more configuration classes if needed

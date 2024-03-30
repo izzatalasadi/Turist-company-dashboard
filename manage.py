@@ -8,7 +8,7 @@ from flask_login import current_user, login_required
 from flask_socketio import SocketIO, emit
 from search_engine.models import Guest
 from search_engine import create_app, db
-from search_engine.config import DevelopmentConfig
+from search_engine.config import DevelopmentConfig,ProductionConfig
 import hashlib
 from cryptography.fernet import Fernet
 from sqlalchemy import or_
@@ -16,30 +16,30 @@ import logging
 from search_engine.flight_data import FlightInfo
 from flask_wtf.csrf import CSRFProtect
 from flask_cors import CORS, cross_origin
-
+import os
+from search_engine.config import Config
 logging.basicConfig(filename='app.log', level=logging.INFO)
 
-# Assuming you have a function to load or generate a key for Fernet
 def load_key():
     """
-    Load the previously generated key
+    Load the encryption key from an environment variable or secure storage
     """
-    return open("secret.key", "rb").read()
+    key = os.environ.get('ENCRYPTION_KEY').encode()
+    return key
 
-key = load_key()
-
-
-def encrypt_data(data, key_path="secret.key"):
-    # Load the previously generated key
-    with open(key_path, "rb") as key_file:
-        key = key_file.read()
+def encrypt_data(data):
+    key = load_key()
     fernet = Fernet(key)
-    
-    encrypted_data = fernet.encrypt(data.encode())
-    return encrypted_data
+    return fernet.encrypt(data.encode()).decode()
 
-app = create_app(DevelopmentConfig)
-app.config['SECRET_KEY'] = 'QjzjsYIw-Po_T8iXr92tyOfgwWdvmWlYLUZM8fg5O68='
+def decrypt_data(data):
+    key = load_key()
+    fernet = Fernet(key)
+    return fernet.decrypt(data.encode()).decode()
+
+
+app = create_app(ProductionConfig)
+app.config.from_object(Config)
 
 socketio = SocketIO(app, cors_allowed_origins="*")
 csrf = CSRFProtect(app)

@@ -3,7 +3,6 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
-from flask_session import Session
 from flask_migrate import Migrate
 from search_engine.config import Config
 
@@ -30,7 +29,6 @@ def create_app(config_class=Config):
     login_manager.init_app(app)
     
     CSRFProtect(app)
-    Session(app)
     
     app.register_blueprint(auth_bp)
 
