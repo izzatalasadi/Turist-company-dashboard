@@ -13,15 +13,16 @@ class UploadForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired(),
+    username = StringField('Username', validators=[DataRequired()], render_kw={"autocomplete": "username"})
+    password = PasswordField('Password', validators=[
+        DataRequired(),
         Length(min=8, message='Password must be at least 8 characters long.'),
         Regexp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])',
-        message='Password must contain a lowercase letter, an uppercase letter, a number, and a special character.')
-    ])
+               message='Password must contain a lowercase letter, an uppercase letter, a number, and a special character.')
+    ], render_kw={"autocomplete": "current-password"})
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Login')
-    
+  
 class AddUserForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[

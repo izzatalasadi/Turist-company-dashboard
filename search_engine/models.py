@@ -38,10 +38,3 @@ class Guest(db.Model):
 
     def __repr__(self):
         return f'<Guest {self.booking}>'
-class ButtonState(db.Model):
-    __tablename__ = 'button_state'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    booking_number = db.Column(db.String(120), nullable=False)
-    status = db.Column(db.String(10), nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)

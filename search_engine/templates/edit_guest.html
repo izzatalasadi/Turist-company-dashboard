@@ -1,0 +1,14 @@
+<!-- edit_guest.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<form id="editGuestForm" action="{{ url_for('update_guest', guest_id=guest.id) }}" method="POST">
+  {% for column in columns %}
+  <div class="form-group">
+    <label for="{{ column }}">{{ column | capitalize }}</label>
+    <input type="text" class="form-control" id="{{ column }}" name="{{ column }}" value="{{ getattr(guest, column) }}">
+  </div>
+  {% endfor %}
+  <button type="submit" class="btn btn-primary">Update Guest</button>
+</form>
+{% endblock %}

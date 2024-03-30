@@ -1,7 +1,5 @@
 {% extends "base.html" %} {% block title %}DMC Guests Search Engine{% endblock
-%} 
-{% block notification %} {% endblock %}
-{% block body %}
+%} {% block notification %} {% endblock %} {% block body %}
 <div class="container mt-5">
   <div class="row justify-content-center">
     {% include 'partials/_main_header.html' %}
@@ -39,6 +37,7 @@
         >
         {% endfor %}
       </div>
+
       <div class="row">
         {% for entry in filtered_data %}
         <div class="col-6 grid-margin stretch-card">
@@ -77,21 +76,27 @@
               </p>
             </div>
             <div class="card-footer">
-              <button
-                class="btn btn-info btn-sm add-btn"
-                data-booking-number="{{ entry.booking }}"
-                style="{{ 'display: none;' if entry.status == 'Checked' }}"
-              >
-                Mark as Checked
-              </button>
-              <button
-                class="btn btn-secondary btn-sm remove-btn"
-                data-booking-number="{{ entry.booking }}"
-                style="{{ 'display: none;' if entry.status != 'Checked' }}"
-              >
-                Unmark
-              </button>
+              <div class="d-flex justify-content-between">
+                <!-- Group Left: Mark as Checked/Unmark Button -->
+                <div>
+                  <button class="btn btn-info btn-sm add-btn" data-booking-number="{{ entry.booking }}" style="{{ 'display: none;' if entry.status == 'Checked' }}">
+                    Mark as Checked
+                  </button>
+                  <button class="btn btn-secondary btn-sm remove-btn" data-booking-number="{{ entry.booking }}" style="{{ 'display: none;' if entry.status != 'Checked' }}">
+                    Unmark
+                  </button>
+                </div>
+                {% if current_user.is_admin %}
+                <!-- Group Right: Edit Details Button -->
+                <div>
+                  <button id="editButton" class="btn btn-primary btn-sm edit-btn" onclick="openEditModal('{{ entry.id }}')" data-toggle="modal" data-target="#editGuestModal" data-id="{{ entry.id }}">
+                    Edit Details
+                  </button>
+                </div>
+                {% endif %}
+              </div>
             </div>
+            
           </div>
         </div>
         {% else %}
@@ -99,6 +104,45 @@
           <p>No results found. Please adjust your search criteria.</p>
         </div>
         {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Guest Modal -->
+<div
+  class="modal fade"
+  id="editGuestModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="editGuestModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editGuestModalLabel"></h5>
+        <button
+          type="button"
+          class="close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Dynamic form fields will be added here by JavaScript -->
+        <form id="editGuestForm"></form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+
+        <button type="button" id="saveChangesButton" class="btn btn-primary">
+          Save changes
+        </button>
       </div>
     </div>
   </div>

@@ -1,11 +1,11 @@
 #name_search_engine/manage.py
 from operator import or_
-from flask import jsonify, render_template, request, send_file, redirect, url_for, flash,jsonify
+from flask import jsonify, render_template, request, send_file, redirect, url_for, flash,jsonify,send_from_directory
 import pandas as pd
 from io import BytesIO
 from datetime import datetime
 from flask_login import current_user, login_required
-
+from flask_socketio import SocketIO, emit
 from search_engine.models import Guest
 from search_engine import create_app, db
 from search_engine.config import DevelopmentConfig
@@ -15,6 +15,7 @@ from sqlalchemy import or_
 import logging
 from search_engine.flight_data import FlightInfo
 from flask_wtf.csrf import CSRFProtect
+from flask_cors import CORS, cross_origin
 
 logging.basicConfig(filename='app.log', level=logging.INFO)
 
@@ -27,7 +28,7 @@ def load_key():
 
 key = load_key()
 
-@login_required
+
 def encrypt_data(data, key_path="secret.key"):
     # Load the previously generated key
     with open(key_path, "rb") as key_file:
@@ -39,8 +40,23 @@ def encrypt_data(data, key_path="secret.key"):
 
 app = create_app(DevelopmentConfig)
 app.config['SECRET_KEY'] = 'QjzjsYIw-Po_T8iXr92tyOfgwWdvmWlYLUZM8fg5O68='
+
+socketio = SocketIO(app, cors_allowed_origins="*")
 csrf = CSRFProtect(app)
 
+CORS(app)
+
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory('static', 'manifest/manifest.json')
+
+@socketio.on('connect')
+def handle_connect():
+    logging.info('Client connected')
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    logging.info('Client disconnected')
 
 @app.route('/', methods=['GET'])
 @login_required
@@ -52,6 +68,27 @@ def home():
     }
     # This function now solely renders the home page and handles no file uploads.
     return render_template('index.html',flight_details=flight_details)
+
+@app.route('/get_guest_details/<int:id>')
+def get_guest_details(id):
+    guest = Guest.query.get_or_404(id)
+    # Convert the guest object to a dictionary or suitable format for JSON response
+    guest_details = {column.name: getattr(guest, column.name) for column in guest.__table__.columns}
+    return jsonify(guest_details)
+
+@app.route('/update_guest_details', methods=['POST'])
+@cross_origin()
+def update_guest_details():
+    logging.info("Update guest details route hit")
+    id = request.form.get('id')
+    logging.info(f"Update guest details id {id}")
+    guest = Guest.query.get_or_404(id)
+    
+    # Update guest details based on form input
+    for key in request.form:
+        setattr(guest, key, request.form[key])
+    db.session.commit()
+    return jsonify({'status': 'success', 'message': 'Guest details updated successfully!'})
 
 @app.route('/dashboard_stats')
 def dashboard_stats():
@@ -144,14 +181,16 @@ def update_status():
         if new_status == "Checked":
             guest.checked_time = datetime.utcnow()
             guest.checked_by = current_user.username
-        else:
+        
+        if new_status == "Unchecked":
             # reset fields
             guest.checked_time = None
             guest.checked_by = None
-        logging.info(f"Status for booking number {booking_number} updated to {new_status}.")
         
         try:
             db.session.commit()
+            emit('status_changed', {'booking_number': booking_number, 'new_status': new_status}, broadcast=True)
+            logging.info(f"Status for booking number {booking_number} updated to {new_status}.")
             return jsonify({"message": "Status updated successfully!", "category": "success"}), 200
         except Exception as e:
             db.session.rollback()
@@ -219,5 +258,5 @@ def save_excel():
 
 if __name__ == '__main__':
     #app.run(debug=True, host= '0.0.0.0')
-    app.run()
-    
+    #app.run()
+    socketio.run(app, debug=True)

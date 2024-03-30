@@ -89,8 +89,7 @@ $(document).ready(function () {
                 if (callback) callback(); // Call callback function if provided
                 // Toggle button visibility based on the updated status
                 socket.emit('update_status', { bookingNumber: bookingNumber, status: status });
-                toggleButtons(bookingNumber, status);
-
+                toggleButtons(bookingNumber, status);                                                                                               
                 if(response.message && response.category) {
                     displayFlashMessages(response.message, response.category);
                 }
@@ -132,7 +131,88 @@ $(document).ready(function () {
             .catch(error => console.error('Error fetching stats:', error));
     }
 
+
+    function openEditModal(guestId) {
+        $('#editGuestForm').data('guestId', guestId);
+        // Fetch guest details from the server
+        $.get(`/get_guest_details/${guestId}`, function(data) {
+            const editableFields = ['comments', 'arrival_time', 'arriving_date', 'booking', 'departure_from', 'flight', 'transportation'];
+            const form = $('#editGuestForm');
+            const modalTitle = $('#editGuestModalLabel');
     
+            // Clear existing form fields and set the modal title
+            form.empty(); 
+            modalTitle.text(`${data.first_name} ${data.last_name}`);
+    
+            // Today's date in YYYY-MM-DD format
+            const today = new Date().toISOString().split('T')[0];
+    
+            Object.entries(data).forEach(([key, value]) => {
+                if (editableFields.includes(key)) {
+                    let inputType = 'text';
+                    let inputValue = value;
+    
+                    // Check if the key is 'arriving_date' and set input type to 'date'
+                    if (key === 'arriving_date') {
+                        inputType = 'date';
+                        inputValue = value || today; // Use provided value or today's date if not set
+                    } 
+                    // Check if the key is 'arrival_time' and set input type to 'time'
+                    else if (key === 'arrival_time') {
+                        inputType = 'time';
+                        // Assume value is in a suitable format ('HH:MM'), adjust if necessary
+                        // If value is not provided or invalid, don't set a default
+                        inputValue = value || ''; 
+                    }
+    
+                    // Append form group with label and input
+                    form.append(`<div class="form-group">
+                        <label for="${key}">${key.charAt(0).toUpperCase() + key.slice(1)}</label>
+                        <input type="${inputType}" class="form-control" name="${key}" id="${key}" value="${inputValue}">
+                    </div>`);
+                }
+            });
+    
+            // Append a hidden input to store the guest ID
+            form.append(`<input type="hidden" name="guestId" value="${guestId}">`);
+            $('#editGuestModal').modal('show');
+        });
+    }
+    
+    function submitGuestEdit() {
+        // Retrieve the guest ID stored earlier
+        var guestId = $('#editGuestForm').data('guestId');
+        var formData = $('#editGuestForm').serialize();
+        formData += '&id=' + encodeURIComponent(guestId); // Append the guestId to formData
+    
+        $.post('/update_guest_details', formData)
+            .done(function(response) {
+                console.log('Response:', response); // Debug line
+                $('#editGuestModal').modal('hide');
+                console.log('Guest details updated successfully!');
+                // refresh the page or update the UI as needed
+                location.reload();
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                console.error("Error with request: ", textStatus, errorThrown);
+                console.log('Failed to update guest details. Please try again.');
+            });
+    }
+    
+    
+    
+    $(document).on('click', '#editButton', function() {
+        var guestId = $(this).data('id');
+        console.log("Edit button clicked with guestId:", guestId); // Debug line
+        openEditModal(guestId);
+    });
+    
+    $(document).ready(function () {
+        $('#saveChangesButton').click(function() {
+            submitGuestEdit();
+        });
+    });
+   
     // Handler for both "Mark as Checked" and "Unmark" buttons
     $(".add-btn, .remove-btn").click(function () {
         var bookingNumber = $(this).data("booking-number");
@@ -158,28 +238,30 @@ $(document).ready(function () {
         var modal = $(this);
         modal.find('.modal-footer #modalUsername').val(username);
     });
-    
 
-    $(document).ready(function () {
-        // Make the whole card clickable for marking as checked or unchecked
-        document.querySelectorAll('.card-clickable').forEach(card => {
-            card.addEventListener('click', function(e) {
-                // Prevent interaction with buttons inside the card from triggering this event
-                if (!e.target.classList.contains('btn') && !e.target.closest('.btn')) {
-                    var bookingNumber = this.getAttribute('data-booking-number');
-                    // Simulate click on "Mark as Checked" or "Unmark" button based on visibility
-                    var addButton = this.querySelector('.add-btn');
-                    var removeButton = this.querySelector('.remove-btn');
-                    if (getComputedStyle(addButton).display !== 'none') {
-                        addButton.click();
-                    } else if (getComputedStyle(removeButton).display !== 'none') {
-                        removeButton.click();
-                    }
-                }
-            });
-        });
-    });  
 });
+
+$(document).ready(function () {
+    // Make the whole card clickable for marking as checked or unchecked
+    document.querySelectorAll('.card-clickable').forEach(card => {
+        card.addEventListener('click', function(e) {
+            // Prevent interaction with buttons inside the card from triggering this event
+            if (!e.target.classList.contains('btn') && !e.target.closest('.btn')) {
+                var bookingNumber = this.getAttribute('data-booking-number');
+                // Simulate click on "Mark as Checked" or "Unmark" button based on visibility
+                var addButton = this.querySelector('.add-btn');
+                var removeButton = this.querySelector('.remove-btn');
+                if (getComputedStyle(addButton).display !== 'none') {
+                    addButton.click();
+                } else if (getComputedStyle(removeButton).display !== 'none') {
+                    removeButton.click();
+                }
+            }
+        });
+    });
+});
+
+
 // Service Worker registration code
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
