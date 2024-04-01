@@ -6,34 +6,31 @@
       role="tabpanel"
       aria-labelledby="overview"
     >
-      <div class="row">{% include 'partials/_main_header.html' %}</div>
-      <div class="row">
-        <div class="col-lg-8 d-flex flex-column">
-          <!-- partial:partials/_leave_report.html -->
-          {% include 'partials/_leave_report.html' %}
-          <!-- partial -->
+      {% include 'partials/_main_header.html' %}
 
-          <div class="row flex-grow">
-            <!-- partial:partials/_events.html -->
-            {% include 'partials/_events.html' %}
-            <!-- partial -->
-            <!-- partial:partials/_activities.html -->
-            {% include 'partials/_activities.html' %}
-            <!-- partial -->
-          </div>
-        
-        </div>
-        <div class="col-lg-4 d-flex flex-column">
-          
-          <!-- partial:partials/_todo_list.html -->
-          {% include 'partials/_todo_list.html' %}
-          <!-- partial -->
+      <div class="col-lg-12 d-flex flex-column">
+        <!-- partial:partials/_leave_report.html -->
+        {% include 'partials/_leave_report.html' %}
+        <!-- partial -->
 
-          <!-- partial:partials/_top.html -->
-          {% include 'partials/_top.html' %}
-          <!-- partial -->
-        </div>
-        
+        <div class="row flex-grow"></div>
+      </div>
+      <div class="row d-flex flex-grow">
+        <!-- partial:partials/_events.html -->
+        {% include 'partials/_events.html' %}
+        <!-- partial -->
+
+        <!-- partial:partials/_activities.html -->
+        {% include 'partials/_activities.html' %}
+        <!-- partial -->
+
+        <!-- partial:partials/_todo_list.html -->
+        {% include 'partials/_todo_list.html' %}
+        <!-- partial -->
+
+        <!-- partial:partials/_top.html -->
+        {% include 'partials/_top.html' %}
+        <!-- partial -->
       </div>
     </div>
   </div>

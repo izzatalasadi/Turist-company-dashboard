@@ -1,12 +1,3 @@
-/* Primary Button Customization */
-.btn.btn-primary {
-  background-color: rgb(250, 169, 19); /* Custom orange */
-  border-color: rgb(250, 169, 19);
-}
-.btn.btn-primary:hover {
-  background-color: darkorange;
-  border-color: darkorange;
-}
 
 /* Logo and Navbar Enhancements */
 .logo-container {
@@ -46,7 +37,7 @@
 .card-footer {
   background-color: white; /* Ensures footer background matches card */
   border-top: 1px solid #eee; /* Adds a subtle divider */
-  padding: 10px 15px; /* Padding within the footer */
+  padding: 15px 20px; /* Padding within the footer */
 }
 
 /* Button Customization for Cards */
@@ -68,9 +59,25 @@
   max-width: auto;
   margin: auto;
 }
-.search-bar .form-control, .search-bar .btn-outline-secondary {
-  border-radius: 0; /* Unified border radius for search bar components */
+.img-xs {
+  width: 30px; /* Adjust as needed */
+  height: 30px; /* Adjust as needed */
+  border-radius: 50%; /* Circular image */
 }
+
+.img-md {
+  width: 60px; /* Adjust as needed */
+  height: 60px; /* Adjust as needed */
+  border-radius: 50%; /* Circular image */
+}
+.navbar-dropdown {
+  width: 200px; /* Adjust as needed */
+}
+.custom-dropdown-menu {
+  max-height: 300px; /* Adjust based on your needs */
+  overflow-y: auto; /* Enables vertical scrolling */
+}
+
 .flight-filter-btn {
   transition: background-color 0.3s ease;
 }
@@ -85,8 +92,73 @@
   transform: translateY(-5px);
   box-shadow: 0 12px 24px rgba(0,0,0,0.1);
 }
+.search-result-card .btn {
+  border-radius: 5px; /* Rounded corners for a modern look */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.search-result-card .btn:hover {
+  transform: translateY(-2px); /* Slight raise effect on hover */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15); /* Increased shadow on hover */
+}
+.search-result-card .card-footer {
+  padding: 15px; /* Increase padding for more space around buttons */
+  display: flex; /* Use flexbox for better control over spacing */
+  justify-content: space-between; /* Space out button groups */
+  align-items: center; /* Vertically center the buttons */
+  flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+}
+/* General styling for all screen sizes */
+.search-result-card .card-footer button {
+  margin: 4px; /* Adds space around each button */
+  flex-grow: 1; /* Optional: Allows buttons to grow and fill the footer space */
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  .search-result-card .btn {
+      padding: 12px 20px; /* Slightly larger padding on tablets */
+      font-size: 18px; /* Larger font size for tablets */
+  }
+  /* Additional tablet-specific adjustments here */
+}
+
+@media (max-width: 767px) {
+  .search-result-card .btn {
+      padding: 10px 15px; /* Increase padding for larger touch area */
+      font-size: 16px; /* Larger font size for better readability */
+      margin: 5px; /* Add some space around buttons */
+      min-width: 90px; /* Ensure buttons have a minimum width */
+  }
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 767px) {
+    .search-result-card .card-footer {
+        flex-direction: column; /* Stacks buttons vertically on small screens */
+    }
+    .search-result-card .card-footer button {
+        margin-bottom: 10px; /* Adds more vertical space between buttons */
+        width: 100%; /* Makes buttons full width for easier tapping */
+    }
+}
+
+/* Adjustments for tablet screens */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .search-result-card .card-footer {
+        justify-content: space-around; /* Spaces out buttons evenly */
+    }
+    .search-result-card .card-footer button {
+        margin: 8px; /* Adds more space around buttons for tablet screens */
+    }
+}
+
 
 /* Responsive Design Adjustments */
+@media (max-width: 768px) {
+  .custom-dropdown-menu {
+      max-height: 200px; /* Smaller max-height for smaller devices */
+  }
+}
 @media (max-width: 768px) {
   .search-bar .input-group, .card-footer {
     padding: 0 15px; /* Adjust padding for better spacing on smaller screens */

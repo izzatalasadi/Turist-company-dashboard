@@ -1,25 +1,43 @@
 {% extends "base.html" %}
 
 {% block title %}Delete User{% endblock %}
+
 {% block notification %}{% endblock %}
+
 {% block body %}
-<div class="mt-5">
-    <h2>Delete User</h2>
-    <div class="alert alert-warning" role="alert">
-        Be careful! Deleting a user is irreversible.
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <!-- Card -->
+            <div class="card">
+                <!-- Card Header -->
+                <div class="card-header">
+                    <h4>Delete User</h4>
+                </div>
+                
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="alert alert-warning" role="alert">
+                        Be careful! Deleting a user is irreversible.
+                    </div>
+                    <h5>Existing Users</h5>
+                    <ul class="list-group mb-4">
+                        {% for user in users %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ user.username }}
+                            <!-- Trigger modal button -->
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-username="{{ user.username }}">
+                                Delete
+                            </button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <!-- End of Card Body -->
+            </div>
+            <!-- End of Card -->
+        </div>
     </div>
-    <h3>Existing Users</h3>
-    <ul class="list-group mb-4">
-        {% for user in users %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            {{ user.username }}
-            <!-- Trigger modal button -->
-            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-username="{{ user.username }}">
-                Delete
-            </button>
-        </li>
-        {% endfor %}
-    </ul>
 </div>
 
 <!-- Delete User Confirmation Modal -->
@@ -45,4 +63,3 @@
     </div>
 </div>
 {% endblock %}
-

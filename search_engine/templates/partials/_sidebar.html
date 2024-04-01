@@ -17,7 +17,7 @@
         aria-expanded="false"
         aria-controls="user_management"
       >
-        <i class="menu-icon mdi mdi mdi-user"></i>
+        <i class="menu-icon mdi mdi-account-box-outline"></i>
         <span class="menu-title">User management</span>
         <i class="menu-arrow"></i>
       </a>
@@ -37,7 +37,6 @@
       </div>
     </li>
 
-
     <li class="nav-item nav-category">File management</li>
     <li class="nav-item">
       <a
@@ -47,7 +46,7 @@
         aria-expanded="false"
         aria-controls="file_management"
       >
-        <i class="menu-icon mdi mdi mdi-file"></i>
+        <i class="menu-icon mdi mdi-archive"></i>
         <span class="menu-title">File management</span>
         <i class="menu-arrow"></i>
       </a>
@@ -69,11 +68,8 @@
     {% endif %}
     <li class="nav-item nav-category">Check-in</li>
     <li class="nav-item">
-      <a
-        class="nav-link"
-        href="{{ url_for('search') }}"
-      >
-        <i class="menu-icon mdi mdi-file-search"></i>
+      <a class="nav-link" href="{{ url_for('search') }}">
+        <i class="menu-icon mdi mdi-account-search"></i>
         <span class="menu-title">Search</span>
       </a>
     </li>

@@ -67,6 +67,83 @@ $(document).ready(function () {
         }
     });
     
+    $("#search_form").submit(function(event) {
+        event.preventDefault(); // Prevent the form from submitting through the browser
+        var searchQuery = $("#search_input").val(); // Get the search input
+    
+        $.ajax({
+            url: '/search-results', // Your search endpoint
+            type: 'GET', // or 'POST'
+            data: {
+                query: searchQuery
+            },
+            success: function(data) {
+                // Update your page with the search results
+                // This could involve updating a <div> to display the results
+                $("#search_results").html(data);
+            },
+            error: function(error) {
+                // Handle any errors
+                console.error("Search failed: ", error);
+            }
+        });
+    });
+    /* // Before the chart initialization
+    if (window.leaveReportChart) {
+        window.leaveReportChart.destroy();
+    }
+
+    // Chart initialization code
+    window.leaveReportChart = new Chart(leaveReportCanvas, {
+        // Your chart configuration...
+    });
+    
+    // Leave Report Chart using Chart.js
+
+    // Setup the chart only once to avoid duplication
+    var leaveReportCanvas = $('#leaveReport')[0].getContext('2d');
+    
+    // Ensure any existing chart instance is destroyed before creating a new one
+    if (window.leaveReportChart) {
+        window.leaveReportChart.destroy();
+    }
+
+    // Initialize your chart with updated configuration
+    window.leaveReportChart = new Chart(leaveReportCanvas, {
+        type: 'bar',
+        data: {
+            labels: ['Checked In', 'Not Checked In'],
+            datasets: [{
+                label: 'Guest Status',
+                data: [12, 19],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 99, 132, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: { // This has been corrected to conform with Chart.js version 3.x
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+     */
+    // Example function to update chart data (You'll need to adjust based on your actual data fetching and updating mechanism)
+    function updateLeaveReportChartData() {
+        // Fetch new data and update the chart
+        // Example:
+        leaveReportChart.data.datasets[0].data = [20, 25]; // New data
+        leaveReportChart.update();
+    }
+
     
 
     // Function to save the state of a button to local storage
@@ -119,17 +196,7 @@ $(document).ready(function () {
         setTimeout(() => { $(".flash-messages").fadeOut(); }, 2000); // Auto-hide after 5 seconds
     }
 
-    function fetchAndDisplayStats() {
-        fetch('/dashboard_stats')
-            .then(response => response.json())
-            .then(data => {
-                // Update stats in your HTML
-                document.getElementById('total_guests').textContent = `${data.total_guests}`;
-                document.getElementById('total_checked').textContent = `${data.total_checked}`;
-                document.getElementById('total_unchecked').textContent = `${data.total_unchecked}`;
-            })
-            .catch(error => console.error('Error fetching stats:', error));
-    }
+
 
 
     function openEditModal(guestId) {
@@ -220,7 +287,7 @@ $(document).ready(function () {
         updateStatus(bookingNumber, status, $(this));
         saveButtonState(bookingNumber, status, $(this));
         toggleButtons(bookingNumber, status, $(this));
-        //fetchAndDisplayStats();
+        updateLeaveReportChartData();
         location.reload();
 
     });

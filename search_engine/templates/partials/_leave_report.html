@@ -1,28 +1,24 @@
-
 <div class="row flex-grow">
   <div class="col-12 grid-margin stretch-card">
     <div class="card card-rounded">
       <div class="card-body">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <div>
-                <h4 class="card-title card-title-dash">Leave Report</h4>
-              </div>
-              <div>
-                <div class="dropdown">
-                  <button class="btn btn-light dropdown-toggle toggle-dark btn-lg mb-0 me-0" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Month Wise </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
-                    <h6 class="dropdown-header">week Wise</h6>
-                    <a class="dropdown-item" href="#">Year Wise</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="mt-3">
-              <canvas id="leaveReport" width="338" height="300" style="display: block; box-sizing: border-box; height: 150px; width: 169px;"></canvas>
-            </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="card-title card-title-dash">Leave Report</h4>
+          <!-- Dynamic Dropdown to Choose Report Type -->
+          <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+              Choose Report Type
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <li><a class="dropdown-item" href="#">Month Wise</a></li>
+              <li><a class="dropdown-item" href="#">Week Wise</a></li>
+              <li><a class="dropdown-item" href="#">Year Wise</a></li>
+            </ul>
           </div>
+        </div>
+        <!-- Chart Placeholder -->
+        <div class="mt-3">
+          <canvas id="leaveReport"></canvas>
         </div>
       </div>
     </div>

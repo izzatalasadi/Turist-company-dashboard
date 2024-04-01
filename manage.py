@@ -1,23 +1,31 @@
 #name_search_engine/manage.py
 from operator import or_
+import secrets
 from flask import jsonify, render_template, request, send_file, redirect, url_for, flash,jsonify,send_from_directory
 import pandas as pd
 from io import BytesIO
 from datetime import datetime
 from flask_login import current_user, login_required
 from flask_socketio import SocketIO, emit
+from flask_cors import CORS, cross_origin
 from search_engine.models import Guest
 from search_engine import create_app, db
-from search_engine.config import DevelopmentConfig,ProductionConfig
+from search_engine.config import ProductionConfig
 import hashlib
 from cryptography.fernet import Fernet
 from sqlalchemy import or_
 import logging
 from search_engine.flight_data import FlightInfo
 from flask_wtf.csrf import CSRFProtect
-from flask_cors import CORS, cross_origin
 import os
 from search_engine.config import Config
+from datetime import datetime
+from search_engine.forms import UpdateProfileForm
+import os
+from PIL import Image
+from flask import current_app
+
+
 logging.basicConfig(filename='app.log', level=logging.INFO)
 
 def load_key():
@@ -36,6 +44,7 @@ def decrypt_data(data):
     key = load_key()
     fernet = Fernet(key)
     return fernet.decrypt(data.encode()).decode()
+
 
 
 app = create_app(ProductionConfig)
@@ -61,13 +70,28 @@ def handle_disconnect():
 @app.route('/', methods=['GET'])
 @login_required
 def home():
+    # Assuming you already have some logic here
+    # Add logic for guest statistics
+    total_guests = Guest.query.count()
+    checked_guests = Guest.query.filter_by(status='Checked').count()
+    arrived_guests = Guest.query.filter_by(status='Arrived').count()
+    user_checks = Guest.query.filter_by(checked_by=current_user.username).count()
+
+    checked_percentage = (checked_guests / total_guests * 100) if total_guests > 0 else 0
+    arrived_percentage = (arrived_guests / total_guests * 100) if total_guests > 0 else 0
+
+    # Existing or additional logic for the page
     flight_details = {
-        'total_guests': Guest.query.count(),
-        'total_checked': Guest.query.filter_by(status='Checked').count(),
-        'total_unchecked': Guest.query.filter_by(status='Unchecked').count(),
+        'total_guests': total_guests,
+        'total_checked': checked_guests,
+        'total_unchecked': total_guests - checked_guests,
     }
-    # This function now solely renders the home page and handles no file uploads.
-    return render_template('index.html',flight_details=flight_details)
+
+    return render_template('index.html', flight_details=flight_details, 
+                           total_guests=total_guests, checked_guests=checked_guests, 
+                           arrived_guests=arrived_guests, user_checks=user_checks, 
+                           checked_percentage=checked_percentage, arrived_percentage=arrived_percentage)
+
 
 @app.route('/get_guest_details/<int:id>')
 def get_guest_details(id):
@@ -131,7 +155,7 @@ def search():
     logging.info(f'Flight details: {flight_details}')
     # Get the flights info for flights in the filtered data
     #flights = set(guest.flight for guest in filtered_data if guest.flight !='')
-    flights = ['WF429','WF118']
+    flights = ['KL1171','LH876']
     logging.info(f'Flights: {flights}')
     
     flight_arriving_time = FlightInfo(flights).get_flights_info()
@@ -257,6 +281,5 @@ def save_excel():
         render_template('file_management/download_file.html')
 
 if __name__ == '__main__':
-    #app.run(debug=True, host= '0.0.0.0')
-    #app.run()
+    
     socketio.run(app, debug=True)

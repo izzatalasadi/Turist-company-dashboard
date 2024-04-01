@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-4">
+            <!-- Profile Image -->
+            <div class="card mb-4">
+                <img class="card-img-top" src="{{ url_for('static', filename='images/faces/' + (current_user.profile_picture|default('default.jpg', true))) }}" alt="User's profile picture">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ current_user.username }}</h5>
+                    <p class="text-muted">{{ current_user.email | default('No email provided', true) }}</p>
+                    <p class="text-muted">{{ current_user.mobile | default('No mobile number provided', true) }}</p>
+                    <p>{{ current_user.bio | default('No bio provided', true) }}</p>
+                    <!-- Add any additional fields you want to display -->
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Edit Profile</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('auth.profile') }}" method="post" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+
+                        <div class="form-group">
+                            {{ form.username.label(class="form-label") }}
+                            {{ form.username(class="form-control") }}
+                            {% if form.username.errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.username.errors[0] }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control") }}
+                            {% if form.email.errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.email.errors[0] }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.mobile.label(class="form-label") }}
+                            {{ form.mobile(class="form-control") }}
+                            {% if form.mobile.errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.mobile.errors[0] }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.bio.label(class="form-label") }}
+                            {{ form.bio(class="form-control") }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.profile_picture.label(class="form-label") }}
+                            {{ form.profile_picture(class="form-control-file") }}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

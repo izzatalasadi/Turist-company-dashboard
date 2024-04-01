@@ -32,8 +32,6 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     FLASK_ENV = 'production'
     # For production, use a secure, random value for the SECRET_KEY!
-    # SECRET_KEY should be generated with a random key-making tool and stored safely
-    SECRET_KEY = os.environ.get('SECRET_KEY')
     DEBUG = False
     TESTING = False
     # Define production database URI

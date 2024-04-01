@@ -1,12 +1,15 @@
+import os
+import secrets
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user,login_required, current_user
-from search_engine.forms import LoginForm, AddUserForm, DeleteUserForm
-from search_engine.models import User, db
+from search_engine.forms import LoginForm, AddUserForm, DeleteUserForm, UpdateProfileForm
+from search_engine.models import User,Notification, Message, db
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 from search_engine.models import Guest
 import logging
 from search_engine.clean_data import ExcelProcessor
+from PIL import Image
 
 auth_bp = Blueprint('auth', __name__, template_folder='templates')
 
@@ -23,6 +26,70 @@ def login():
         else:
             flash('Invalid username or password', 'danger')
     return render_template('auth/login.html', form=form)
+
+@auth_bp.route('/notification')
+@login_required
+def notification():
+    notifications = Notification.query.filter_by(user_id=current_user.id).all()
+    messages = Message.query.filter_by(receiver_id=current_user.id).all()
+    return render_template('partials/_notification.html', notifications=notifications, messages=messages)
+
+@auth_bp.route('/search-results')
+@login_required
+def search_results():
+    query = request.args.get('query', '')
+    user_results = User.query.filter(User.username.like(f'%{query}%')).all()
+    message_results = Message.query.filter(Message.content.like(f'%{query}%')).all()
+    notification_results = Notification.query.filter(Notification.content.like(f'%{query}%')).all()
+
+    return render_template('partials/_search_result.html', 
+                            query=query,
+                            user_results=user_results, 
+                            message_results=message_results, 
+                            notification_results=notification_results)
+
+@auth_bp.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    form = UpdateProfileForm()
+    if form.validate_on_submit():
+        if form.profile_picture.data:
+            picture_file = save_picture(form.profile_picture.data)
+            current_user.profile_picture = picture_file
+        current_user.username = form.username.data
+        current_user.bio = form.bio.data
+        current_user.mobile = form.mobile.data
+        db.session.commit()
+        flash('Your account has been updated!', 'success')
+        return redirect(url_for('auth.profile'))
+    
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+        form.mobile.data =  current_user.mobile
+        form.bio.data = current_user.bio
+        
+        
+    # Check if current_user has a profile_picture, if not use default
+    image_file = url_for('static', filename='images/faces/' + current_user.profile_picture) if current_user.profile_picture else url_for('static', filename='images/faces/face1.jpg')
+    return render_template('auth/profile.html', title='Profile', form=form, image_file=image_file)
+
+@login_required
+def save_picture(form_picture):
+    random_hex = os.urandom(8).hex()
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_filename = random_hex + f_ext
+    path = 'search_engine/static/images/faces/'
+    picture_path = os.path.join(path, picture_filename)
+    
+    if not os.path.exists(path):
+        os.makedirs(path)
+    
+    # Assuming form_picture is a FileStorage object and can be opened with PIL
+    image = Image.open(form_picture)
+    image.save(picture_path)
+
+    return picture_filename
 
 @auth_bp.route('/logout')
 @login_required

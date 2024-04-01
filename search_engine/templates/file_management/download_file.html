@@ -2,17 +2,28 @@
 
 {% block title %}Export Excel{% endblock %}
 
-{% block notification %}{% endblock %}
+{% block additional_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+{% endblock %}
+
 {% block body %}
-<!-- Save Excel File Card -->
-<div class="col-md-6 col-lg-4 mb-4">
-    
-    <h5 class="card-title">Save Excel File</h5>
-    <p class="card-text">Download the processed data as an Excel file.</p>
-    <form action="{{ url_for('save_excel') }}" method="post">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <button type="submit" class="btn btn-success">Download</button>
-    </form>
-    
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <!-- Save Excel File Card -->
+        <div class="col-md-8 col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0">Save Excel File</h5>
+                </div>
+                <div class="card-body">
+                    <p>Download the processed data as an Excel file.</p>
+                    <form action="{{ url_for('save_excel') }}" method="post" class="mt-3">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-primary">Download</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

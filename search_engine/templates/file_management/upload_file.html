@@ -4,27 +4,27 @@
 
 {% if current_user.is_admin %}
 {% block body %}
-<!-- Import File Card -->
-<div class="col-md-6 col-lg-4 mb-4">
-    <h5>Import File</h5>
-    <p >Upload and excel file to import the data to databse.</p>
-    <form
-        method="POST"
-        enctype="multipart/form-data"
-        action="{{ url_for('auth.import_file') }}"
-        class="d-inline-block mt-2">
-        <input
-            type="hidden"
-            name="csrf_token"
-            value="{{ csrf_token() }}" />
-        <input
-            type="file"
-            class="form-control-file"
-            id="file"
-            name="file"
-            required />
-        <button type="submit" class="btn btn-info mt-2">Upload</button>
-    </form>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <!-- Import File Card -->
+        <div class="col-md-8 col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0">Import File</h5>
+                </div>
+                <div class="card-body">
+                    <p>Upload an Excel file to import the data to the database.</p>
+                    <form method="POST" enctype="multipart/form-data" action="{{ url_for('auth.import_file') }}" class="mt-3">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="custom-file mb-3">
+                            <input type="file" class="custom-file-input" id="file" name="file" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 {% endif %}

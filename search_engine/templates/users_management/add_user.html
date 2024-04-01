@@ -1,37 +1,78 @@
 {% extends "base.html" %}
 
 {% block title %}Add New User{% endblock %}
-
-{% block notification %}{% endblock %}
+{% block notification %} {% endblock %}
 {% block body %}
 <div class="container mt-5">
-    <h2>Add User</h2>
-    
-    <form method="POST" novalidate>
-        {{ form.hidden_tag() }}
-        <div class="mb-3">
-            {{ form.username.label(class="form-label") }}
-            {{ form.username(class="form-control") }}
-            {% if form.username.errors %}
-            <div class="alert alert-warning" role="alert">
-                {{ form.username.errors[0] }}
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <!-- Card -->
+            <div class="card">
+                <!-- Card Header -->
+                <div class="card-header">
+                    <h4>Add New User</h4>
+                </div>
+                
+                <!-- Card Body -->
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data" novalidate>
+                        {{ form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ form.username.label(class="form-label") }}
+                            {{ form.username(class="form-control") }}
+                            {% if form.username.errors %}
+                            <div class="alert alert-warning" role="alert">
+                                {{ form.username.errors[0] }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.password.label(class="form-label") }}
+                            {{ form.password(class="form-control") }}
+                            {% if form.password.errors %}
+                            <div class="alert alert-warning" role="alert">
+                                {{ form.password.errors[0] }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control") }}
+                            {% if form.email.errors %}
+                            <div class="alert alert-warning" role="alert">
+                                {{ form.email.errors[0] }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.mobile.label(class="form-label") }}
+                            {{ form.mobile(class="form-control") }}
+                            {% if form.mobile.errors %}
+                            <div class="alert alert-warning" role="alert">
+                                {{ form.mobile.errors[0] }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.bio.label(class="form-label") }}
+                            {{ form.bio(class="form-control") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.profile_picture.label(class="form-label") }}
+                            {{ form.profile_picture(class="form-control") }}
+                        </div>
+                        <div class="mb-3 form-check">
+                            {{ form.is_admin(class="form-check-input") }}
+                            {{ form.is_admin.label(class="form-check-label") }}
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Add User</button>
+                    </form>
+                </div>
+                <!-- End of Card Body -->
             </div>
-            {% endif %}
+            <!-- End of Card -->
         </div>
-        <div class="mb-3">
-            {{ form.password.label(class="form-label") }}
-            {{ form.password(class="form-control") }}
-            {% if form.password.errors %}
-            <div class="alert alert-warning" role="alert">
-                {{ form.password.errors[0] }}
-            </div>
-            {% endif %}
-        </div>
-        <div class="mb-3 form-check">
-            {{ form.is_admin(class="form-check-input") }}
-            {{ form.is_admin.label(class="form-check-label") }}
-        </div>
-        <button type="submit" class="btn btn-primary">Add User</button>
-    </form>
+    </div>
 </div>
 {% endblock %}
