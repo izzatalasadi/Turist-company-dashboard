@@ -2,7 +2,7 @@ import os
 
 class Config(object):
     # General Config
-    SECRET_KEY = os.environ.get('SECRET_KEY')
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'CPr4ftfxzHDhzxRwJxv3aNEv5ItikxsCNxhUNmaDag8=')
     FLASK_APP = 'run.py'
     FLASK_ENV = 'development'
 
@@ -31,11 +31,14 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     FLASK_ENV = 'production'
-    # For production, use a secure, random value for the SECRET_KEY!
     DEBUG = False
     TESTING = False
-    # Define production database URI
-    #SQLALCHEMY_DATABASE_URI = os.environ.get('PROD_DATABASE_URL')
     SESSION_COOKIE_SECURE = True
 
-# You can add more configuration classes if needed
+    @property
+    def SQLALCHEMY_DATABASE_URI(self):
+        uri = os.getenv("DATABASE_URL")
+        if uri and uri.startswith("postgres://"):
+            uri = uri.replace("postgres://", "postgresql://", 1)
+        return uri + "?sslmode=require" if uri else None
+

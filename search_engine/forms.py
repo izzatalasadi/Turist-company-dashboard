@@ -49,3 +49,7 @@ class UpdateProfileForm(FlaskForm):
     profile_picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg','jpeg', 'png'])])
     mobile = StringField('Mobile', validators=[Length(min=10, max=15)])
     submit = SubmitField('Update')
+
+class SearchForm(FlaskForm):
+    search_query = StringField('Search')
+    submit = SubmitField('Search')

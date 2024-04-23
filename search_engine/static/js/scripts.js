@@ -88,63 +88,12 @@ $(document).ready(function () {
             }
         });
     });
-    /* // Before the chart initialization
-    if (window.leaveReportChart) {
-        window.leaveReportChart.destroy();
-    }
-
-    // Chart initialization code
-    window.leaveReportChart = new Chart(leaveReportCanvas, {
-        // Your chart configuration...
+    // Load users when main_panel.html is loaded
+    $.get('/users', function(data) {
+        // Populate the userContainer div with the user information
+        $('#userContainer').html(data);
+        console.log(data);
     });
-    
-    // Leave Report Chart using Chart.js
-
-    // Setup the chart only once to avoid duplication
-    var leaveReportCanvas = $('#leaveReport')[0].getContext('2d');
-    
-    // Ensure any existing chart instance is destroyed before creating a new one
-    if (window.leaveReportChart) {
-        window.leaveReportChart.destroy();
-    }
-
-    // Initialize your chart with updated configuration
-    window.leaveReportChart = new Chart(leaveReportCanvas, {
-        type: 'bar',
-        data: {
-            labels: ['Checked In', 'Not Checked In'],
-            datasets: [{
-                label: 'Guest Status',
-                data: [12, 19],
-                backgroundColor: [
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 99, 132, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 99, 132, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: { // This has been corrected to conform with Chart.js version 3.x
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-     */
-    // Example function to update chart data (You'll need to adjust based on your actual data fetching and updating mechanism)
-    function updateLeaveReportChartData() {
-        // Fetch new data and update the chart
-        // Example:
-        leaveReportChart.data.datasets[0].data = [20, 25]; // New data
-        leaveReportChart.update();
-    }
-
-    
 
     // Function to save the state of a button to local storage
     function saveButtonState(bookingNumber, status) {
@@ -265,8 +214,55 @@ $(document).ready(function () {
                 console.log('Failed to update guest details. Please try again.');
             });
     }
+        // Function to delete a message
+        function deleteMessage(messageId) {
+            $.post(`/delete_message/${messageId}`, function(response) {
+                alert(response.message);
+                location.reload();
+            }).fail(function() {
+                alert('Failed to delete message');
+            });
+        }
     
+        // Delegated event handler for delete buttons
+        $('.list-group').on('click', '.del-btn', function() {
+            var messageId = $(this).attr('data-message-id');
+            deleteMessage(messageId);
+        });
     
+        // Function to send a reply to a message
+    function sendReply(messageId) {
+        var replyContent = $('#replyContent_' + messageId).val();
+        if (replyContent.trim() === '') {
+            alert('Please enter a reply message.');
+            return;
+        }
+        $.post(`/reply_message/${messageId}`, { reply_content: replyContent }, function(response) {
+            alert(response.message);
+            location.reload();
+        }).fail(function() {
+            alert('Failed to send reply');
+        });
+    }
+
+    $('.list-group').on('click', '.btn-primary[data-message-id]', function() {
+        var messageId = $(this).data('message-id');
+        var replyContent = $('#replyContent_' + messageId).val();
+        if (replyContent.trim() === '') {
+            alert('Please enter a reply message.');
+            return;
+        }
+        $.post(`/reply_message/${messageId}`, { reply_content: replyContent }, function(response) {
+            alert(response.message);
+            location.reload();
+        }).fail(function() {
+            alert('Failed to send reply');
+        });
+    });
+    
+
+    
+
     
     $(document).on('click', '#editButton', function() {
         var guestId = $(this).data('id');

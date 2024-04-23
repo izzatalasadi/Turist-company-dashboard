@@ -17,7 +17,7 @@
                 </div>
                 <div class="card-body">
                     <p>Download the processed data as an Excel file.</p>
-                    <form action="{{ url_for('save_excel') }}" method="post" class="mt-3">
+                    <form action="{{ url_for('app.save_excel') }}" method="post" class="mt-3">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button type="submit" class="btn btn-primary">Download</button>
                     </form>

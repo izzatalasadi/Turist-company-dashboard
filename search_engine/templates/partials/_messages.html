@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Messages{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2>Messages</h2>
+    {% if messages %}
+        <div class="list-group">
+            {% for message in messages %}
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">From: {{ message.sender.username }}</h5>
+                        <small class="text-muted">{{ message.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+                    </div>
+                    <p class="mb-1">{{ message.content }}</p>
+                    <button class="btn btn-secondary del-btn" data-message-id="{{ message.id }}">Delete</button>
+                    <button class="btn btn-primary reply-btn" data-message-id="{{ message.id }}">Reply</button>
+                    <!-- Reply box -->
+                    <div class="reply-box" style="display: none;">
+                        <textarea id="replyContent_{{ message.id }}" class="form-control" rows="3" placeholder="Write your reply here"></textarea>
+                        <button class="btn btn-primary" onclick="sendReply('{{ message.id }}')">Send</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You have no messages.</p>
+    {% endif %}
+</div>
+{% endblock %}

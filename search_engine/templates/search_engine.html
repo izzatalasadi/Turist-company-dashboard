@@ -10,10 +10,10 @@
       <div class="container mb-5">
         <form
           method="POST"
-          action="{{ url_for('search') }}"
+          action="{{ url_for('app.search') }}"
           class="input-group"
         >
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          {{ form.hidden_tag() }}
           <input
             type="text"
             class="form-control"
@@ -30,7 +30,7 @@
       <div class="mb-4 d-flex flex-wrap justify-content-center">
         {% for flight, color in (flight_colors|default({})).items() %}
         <a
-          href="{{ url_for('search', search_query=request.args.get('search_query', ''), flight=flight) }}"
+          href="{{ url_for('app.search', search_query=request.args.get('search_query', ''), flight=flight) }}"
           class="btn flight-filter-btn m-1"
           style="background-color: {{ color }}; color: #fff;"
           >{{ flight }}</a
@@ -134,7 +134,9 @@
       </div>
       <div class="modal-body">
         <!-- Dynamic form fields will be added here by JavaScript -->
-        <form id="editGuestForm"></form>
+        <form id="editGuestForm">
+          {{ form.hidden_tag() }}
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

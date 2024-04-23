@@ -1,0 +1,48 @@
+
+
+<div class="d-sm-flex align-items-center justify-content-between border-bottom">
+            
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+        <a class="nav-link active ps-0" id="home-tab" data-bs-toggle="tab" href="{{ url_for('main.home') }}" role="tab" aria-controls="overview" aria-selected="true">Overview</a>
+        </li>
+
+        <!-- Admin-only navigation options -->
+        {% if current_user.is_admin %}
+        <li class="nav-item" role="presentation">
+        <a class="nav-link" data-bs-toggle="collapse" href="#user_management" aria-expanded="false" aria-controls="user_management">
+            <i class="menu-icon mdi mdi-account-box-outline"></i>
+            User management
+        </a>
+        <div class="collapse" id="user_management">
+            <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.add_user') }}">Add user</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.delete_user') }}">Delete user</a>
+            </li>
+            </ul>
+        </div>
+        </li>
+
+        <li class="nav-item" role="presentation">
+        <a class="nav-link" data-bs-toggle="collapse" href="#file_management" aria-expanded="false" aria-controls="file_management">
+            <i class="menu-icon mdi mdi-archive"></i>
+            File management
+        </a>
+        <div class="collapse" id="file_management">
+            <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.import_file') }}">Import Excel</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('app.download_page') }}">Export Excel</a>
+            </li>
+            </ul>
+        </div>
+        </li>
+        {% endif %}
+        <!-- End of Admin-only navigation options -->
+    </ul>
+</div>

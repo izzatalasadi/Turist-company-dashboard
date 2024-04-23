@@ -1,6 +1,6 @@
 <!-- partial:partials/_navbar.html -->
 <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
-  <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">    <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">    
     <div class="me-3">
       <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
         <span class="mdi mdi-menu"></span>
@@ -22,7 +22,7 @@
     <ul class="navbar-nav ms-auto">
       <!--Search bar -->
       <li class="nav-item">
-        <form class="search-form" action="{{ url_for('auth.search_results') }}" method="GET">
+        <form class="search-form" action="{{ url_for('app.search_results') }}" method="GET">
           <i class="mdi mdi-magnify"></i>
           <input type="search" name="query" class="form-control" placeholder="Search Here" title="Search here">
       </form>

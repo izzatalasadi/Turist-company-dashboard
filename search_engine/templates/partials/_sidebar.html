@@ -2,73 +2,14 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
     <li class="nav-item">
-      <a class="nav-link" href="{{ url_for('home') }}">
+      <a class="nav-link" href="{{ url_for('main.home') }}">
         <i class="mdi mdi-grid-large menu-icon"></i>
         <span class="menu-title">Dashboard</span>
       </a>
     </li>
-    {% if current_user.is_admin %}
-    <li class="nav-item nav-category">File management</li>
-    <li class="nav-item">
-      <a
-        class="nav-link"
-        data-bs-toggle="collapse"
-        href="#user_management"
-        aria-expanded="false"
-        aria-controls="user_management"
-      >
-        <i class="menu-icon mdi mdi-account-box-outline"></i>
-        <span class="menu-title">User management</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="user_management">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('auth.add_user') }}"
-              >Add user</a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('auth.delete_user') }}"
-              >Delete user</a
-            >
-          </li>
-        </ul>
-      </div>
-    </li>
-
-    <li class="nav-item nav-category">File management</li>
-    <li class="nav-item">
-      <a
-        class="nav-link"
-        data-bs-toggle="collapse"
-        href="#file_management"
-        aria-expanded="false"
-        aria-controls="file_management"
-      >
-        <i class="menu-icon mdi mdi-archive"></i>
-        <span class="menu-title">File management</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="file_management">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('auth.import_file') }}"
-              >Import Excel</a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('download_page') }}"
-              >Export Excel</a
-            >
-          </li>
-        </ul>
-      </div>
-    </li>
-    {% endif %}
     <li class="nav-item nav-category">Check-in</li>
     <li class="nav-item">
-      <a class="nav-link" href="{{ url_for('search') }}">
+      <a class="nav-link" href="{{ url_for('app.search') }}">
         <i class="menu-icon mdi mdi-account-search"></i>
         <span class="menu-title">Search</span>
       </a>

@@ -1,0 +1,7 @@
+__pycache__/
+instance/
+.vscode/
+*.pyc
+.env
+flask_session/
+*.sqlite

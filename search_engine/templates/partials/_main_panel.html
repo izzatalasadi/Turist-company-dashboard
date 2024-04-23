@@ -1,37 +1,26 @@
 <div class="home-tab">
-  <div class="tab-content tab-content-basic">
-    <div
-      class="tab-pane fade show active"
-      id="overview"
-      role="tabpanel"
-      aria-labelledby="overview"
-    >
-      {% include 'partials/_main_header.html' %}
+  <div class="col-lg-12 d-flex flex-column">
+    <div class="row d-flex">
+      {% include 'partials/_dashboard_nav.html' %}
+    </div>
+  </div>
+  <div class="col-lg-12 d-flex flex-column">
+    <div class="row d-flex flex-grow">
+      <!-- partial:partials/_events.html -->
+      {% include 'partials/_events.html' %}
+      <!-- partial -->
 
-      <div class="col-lg-12 d-flex flex-column">
-        <!-- partial:partials/_leave_report.html -->
-        {% include 'partials/_leave_report.html' %}
-        <!-- partial -->
-
-        <div class="row flex-grow"></div>
+      <!-- partial:partials/_activities.html -->
+      {% include 'partials/_activities.html' %}
+      <!-- partial -->
+      <div id="userContainer">
+        <!-- User data will be inserted here -->
       </div>
-      <div class="row d-flex flex-grow">
-        <!-- partial:partials/_events.html -->
-        {% include 'partials/_events.html' %}
-        <!-- partial -->
+    </div>
+  </div>
+</div>
 
-        <!-- partial:partials/_activities.html -->
-        {% include 'partials/_activities.html' %}
-        <!-- partial -->
-
-        <!-- partial:partials/_todo_list.html -->
-        {% include 'partials/_todo_list.html' %}
-        <!-- partial -->
-
-        <!-- partial:partials/_top.html -->
-        {% include 'partials/_top.html' %}
-        <!-- partial -->
-      </div>
+     
     </div>
   </div>
 </div>
