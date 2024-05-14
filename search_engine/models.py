@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False, index=True)
-    password_hash = db.Column(db.String(128), nullable=False)
+    password_hash = db.Column(db.String(512), nullable=False)
     email = db.Column(db.String(120), index=True, unique=True) 
     mobile = db.Column(db.String(120), unique=False, nullable=True)
     profile_picture = db.Column(db.String(120), nullable=True, default='face1.jpeg')

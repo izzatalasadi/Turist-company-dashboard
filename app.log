@@ -268,3 +268,122 @@ WHERE guest.checked_by = %(checked_by_1)s) AS anon_1]
 (Background on this error at: https://sqlalche.me/e/20/9h9h)
 INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:18:59] "[35m[1mGET / HTTP/1.1[0m" 500 -
 INFO:apscheduler.scheduler:Scheduler has been shut down
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+ERROR:flask_migrate:Error: Directory migrations already exists and is not empty
+INFO:apscheduler.scheduler:Scheduler has been shut down
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:apscheduler.scheduler:Scheduler has been shut down
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:52] "[32mGET /api/activities HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:52] "GET /login?next=/api/activities HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:52] "GET /socket.io/?EIO=4&transport=polling&t=OztJbBD HTTP/1.1" 200 -
+INFO:root:Client connected
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:52] "POST /socket.io/?EIO=4&transport=polling&t=OztJbBH&sid=ps-MNwH-lq3iG5neAAAA HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:52] "GET /socket.io/?EIO=4&transport=polling&t=OztJbBN&sid=ps-MNwH-lq3iG5neAAAA HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:52] "GET /socket.io/?EIO=4&transport=polling&t=OztJbBW&sid=ps-MNwH-lq3iG5neAAAA HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "[32mGET / HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "GET /login?next=/ HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "[36mGET /static/manifest/manifest.json HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "[36mGET /static/js/jquery.cookie.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "[36mGET /static/css/feather.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "[36mGET /static/sw.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "[36mGET /static/js/off-canvas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "[36mGET /static/js/hoverable-collapse.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "[36mGET /static/js/bootstrap-datepicker.min.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "[36mGET /static/js/template.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "[36mGET /static/js/settings.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "[36mGET /static/js/scripts.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "[36mGET /static/images/logo.svg HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "[36mGET /static/js/vendor.bundle.base.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "GET /socket.io/?EIO=4&transport=polling&t=OztJcNi HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "[32mGET /users HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "GET /login?next=/users HTTP/1.1" 200 -
+INFO:root:Client connected
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "POST /socket.io/?EIO=4&transport=polling&t=OztJcNz&sid=TQnQLG1RvBs-Mz8cAAAC HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "GET /socket.io/?EIO=4&transport=polling&t=OztJcO7&sid=TQnQLG1RvBs-Mz8cAAAC HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:32:57] "GET /socket.io/?EIO=4&transport=polling&t=OztJcOW&sid=TQnQLG1RvBs-Mz8cAAAC HTTP/1.1" 200 -
+INFO:apscheduler.scheduler:Scheduler has been shut down
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:apscheduler.scheduler:Scheduler has been shut down
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:apscheduler.scheduler:Scheduler has been shut down
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:26] "GET /socket.io/?EIO=4&transport=polling&t=OztOlag HTTP/1.1" 200 -
+INFO:root:Client connected
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:26] "POST /socket.io/?EIO=4&transport=polling&t=OztOlaq&sid=KyvdbALWfNAN8Kx2AAAA HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:26] "GET /socket.io/?EIO=4&transport=polling&t=OztOlax&sid=KyvdbALWfNAN8Kx2AAAA HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:26] "GET /socket.io/?EIO=4&transport=polling&t=OztOlb8&sid=KyvdbALWfNAN8Kx2AAAA HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/js/bootstrap-datepicker.min.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/manifest/manifest.json HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/js/jquery.cookie.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/sw.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/css/feather.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/js/off-canvas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/js/hoverable-collapse.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/js/settings.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/js/template.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/js/vendor.bundle.base.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/css/feather.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/js/scripts.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/js/jquery.cookie.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/sw.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/js/bootstrap-datepicker.min.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/js/vendor.bundle.base.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/js/off-canvas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/js/template.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/js/hoverable-collapse.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/js/scripts.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/js/settings.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:29] "[36mGET /static/images/logo.svg HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:30] "[36mGET /static/manifest/manifest.json HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:30] "[36mGET /static/images/logo.svg HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:30] "[36mGET /static/images/faces/face1.jpeg HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:30] "GET /api/activities HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:30] "GET /socket.io/?EIO=4&transport=polling&t=OztOmYn HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:30] "GET /users HTTP/1.1" 200 -
+INFO:root:Client connected
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:30] "POST /socket.io/?EIO=4&transport=polling&t=OztOmY_&sid=0DKnwoTwQHPVX7MxAAAC HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:30] "GET /socket.io/?EIO=4&transport=polling&t=OztOmY_.0&sid=0DKnwoTwQHPVX7MxAAAC HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:30] "GET /socket.io/?EIO=4&transport=polling&t=OztOmZA&sid=0DKnwoTwQHPVX7MxAAAC HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:55:30] "GET /socket.io/?EIO=4&transport=polling&t=OztOmZI&sid=0DKnwoTwQHPVX7MxAAAC HTTP/1.1" 200 -
+INFO:apscheduler.scheduler:Scheduler has been shut down
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
