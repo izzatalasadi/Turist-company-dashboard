@@ -32,9 +32,4 @@ class ProductionConfig(Config):
     TESTING = False
     SESSION_COOKIE_SECURE = True
 
-    @property
-    def SQLALCHEMY_DATABASE_URI(self):
-        uri = os.getenv("DATABASE_URL")
-        if uri and uri.startswith("postgres://"):
-            uri = uri.replace("postgres://", "postgresql://", 1)
-        return uri
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "").replace("postgres://", "postgresql://", 1)
