@@ -80,17 +80,17 @@
               <div class="d-flex justify-content-between">
                 <!-- Group Left: Mark as Checked/Unmark Button -->
                 <div>
-                  <button class="btn btn-info btn-sm add-btn" data-booking-number="{{ entry.booking }}" style="{{ 'display: none;' if entry.status == 'Checked' }}">
+                  <button class="btn btn-success add-btn" data-booking-number="{{ entry.booking }}" style="{{ 'display: none;' if entry.status == 'Checked' }}">
                     Mark as Checked
                   </button>
-                  <button class="btn btn-secondary btn-sm remove-btn" data-booking-number="{{ entry.booking }}" style="{{ 'display: none;' if entry.status != 'Checked' }}">
+                  <button class="btn btn-danger remove-btn" data-booking-number="{{ entry.booking }}" style="{{ 'display: none;' if entry.status != 'Checked' }}">
                     Unmark
                   </button>
                 </div>
                 {% if current_user.is_admin %}
                 <!-- Group Right: Edit Details Button -->
                 <div>
-                  <button id="editButton" class="btn btn-primary btn-sm edit-btn" onclick="openEditModal('{{ entry.id }}')" data-toggle="modal" data-target="#editGuestModal" data-id="{{ entry.id }}">
+                  <button id="editButton" class="btn btn-light edit-btn" onclick="openEditModal('{{ entry.id }}')" data-toggle="modal" data-target="#editGuestModal" data-id="{{ entry.id }}">
                     Edit Details
                   </button>
                 </div>

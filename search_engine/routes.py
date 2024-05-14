@@ -1,3 +1,7 @@
+#TO- do
+# change the Excel file if its not will be added to database to PDF
+# User emit to notify the system with update for "messages"
+
 import os
 import pandas as pd
 import hashlib
@@ -8,12 +12,13 @@ from operator import or_
 from PIL import Image
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
-from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, send_file, send_from_directory
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, send_file, send_from_directory, current_app
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_socketio import emit
 from flask_cors import cross_origin
 from search_engine.forms import LoginForm, AddUserForm, DeleteUserForm, UpdateProfileForm, SearchForm
-from search_engine.models import User, Notification, Message, Guest
+from search_engine.models import User, Message, Guest, Activity,Flight
+import uuid
 from search_engine.extensions import  db
 from search_engine.clean_data import ExcelProcessor
 from search_engine.flight_data import FlightInfo
@@ -23,6 +28,7 @@ from flask_cors import cross_origin
 from datetime import datetime
 from search_engine import socketio
 from search_engine import limiter
+
 
 logging.basicConfig(filename='app.log', level=logging.INFO)
 
@@ -84,6 +90,9 @@ def home():
 
     checked_percentage = (checked_guests / total_guests * 100) if total_guests > 0 else 0
     arrived_percentage = (arrived_guests / total_guests * 100) if total_guests > 0 else 0
+    
+    all_messages = Message.query.filter_by(receiver_id=current_user.id).order_by(Message.timestamp.desc()).all()
+    unread_count = Message.query.filter_by(receiver_id=current_user.id, read=False).count()
 
     # Existing or additional logic for the page
     flight_details = {
@@ -95,15 +104,101 @@ def home():
     return render_template('index.html', flight_details=flight_details, 
                            total_guests=total_guests, checked_guests=checked_guests, 
                            arrived_guests=arrived_guests, user_checks=user_checks, 
-                           checked_percentage=checked_percentage, arrived_percentage=arrived_percentage)
+                           checked_percentage=checked_percentage, arrived_percentage=arrived_percentage,
+                           messages=all_messages, unread_count=unread_count)
 
 
 @main_bp.route('/users')
 @login_required
 def display_users():
-    # Query the database for all users
-    users = User.query.all()
-    return render_template('partials/_top.html', users=users)
+    try:
+        users = User.query.all()
+        return render_template('partials/_top.html', users=users)  # Ensure this conversion is error-free
+    except Exception as e:
+        logging.error(f"Error fetching users: {e}")
+        return jsonify({"error": "Internal server error"}), 500
+
+@main_bp.route('/activities')
+@login_required
+def activities():
+    # Fetch activities from the database ordered by timestamp
+    activities = Activity.query.order_by(Activity.timestamp.desc()).all()
+
+    # Calculate total and remaining activities (assuming you track completion)
+    total_activities = len(activities)
+    remaining_activities = sum(not activity.checked_in for activity in activities)
+
+    return render_template('partials/_activities.html', 
+                           activities=activities,
+                           total_activities=total_activities, 
+                           remaining_activities=remaining_activities)
+    
+def log_activity(event, description):
+    if not current_user.is_authenticated:
+        return  # Only log activities for authenticated users
+
+    activity = Activity(
+        user_id=current_user.id,
+        event=event,
+        description=description,
+        timestamp=datetime.utcnow()
+    )
+    try:
+        db.session.add(activity)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Failed to log activity: {e}",'danger')
+
+
+@main_bp.route('/api/activities')
+@login_required
+def api_activities():
+    activities = Activity.query.order_by(Activity.timestamp.desc()).all()
+    activity_list = [{
+        'username': activity.user.username,  # assuming relationship `user` exists
+        'event': activity.event,
+        'description': activity.description,
+        'timestamp': activity.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+    } for activity in activities]
+    return jsonify(activity_list)
+
+@main_bp.route('/api/messages')
+@login_required
+def api_messages():
+    messages = Message.query.filter_by(recipient_id=current_user.id).order_by(Message.timestamp.desc()).all()
+    messages_data = [{
+        'sender': message.sender.username,  # assuming a sender relationship
+        'body': message.body,
+        'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+    } for message in messages]
+    return jsonify(messages_data)
+
+@main_bp.route('/api/guests')
+@login_required
+def api_guests():
+    if not current_user.is_authenticated:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    guests = Guest.query.all()
+    guest_list = [{
+        'id': guest.id,
+        'first_name': guest.first_name,
+        'last_name': guest.last_name,
+        'booking': guest.booking
+    } for guest in guests]
+    return jsonify(guest_list)
+
+@main_bp.route('/api/pdfs')
+@login_required
+def api_pdfs():
+    if not current_user.is_authenticated:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    directory = os.path.join(current_app.root_path, 'static', 'pdf')
+    pdf_files = [f for f in os.listdir(directory) if f.endswith('.pdf')]
+    pdf_list = [{'filename': pdf} for pdf in pdf_files]
+    return jsonify(pdf_list)
 
 # =========== Bp section auth ================
 
@@ -158,6 +253,9 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user and check_password_hash(user.password_hash, form.password.data):
             login_user(user, remember=form.remember_me.data)
+            user.update_last_seen()
+            log_activity('Login', f'User {current_user.username} logged in successfully')
+            
             return redirect(url_for('main.home'))  # Adjust according to your home page route
         else:
             flash('Invalid username or password', 'danger')
@@ -190,15 +288,16 @@ def add_user():
         # If the user does not exist, proceed to add them
         user = User(
             username=form.username.data,
-            email=form.email.data,  # Add email field
+            email=form.email.data,  
             mobile=form.mobile.data,
             bio=form.bio.data,
-            profile_picture='face1.jpg',  # Default profile picture
+            profile_picture='face1.jpeg',  # Default profile picture
             is_admin=form.is_admin.data
         )
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
+        log_activity('Add', f'New User "{user.username}" been added successfully')
         flash(f'User "{user.username}" has been added.', 'success')
         return redirect(url_for('auth.add_user'))
 
@@ -220,8 +319,12 @@ def delete_user():
         user = User.query.filter_by(username=form.username.data).first()
         if user:
             db.session.delete(user)
+            activity = Activity(user_id=user.id, event='Delete user', description='User deleted succesfully.')
+            db.session.add(activity)
+    
             db.session.commit()
-            flash(f'User "{user}" has been deleted.', 'success')
+            log_activity('Add', f'User "{user.username}" has been deleted successfully')
+            flash(f'User "{user.username}" has been deleted.', 'success')
             return redirect(url_for('auth.delete_user'))  
         else:
             flash(f'User "{user}" not found.', 'warning')
@@ -232,57 +335,141 @@ def delete_user():
 @login_required
 def import_file():
     if request.method == 'POST':
-        if 'file' not in request.files:
-            flash('No file part', 'danger')
-            return redirect(url_for('auth.import_file'))
-
+        file_type = request.form.get('file_type')
         file = request.files['file']
         filename = secure_filename(file.filename)
-        if not filename.endswith('.xlsx'):
-            flash('Invalid file format. Please upload an Excel file.', 'warning')
-            return redirect(url_for('auth.import_file'))
+        if file_type == 'excel' and filename.endswith('.xlsx'):
+            # Process Excel file
+            process_excel(file)
+            log_activity('File', f'New Excel file "{filename}" has been added successfully')
+            flash('Excel information been added to database', 'success')
+        elif file_type == 'pdf' and filename.endswith('.pdf'):
+            # Process PDF file
+            save_pdf(file)
+            flash(f'PDF "{filename}" been saved', 'success')
+        else:
+            flash('Invalid file type or format. Please select the correct file type and upload an Excel or PDF file.', 'warning')
 
-        # Process file
-        processor = ExcelProcessor(file)  # Adjust as needed
-        try:
-            df = processor.read_and_process_excel()
-            for _, row in df.iterrows():
-                    # Check if booking number already exists in the database
-                    existing_guest = Guest.query.filter_by(booking=str(row['BOOKING'])).first()
-                    
-                    if not existing_guest:
-                        # If not, add new guest information to the database
-                        guest = Guest(
-                            booking=str(row['BOOKING']),
-                            first_name=str(row['FIRST NAME']),
-                            last_name=str(row['LAST NAME']),
-                            flight=str(row['FLIGHT']),
-                            departure_from=str(row['FROM']),
-                            arriving_date=None,  # You need to replace None with actual arriving_date if applicable
-                            arrival_time=None,  # You need to replace None with actual arrival_time if applicable
-                            transportation=str(row['TRANSPORTATION']),
-                            status=str(row['STATUS']),
-                            comments=str(row['COMMENTS'])
-                        )
-                        db.session.add(guest)
-                        logging.info(f"Added new guest: {guest}")
-                        
-                    else:
-                        logging.warning(f"Guest with booking {row['BOOKING']} already exists in the database. Skipping.")
-                
-                # Commit the changes to the database
-            db.session.commit()
-            flash('File uploaded and processed successfully.', 'success')
-            logging.info("Database updated successfully.")
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Failed to process file: {e}', 'warning')
-            logging.error(f'Failed to process file: {e}')
         return redirect(url_for('auth.import_file'))
 
-    # For a GET request, render the upload_file.html template
     return render_template('file_management/upload_file.html')
 
+def process_excel(file):
+    processor = ExcelProcessor(file)  # Adjust as needed
+    
+    try:
+        df = processor.read_and_process_excel()
+        logging.info(df)
+        for _, row in df.iterrows():
+            flight = Flight.query.filter_by(flight_number=str(row['FLIGHT']).strip()).first()
+            
+            if not flight:
+                flight = Flight(
+                        flight_number=str(row['FLIGHT']).strip(),
+                        departure_from=str(row['FROM']).strip(),
+                        arrival_time=str(row.get('TIME', '')).strip()  
+                        #arrival_date=str(row.get('ARRIVAL DATE', '')).strip()
+                    )
+                db.session.add(flight)
+                logging.info(f"New flight added: {flight.flight_number}")
+                
+            existing_guest = Guest.query.filter_by(booking=str(row['BOOKING'])).first()
+            if not existing_guest:
+                guest = Guest(
+                    booking=str(row['BOOKING']),
+                    first_name=str(row['FIRST NAME']),
+                    last_name=str(row['LAST NAME']),
+                    flight_id=flight.id,
+                    departure_from=flight.departure_from, # Directly using the flight's departure from
+                    arrival_time=flight.arrival_time,  # Directly using the flight's arrival time
+                    arriving_date=flight.arrival_date,
+                    transportation=str(row['TRANSPORTATION']),
+                    status=str(row['STATUS']),
+                    comments=str(row['COMMENTS'])
+                )
+                db.session.add(guest)
+                logging.info(f"Added new guest: {guest}")
+            else:
+                logging.warning(f"Guest with booking {row['BOOKING']} already exists. Skipping.")
+
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        logging.error(f"Failed to process file: {e}")
+
+def save_pdf(file):
+    # Define the directory where PDFs are stored, relative to the Flask app instance
+    directory = os.path.join(current_app.root_path, 'static', 'pdf')
+    # Ensure the directory exists
+    os.makedirs(directory, exist_ok=True)
+    
+    # Define the file path
+    filename = secure_filename(file.filename)
+    filepath = os.path.join(directory, filename)
+    
+    # Check if a file with the same name already exists
+    if os.path.exists(filepath):
+        # Create a unique file name by appending a timestamp or UUID
+        base, extension = os.path.splitext(filename)
+        unique_filename = f"{base}_{uuid.uuid4().hex}{extension}"
+        filepath = os.path.join(directory, unique_filename)
+        flash(f'File "{filename}" already exists. Saving as "{unique_filename}".', 'warning')
+        logging.info(f'File "{filename}" renamed to "{unique_filename}" to avoid overwrite.')
+    else:
+        flash(f'File "{filename}" has been uploaded successfully.', 'success')
+    
+    # Save the file to the defined file path
+    file.save(filepath)
+    logging.info(f'File saved at {filepath}')
+    return redirect(url_for('auth.import_file'))
+
+@auth_bp.route('/pdf_viewer')
+def pdf_viewer():
+    directory = os.path.join(current_app.root_path, 'static', 'pdf')
+    # List all files in the directory
+    pdf_files = [f for f in os.listdir(directory) if f.endswith('.pdf')]
+    pdf_files_urls = {file: url_for('static', filename='pdf/' + file) for file in pdf_files}
+    return render_template('partials/_pdf_viewer.html', pdf_files=pdf_files_urls)
+
+
+@auth_bp.route('/delete_guest_page')
+@login_required
+def delete_guest_page():
+    return render_template('partials/_delete_all_guests.html')
+
+@auth_bp.route('/delete_all_guests', methods=['POST'])
+@login_required
+def delete_all_guests():
+    if not current_user.is_admin:
+        flash('You are not authorized to perform this action.', 'danger')
+        return redirect(url_for('auth.home'))
+
+    try:
+        num_deleted = Guest.query.delete()
+        db.session.commit()
+        flash(f'Successfully deleted {num_deleted} guests from the database.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('Failed to delete guests due to an error.', 'danger')
+        logging.error(f'Error deleting all guests: {e}')
+    return redirect(url_for('auth.delete_guest_page'))
+
+@auth_bp.route('/delete_pdf', methods=['POST'])
+@login_required
+def delete_pdf():
+    if not current_user.is_admin:
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    filename = request.form['filename']
+    try:
+        # Assuming the PDFs are stored in a directory accessible to the app
+        directory = os.path.join(current_app.root_path, 'static', 'pdf')
+        os.remove(os.path.join(directory, filename))
+        return jsonify({'message': 'PDF deleted successfully'}), 200
+    except Exception as e:
+        current_app.logger.error(f'Failed to delete PDF {filename}: {str(e)}')
+        return jsonify({'error': 'Failed to delete PDF'}), 500
+    
 # =========== Bp section app ===========
 
 @app_bp.route('/manifest.json')
@@ -309,6 +496,8 @@ def update_guest_details():
     # Update guest details based on form input
     for key in request.form:
         setattr(guest, key, request.form[key])
+        
+    log_activity('Guest', f'"{guest.last_name}, {guest.first_name}" has been added successfully')
     db.session.commit()
     return jsonify({'status': 'success', 'message': 'Guest details updated successfully!'})
 
@@ -324,8 +513,10 @@ def dashboard_stats():
         'total_checked': total_checked,
         'total_unchecked': total_unchecked,
     }
-
+    
     return jsonify(stats)
+
+
 
 @app_bp.route('/search-results')
 @login_required
@@ -333,118 +524,74 @@ def search_results():
     query = request.args.get('query', '')
     user_results = User.query.filter(User.username.like(f'%{query}%')).all()
     message_results = Message.query.filter(Message.content.like(f'%{query}%')).all()
-    notification_results = Notification.query.filter(Notification.content.like(f'%{query}%')).all()
-
+    
     return render_template('partials/_search_result.html', 
                             query=query,
                             user_results=user_results, 
-                            message_results=message_results, 
-                            notification_results=notification_results)
+                            message_results=message_results)
 
 
 @app_bp.route('/search', methods=['POST', 'GET'])
-@cross_origin()  # Apply specific CORS policy
-@limiter.limit("30 per minute")  # Apply specific rate limit
+@cross_origin()
+@limiter.limit("30 per minute")
 @login_required
 def search():
     form = SearchForm()
     if form.validate_on_submit():
         search_query = form.search_query.data.lower()
         flight_filter = request.args.get('flight', None)
-        # Continue with your existing search logic
     else:
         search_query = request.form.get('search_query', '').lower()
         flight_filter = request.args.get('flight', None)
-    
+
     guests_query = Guest.query
 
     if flight_filter:
-        guests_query = guests_query.filter(Guest.flight.ilike(f'%{flight_filter}%'))
-    
+        guests_query = guests_query.join(Flight).filter(Flight.flight_number.ilike(f'%{flight_filter}%'))
+
     if search_query:
         guests_query = guests_query.filter(or_(Guest.first_name.ilike(f'%{search_query}%'), Guest.last_name.ilike(f'%{search_query}%')))
 
     filtered_data = guests_query.all()
     flight_details = {
-    'count': guests_query.count(),
-    'total_items' : len(filtered_data),
-    'total_unchecked' : guests_query.filter_by(status='Unchecked').count(),
-    'total_checked' : guests_query.filter_by(status='Checked').count()}
-    
-    logging.info(f'Flight details: {flight_details}')
-    # Get the flights info for flights in the filtered data
-    #flights = set(guest.flight for guest in filtered_data if guest.flight !='')
-    flights = ['KL1171','LH876']
-    logging.info(f'Flights: {flights}')
-    
-    flight_arriving_time = FlightInfo(flights).get_flights_info()
-    logging.info(f'Flights arriving time: {flight_arriving_time}')
-
-    logging.info('Start adding the arriving date')
-    try:
-        for guest in filtered_data:
-            if guest.flight in flight_arriving_time:
-                # Only update if the flight is found in the flight_arriving_time dictionary
-                arriving_info = flight_arriving_time.get(guest.flight, None)
-                if arriving_info:
-                    guest.arriving_date = arriving_info[0]  # Assuming this is the arriving date
-                    guest.arrival_time = arriving_info[1]  # Assuming this is the arrival time
-                    db.session.add(guest)
-                    
-    except Exception as e:
-        logging.warn(f'Error: Flight not found {e}')
-        
-    try:
-        db.session.commit()
-        logging.info('Flight arriving information updated successfully.')
-        
-    except Exception as e:
-        db.session.rollback()
-        logging.error(f'Error: Failed to update flight arriving information: {e}')
-        
-    logging.info(f"Flight details: {flight_details}")
+        'count': guests_query.count(),
+        'total_items': len(filtered_data),
+        'total_unchecked': guests_query.filter(Guest.status == 'Unchecked').count(),
+        'total_checked': guests_query.filter(Guest.status == 'Checked').count()
+    }
 
     # Assign a color to each unique flight in the filtered data
-    flight_colors = {flight: '#' + hashlib.md5(flight.encode()).hexdigest()[:6] for flight in flights}
-    
-    return render_template('search_engine.html',form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors)
+    flights = set(guest.flight for guest in filtered_data if guest.flight)
+    flight_colors = {flight.flight_number: '#' + hashlib.md5(flight.flight_number.encode()).hexdigest()[:6] for flight in flights if flight and flight.flight_number}
 
+    return render_template('search_engine.html', form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors)
 
 @app_bp.route('/update_status', methods=['POST'])
 @login_required
 def update_status():
     booking_number = request.form.get('booking_number')
-    new_status = request.form.get('status')  # 'Checked' or 'Unchecked'
+    new_status = request.form.get('status')
 
-    # Attempt to find an existing guest with the given booking number
     guest = Guest.query.filter_by(booking=booking_number).first()
-    
     if guest:
-        # If guest found, update status and other relevant fields
         guest.status = new_status
         if new_status == "Checked":
             guest.checked_time = datetime.utcnow()
             guest.checked_by = current_user.username
-        
-        if new_status == "Unchecked":
-            # reset fields
+        elif new_status == "Unchecked":
             guest.checked_time = None
             guest.checked_by = None
-        
+
         try:
             db.session.commit()
-            emit('status_changed', {'booking_number': booking_number, 'new_status': new_status}, broadcast=True)
-            logging.info(f"Status for booking number {booking_number} updated to {new_status}.")
-            return jsonify({"message": "Status updated successfully!", "category": "success"}), 200
-        
+            flash('Status updated successfully', 'success')
+            return jsonify({'message': 'Status updated successfully', 'status': 'success'}), 200
         except Exception as e:
             db.session.rollback()
-            logging.error(f"Failed to update status for booking number {booking_number}: {e}")
-            return jsonify({"message": 'Error updating status. Please try again.', "category": 'error'}), 500
+            return jsonify({'message': str(e), 'status': 'error'}), 500
     else:
-        # If no guest found with the booking number
-        logging.warning(f"Booking number {booking_number} not found.")
-        return jsonify({"message": "Booking number not found", "category": 'error'}), 404
+        flash('Booking number not found', 'warning')
+        return jsonify({'message': 'Booking number not found', 'status': 'warning'}), 404        
     
 @app_bp.route('/download')
 def download_page():
@@ -454,54 +601,50 @@ def download_page():
 @login_required
 def save_excel():
     try:
-        # Query the database for all guests
+        logging.info("Accessing save_excel route")
         guests = Guest.query.all()
 
         if not guests:
+            logging.warning("No guests found in database")
             flash('No data available to save. Please ensure there is data in the database.', 'warning')
-            return redirect(url_for('main.home'))
+            return redirect(url_for('app.download_page'))
 
-        # Convert the query result to a list of dictionaries
         data = [{
+            # Ensure all attribute names match exactly with your database model
             'Booking Number': guest.booking,
             'First Name': guest.first_name,
             'Last Name': guest.last_name,
             'Flight': guest.flight,
             'Departure From': guest.departure_from,
-            'Arriving Date': guest.arriving_date if guest.arriving_date else '',
-            'Arrival Time': guest.arrival_time if guest.arrival_time else '',
+            'Arriving Date': guest.arriving_date.strftime('%Y-%m-%d') if guest.arriving_date else '',
+            'Arrival Time': getattr(guest, 'arrival_time', '').strftime('%H:%M') if getattr(guest, 'arrival_time', None) else '',
             'Transportation': guest.transportation,
             'Status': guest.status,
             'Checked Time': guest.checked_time.strftime('%Y-%m-%d %H:%M:%S') if guest.checked_time else '',
-            'Checked By': guest.checked_by,  # You may need to adjust this based on how you store user information
+            'Checked By': guest.checked_by if guest.checked_by else '',
             'Comments': guest.comments
-        } for guest in guests]
+            } for guest in guests]
 
-        # Convert the list of dictionaries to a DataFrame
         df = pd.DataFrame(data)
-
-        # Use a BytesIO buffer to write the DataFrame to an Excel file in memory
         excel_buffer = BytesIO()
         with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
             df.to_excel(writer, sheet_name='Guests', index=False)
-
-        # Reset the buffer position to the beginning
+            
         excel_buffer.seek(0)
-
-        # Return the Excel file to the client
+        logging.info("Excel file created successfully")
         return send_file(
             excel_buffer,
             as_attachment=True,
-            download_name='guest_data.xlsx',
+            download_name=f'Guests_arrival-{datetime.now().strftime("%Y-%m-%d")}.xlsx',
             mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
-
+        #return redirect(url_for('app.download_page'))
     except Exception as e:
-        logging.error(f"Error generating Excel file: {e}")
+        logging.error(f"Error in save_excel: {e}")
         flash('An error occurred while generating the Excel file. Please try again.', 'danger')
-        render_template('file_management/download_file.html')
-
-
+        return redirect(url_for('app.download_page'))
+    
+    
 @app_bp.route('/development-rates')
 @cross_origin()  # Apply specific CORS policy
 @limiter.limit("10 per minute")  # Apply specific rate limit
@@ -524,39 +667,67 @@ def send_message(user_id):
         # Save the message to the database
         db.session.add(message)
         db.session.commit()
-
-        return redirect(url_for('app.messages'))  # Redirect to messages page after sending message
+        flash('Message been sent.', 'success')
+        return redirect(url_for('main.home'))  # Redirect to messages page after sending message
     else:
+        flash('Message not been send.', 'warning')
         # Handle other HTTP methods if necessary
-        return redirect(url_for('app.messages'))  # Redirect to messages page if not a POST request
+        return redirect(url_for('main.home'))  # Redirect to messages page if not a POST request
+
 @app_bp.route('/delete_message/<int:message_id>', methods=['POST'])
 @login_required
 def delete_message(message_id):
+    # Retrieve the message or return a 404 if it doesn't exist
     message = Message.query.get_or_404(message_id)
-    if message.sender_id == current_user.id:
+
+    # Check if the current user is authorized to delete the message
+    if message.sender_id != current_user.id and message.receiver_id != current_user.id:
+        # If the user is neither the sender nor the receiver, deny access
+        return jsonify({'error': 'Unauthorized access'}), 403
+
+    # Attempt to delete the message
+    try:
         db.session.delete(message)
         db.session.commit()
-        flash('Message deleted successfully', 'success')
-    else:
-        flash('You are not authorized to delete this message', 'danger')
-    return redirect(url_for('app.messages'))
-
+        return jsonify({'message': 'Message deleted successfully'}), 200
+    except Exception as e:
+        # Handle any exceptions that occur during the delete operation
+        db.session.rollback()
+        # Log the exception to your logging framework
+        # e.g., app.logger.error(f'Error deleting message: {e}')
+        return jsonify({'error': 'Failed to delete message, please try again later.'}), 500
+    
 @app_bp.route('/reply_message/<int:message_id>', methods=['POST'])
 @login_required
 def reply_message(message_id):
-    message = Message.query.get_or_404(message_id)
-    content = request.form.get('reply_content')
-    if content:
-        # Assuming you have a reply template or modal, render it here
-        # Return the rendered template or modal as a response
-        return render_template('reply_message.html', message=message)
-    else:
-        flash('Reply content cannot be empty', 'danger')
-        return redirect(url_for('app.messages'))
+    original_message = Message.query.get_or_404(message_id)
+    reply_content = request.form.get('reply_content')
+    
+    if not reply_content:
+        return jsonify({'error': 'Reply cannot be empty'}), 400
+
+    reply_message = Message(
+        sender_id=current_user.id,
+        receiver_id=original_message.sender_id,  # Note change here from `recipient_id` to `receiver_id`
+        content=reply_content
+    )
+    db.session.add(reply_message)
+    db.session.commit()
+    return jsonify({'message': 'Reply sent'}), 200
 
 @app_bp.route('/messages')
 @login_required
 def messages():
-    user_messages = Message.query.filter_by(receiver_id=current_user.id).order_by(Message.timestamp.desc()).all()
-    return render_template('partials/_messages.html', messages=user_messages)
+    all_messages = Message.query.filter_by(receiver_id=current_user.id).order_by(Message.timestamp.desc()).all()
+    unread_count = Message.query.filter_by(receiver_id=current_user.id, read=False).count()
+    return render_template('partials/_messages.html', messages=all_messages, unread_count=unread_count)
 
+@app_bp.route('/read_message/<int:message_id>', methods=['POST'])
+@login_required
+def read_message(message_id):
+    message = Message.query.get_or_404(message_id)
+    if message.receiver_id == current_user.id:
+        message.read = True
+        db.session.commit()
+        return jsonify({'success': 'Message marked as read'})
+    return jsonify({'error': 'Unauthorized'}), 403

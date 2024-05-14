@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}Import Excel{% endblock %}
+{% block title %}Import File{% endblock %}
 
 {% if current_user.is_admin %}
+
 {% block body %}
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -13,13 +14,20 @@
                     <h5 class="mb-0">Import File</h5>
                 </div>
                 <div class="card-body">
-                    <p>Upload an Excel file to import the data to the database.</p>
+                    <p>Upload an Excel file or PDF to import the data or store the document.</p>
                     <form method="POST" enctype="multipart/form-data" action="{{ url_for('auth.import_file') }}" class="mt-3">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="mb-3">
+                            <label for="fileType" class="form-label">Select file type:</label>
+                            <select class="form-select" id="fileType" name="file_type" required>
+                                <option value="excel">Excel</option>
+                                <option value="pdf">PDF</option>
+                            </select>
+                        </div>
                         <div class="custom-file mb-3">
                             <input type="file" class="custom-file-input" id="file" name="file" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <button type="submit" class="btn btn-light">Upload</button>
                     </form>
                 </div>
             </div>

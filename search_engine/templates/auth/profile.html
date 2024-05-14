@@ -8,7 +8,7 @@
         <div class="col-lg-4">
             <!-- Profile Image -->
             <div class="card mb-4">
-                <img class="card-img-top" src="{{ url_for('static', filename='images/faces/' + (current_user.profile_picture|default('default.jpg', true))) }}" alt="User's profile picture">
+                <img class="card-img-top" src="{{ url_for('static', filename='images/faces/' + (current_user.profile_picture|default('face1.jpeg', true))) }}" alt="User's profile picture">
                 <div class="card-body text-center">
                     <h5 class="card-title">{{ current_user.username }}</h5>
                     <p class="text-muted">{{ current_user.email | default('No email provided', true) }}</p>

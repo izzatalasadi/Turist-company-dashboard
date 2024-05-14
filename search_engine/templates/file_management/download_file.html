@@ -1,11 +1,6 @@
 {% extends "base.html" %}
 
 {% block title %}Export Excel{% endblock %}
-
-{% block additional_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
-{% endblock %}
-
 {% block body %}
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -17,10 +12,10 @@
                 </div>
                 <div class="card-body">
                     <p>Download the processed data as an Excel file.</p>
-                    <form action="{{ url_for('app.save_excel') }}" method="post" class="mt-3">
+                    <form action="{{ url_for('app.save_excel') }}" method="post">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit" class="btn btn-primary">Download</button>
-                    </form>
+                        <button type="submit" class="btn btn-light">Download</button>
+                    </form>                    
                 </div>
             </div>
         </div>

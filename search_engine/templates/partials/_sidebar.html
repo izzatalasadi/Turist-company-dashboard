@@ -1,17 +1,85 @@
 {% if current_user.is_authenticated %}
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
-    <li class="nav-item">
+    <li class="nav-item {{ 'active' if request.endpoint == 'main.home' }} mt-4">
       <a class="nav-link" href="{{ url_for('main.home') }}">
         <i class="mdi mdi-grid-large menu-icon"></i>
         <span class="menu-title">Dashboard</span>
       </a>
     </li>
-    <li class="nav-item nav-category">Check-in</li>
+
+    <!-- Admin-only navigation options -->
+    {% if current_user.is_admin %}
+    <li class="nav-item nav-category">Management</li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        data-bs-toggle="collapse"
+        href="#user_management"
+        aria-expanded="false"
+        aria-controls="user_management"
+      >
+        <i class="menu-icon mdi mdi-account-box-outline"></i>
+        <span class="menu-title">User management</span>
+      </a>
+      <div class="collapse" id="user_management">
+        <ul class="nav sub-menu">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('auth.add_user') }}"
+              >Add user</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('auth.delete_user') }}"
+              >Delete user</a
+            >
+          </li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        data-bs-toggle="collapse"
+        href="#file_management"
+        aria-expanded="false"
+        aria-controls="file_management"
+      >
+        <i class="menu-icon mdi mdi-archive"></i>
+        <span class="menu-title">Data management</span>
+      </a>
+      <div class="collapse" id="file_management">
+        <ul class="nav sub-menu">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('auth.import_file') }}"
+              >Import data</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('app.download_page') }}"
+              >Export data</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('auth.delete_guest_page') }}">Delete data</a>
+        </li>
+        
+        </ul>
+      </div>
+    </li>
+    {% endif %}
+
+    <li class="nav-item nav-category">Apps</li>
     <li class="nav-item">
       <a class="nav-link" href="{{ url_for('app.search') }}">
         <i class="menu-icon mdi mdi-account-search"></i>
-        <span class="menu-title">Search</span>
+        <span class="menu-title">Check-in</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{{ url_for('auth.pdf_viewer') }}">
+        <i class="menu-icon mdi mdi-account-search"></i>
+        <span class="menu-title">PDF-viewer</span>
       </a>
     </li>
   </ul>

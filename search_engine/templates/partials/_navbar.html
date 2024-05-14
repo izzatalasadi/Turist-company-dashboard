@@ -1,11 +1,22 @@
-<!-- partial:partials/_navbar.html -->
-<nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
-  <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">    
-    <div class="me-3">
-      <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
+
+<nav
+  class="navbar default-layout col-lg-12 col-12 fixed-top d-flex align-items-top flex-row mt-auto pt-auto"
+>
+  <div
+    class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start"
+  >
+    <div class="mt-3">
+      <button
+        class="navbar-toggler navbar-toggler align-self-center"
+        type="button"
+        data-bs-toggle="minimize"
+      >
         <span class="mdi mdi-menu"></span>
         <a class="navbar-brand brand-logo">
-          <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="logo" />
+          <img
+            src="{{ url_for('static', filename='images/logo.svg') }}"
+            alt="logo"
+          />
         </a>
       </button>
     </div>
@@ -20,77 +31,74 @@
       </li>
     </ul>
     <ul class="navbar-nav ms-auto">
+      
       <!--Search bar -->
       <li class="nav-item">
-        <form class="search-form" action="{{ url_for('app.search_results') }}" method="GET">
+        <form
+          class="search-form"
+          action="{{ url_for('app.search_results') }}"
+          method="GET"
+        >
           <i class="mdi mdi-magnify"></i>
-          <input type="search" name="query" class="form-control" placeholder="Search Here" title="Search here">
-      </form>
-      
+          <input
+            type="search"
+            name="query"
+            class="form-control"
+            placeholder="Search Here"
+            title="Search here"
+          />
+        </form>
       </li>
       <!--End search bar -->
-      
-      <!-- Notifications -->
-      <li class="nav-item dropdown">
-        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="mdi mdi-bell"></i>
-          <span class="count">{{ notifications|length }}</span>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="notificationDropdown">
-          {% for notification in notifications %}
-          <li>
-            <a class="dropdown-item" href="#">
-              <div class="d-flex">
-                <div class="flex-shrink-0">
-                  <i class="mdi mdi-alert m-auto text-primary"></i>
-                </div>
-                <div class="flex-grow-1 ms-3">
-                  <h6 class="mb-1">{{ notification.content }}</h6>
-                  <small class="text-muted">{{ notification.timestamp }}</small>
-                </div>
-              </div>
-            </a>
-          </li>
-          {% else %}
-          <li><a class="dropdown-item text-center" href="#">No notifications</a></li>
-          {% endfor %}
-        </ul>
-      </li>
-      <!-- End notifications -->
 
       <!-- Messages Dropdown -->
       <li class="nav-item dropdown">
-        <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="mdi mdi-email mdi-24px"></i>
-          <span class="count">{{ messages|length }}</span>
+        <a
+            class="nav-link count-indicator dropdown-toggle"
+            id="messageDropdown"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+        >
+            <i class="mdi mdi-email mdi-24px"></i>
+            <span class="count">{{ unread_count }}</span>
         </a>
-        <ul class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="messageDropdown">
-          {% if messages|length > 0 %}
-            {% for message in messages %}
-            <li>
-              <a class="dropdown-item" href="#">
-                <div class="d-flex">
-                  <div class="flex-shrink-0">
-                    <img src="{{ url_for('static', filename='images/faces/' ~ message.sender.profile_picture) }}" alt="Profile Image" class="img-sm profile-pic">
-                  </div>
-                  <div class="flex-grow-1 ms-3">
-                    <p class="mb-0"><strong>From: {{ message.sender.username }}</strong></p>
-                    <p class="mb-1">{{ message.content }}</p>
-                    <small class="text-muted">{{ message.timestamp }}</small>
-                  </div>
-                </div>
-              </a>
-            </li>
-            {% endfor %}
-          {% else %}
-            <li><a class="dropdown-item text-center" href="#">No messages</a></li>
-          {% endif %}
+        <ul
+            class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
+            aria-labelledby="messageDropdown"
+        >
+            {% if messages|length > 0 %}
+                {% for message in messages %}
+                    <li class="{{ 'bg-light' if not message.read }}">
+                        <a class="dropdown-item" href="#">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <img
+                                        src="{{ url_for('static', filename='images/faces/' ~ message.sender.profile_picture) }}"
+                                        alt="Profile Image"
+                                        class="img-sm profile-pic"
+                                    />
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <p class="mb-0"><strong>From: {{ message.sender.username }}</strong></p>
+                                    <p class="mb-1">{{ message.content }}</p>
+                                    
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li><a class="dropdown-item text-center">No messages</a></li>
+            {% endif %}
+            <li><a class="dropdown-item text-center" href="/messages">show all messages</a></li>
         </ul>
       </li>
       <!-- End Messages Dropdown -->
 
       <!-- User profile -->
-      <li class="nav-item dropdown d-block user-dropdown">
+      <li class="nav-item dropdown">
         <a
           class="nav-link dropdown-toggle"
           id="UserDropdown"
@@ -99,7 +107,6 @@
           data-bs-toggle="dropdown"
           aria-expanded="false"
         >
-          <!-- Dynamically load the user's profile image if it exists, else load a default image -->
           <img
             class="img-xs rounded-circle"
             src="{{ url_for('static', filename='images/faces/face1.jpeg') }}"
@@ -124,6 +131,7 @@
               <p class="fw-light text-muted mb-0">{{ current_user.email }}</p>
             </div>
           </li>
+          
           <!-- Menu items -->
           <li>
             <a class="dropdown-item" href="{{ url_for('auth.profile') }}"
@@ -152,4 +160,4 @@
     </button>
   </div>
 </nav>
-<!-- partial -->
+
