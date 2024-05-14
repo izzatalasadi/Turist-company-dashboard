@@ -1,0 +1,270 @@
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:apscheduler.scheduler:Scheduler has been shut down
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:17] "GET /socket.io/?EIO=4&transport=polling&t=OztAltC HTTP/1.1" 200 -
+INFO:root:Client connected
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:17] "POST /socket.io/?EIO=4&transport=polling&t=OztAltT&sid=DJp8Ahcgl2wJ3NbgAAAA HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:17] "GET /socket.io/?EIO=4&transport=polling&t=OztAltb&sid=DJp8Ahcgl2wJ3NbgAAAA HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:17] "GET /socket.io/?EIO=4&transport=polling&t=OztAltp&sid=DJp8Ahcgl2wJ3NbgAAAA HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:28] "[32mGET /api/activities HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:28] "GET /login?next=/api/activities HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:29] "[32mGET / HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /login?next=/ HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /static/css/styles.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /static/css/style.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /static/css/feather.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /static/js/jquery.cookie.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /static/js/vendor.bundle.base.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /static/sw.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /static/js/bootstrap-datepicker.min.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /static/js/hoverable-collapse.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /static/js/off-canvas.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /static/js/template.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /static/js/settings.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /static/js/scripts.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /static/manifest/manifest.json HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /static/images/logo.svg HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /socket.io/?EIO=4&transport=polling&t=OztAp7A HTTP/1.1" 200 -
+INFO:root:Client connected
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "POST /socket.io/?EIO=4&transport=polling&t=OztAp7L&sid=qC9j3RBv9RpoNx1SAAAC HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /socket.io/?EIO=4&transport=polling&t=OztAp7M&sid=qC9j3RBv9RpoNx1SAAAC HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "[33mGET /apple-touch-icon-precomposed.png HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "GET /socket.io/?EIO=4&transport=polling&t=OztAp7f&sid=qC9j3RBv9RpoNx1SAAAC HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "[33mGET /apple-touch-icon.png HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:30] "[36mGET /static/images/favicon.png HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:31] "[32mGET /users HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:32] "GET /login?next=/users HTTP/1.1" 200 -
+INFO:root:Client disconnected
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:35] "GET /socket.io/?EIO=4&transport=websocket&sid=qC9j3RBv9RpoNx1SAAAC HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:36] "POST /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:36] "[36mGET /static/manifest/manifest.json HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:36] "[36mGET /static/css/feather.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:36] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:36] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:37] "[36mGET /static/sw.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:37] "[36mGET /static/js/off-canvas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:37] "[36mGET /static/js/bootstrap-datepicker.min.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:37] "[36mGET /static/js/jquery.cookie.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:37] "[36mGET /static/images/logo.svg HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:37] "[36mGET /static/js/vendor.bundle.base.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:37] "[36mGET /static/js/hoverable-collapse.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:37] "[36mGET /static/js/template.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:37] "[36mGET /static/js/settings.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:37] "[36mGET /static/js/scripts.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:37] "GET /socket.io/?EIO=4&transport=polling&t=OztAqhV HTTP/1.1" 200 -
+INFO:root:Client connected
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:37] "POST /socket.io/?EIO=4&transport=polling&t=OztAqhg&sid=bJK0zQam8QS5GWBNAAAE HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:37] "GET /socket.io/?EIO=4&transport=polling&t=OztAqhh&sid=bJK0zQam8QS5GWBNAAAE HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:37] "GET /socket.io/?EIO=4&transport=polling&t=OztAqhl&sid=bJK0zQam8QS5GWBNAAAE HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:37] "[32mGET /users HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:38] "GET /login?next=/users HTTP/1.1" 200 -
+INFO:root:Client disconnected
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:49] "GET /socket.io/?EIO=4&transport=websocket&sid=bJK0zQam8QS5GWBNAAAE HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "POST /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "[36mGET /static/manifest/manifest.json HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "[36mGET /static/css/feather.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "[36mGET /static/js/off-canvas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "[36mGET /static/js/vendor.bundle.base.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "[36mGET /static/sw.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "[36mGET /static/images/logo.svg HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "[36mGET /static/js/jquery.cookie.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "[36mGET /static/js/template.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "[36mGET /static/js/hoverable-collapse.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "[36mGET /static/js/settings.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "[36mGET /static/js/bootstrap-datepicker.min.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "[36mGET /static/js/scripts.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "GET /socket.io/?EIO=4&transport=polling&t=OztAt_Q HTTP/1.1" 200 -
+INFO:root:Client connected
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "POST /socket.io/?EIO=4&transport=polling&t=OztAt_d&sid=4YZ4xz0ZiM4wBCvdAAAG HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:50] "GET /socket.io/?EIO=4&transport=polling&t=OztAt_e&sid=4YZ4xz0ZiM4wBCvdAAAG HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:51] "[32mGET /users HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:52] "GET /login?next=/users HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:52] "[32mGET /api/activities HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:54:53] "GET /login?next=/api/activities HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:55:21] "[32mGET /api/activities HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:55:21] "GET /login?next=/api/activities HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:55:23] "[32mGET /api/activities HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:55:24] "GET /login?next=/api/activities HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:55:51] "[32mGET /api/activities HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:55:52] "GET /login?next=/api/activities HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:55:53] "[32mGET /api/activities HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:55:54] "GET /login?next=/api/activities HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:56:21] "[32mGET /api/activities HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:56:22] "GET /login?next=/api/activities HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:56:23] "[32mGET /api/activities HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 14:56:23] "GET /login?next=/api/activities HTTP/1.1" 200 -
+INFO:apscheduler.scheduler:Scheduler has been shut down
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:18:43] "GET /socket.io/?EIO=4&transport=polling&t=OztGLnn HTTP/1.1" 200 -
+INFO:root:Client connected
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:18:43] "POST /socket.io/?EIO=4&transport=polling&t=OztGLo6&sid=3EBBVGfBrz2xyWuSAAAA HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:18:43] "GET /socket.io/?EIO=4&transport=polling&t=OztGLoC&sid=3EBBVGfBrz2xyWuSAAAA HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:18:43] "GET /socket.io/?EIO=4&transport=polling&t=OztGLoN&sid=3EBBVGfBrz2xyWuSAAAA HTTP/1.1" 200 -
+ERROR:search_engine:Exception on / [GET]
+Traceback (most recent call last):
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1960, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.InvalidTextRepresentation: invalid input syntax for type integer: "admin"
+LINE 4: WHERE guest.checked_by = 'admin') AS anon_1
+                                 ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/flask/app.py", line 1463, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/flask/app.py", line 872, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/flask/app.py", line 870, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/flask/app.py", line 855, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/flask_cors/decorator.py", line 130, in wrapped_function
+    resp = make_response(f(*args, **kwargs))
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/flask_limiter/extension.py", line 1299, in __inner
+    return cast(R, flask.current_app.ensure_sync(obj)(*a, **k))
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+  File "/Users/izzatfahmialasadi/Documents/GitHub/DMC_dashboard/search_engine/routes.py", line 89, in home
+    user_checks = Guest.query.filter_by(checked_by=current_user.username).count()
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/orm/query.py", line 3111, in count
+    self._legacy_from_self(col).enable_eagerloads(False).scalar()
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/orm/query.py", line 2804, in scalar
+    ret = self.one()
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/orm/query.py", line 2777, in one
+    return self._iter().one()  # type: ignore
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/orm/query.py", line 2826, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 2306, in execute
+    return self._execute_internal(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 2191, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/orm/context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1408, in execute
+    return meth(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/sql/elements.py", line 513, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1630, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1839, in _execute_context
+    return self._exec_single_context(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1979, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 2335, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1960, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.DataError: (psycopg2.errors.InvalidTextRepresentation) invalid input syntax for type integer: "admin"
+LINE 4: WHERE guest.checked_by = 'admin') AS anon_1
+                                 ^
+
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT guest.id AS guest_id, guest.booking AS guest_booking, guest.first_name AS guest_first_name, guest.last_name AS guest_last_name, guest.flight_id AS guest_flight_id, guest.departure_from AS guest_departure_from, guest.arriving_date AS guest_arriving_date, guest.arrival_time AS guest_arrival_time, guest.transportation AS guest_transportation, guest.status AS guest_status, guest.checked_time AS guest_checked_time, guest.checked_by AS guest_checked_by, guest.comments AS guest_comments 
+FROM guest 
+WHERE guest.checked_by = %(checked_by_1)s) AS anon_1]
+[parameters: {'checked_by_1': 'admin'}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:18:50] "[35m[1mGET / HTTP/1.1[0m" 500 -
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:18:54] "GET /api/activities HTTP/1.1" 200 -
+ERROR:search_engine:Exception on / [GET]
+Traceback (most recent call last):
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1960, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.InvalidTextRepresentation: invalid input syntax for type integer: "admin"
+LINE 4: WHERE guest.checked_by = 'admin') AS anon_1
+                                 ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/flask/app.py", line 1463, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/flask/app.py", line 872, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/flask/app.py", line 870, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/flask/app.py", line 855, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/flask_cors/decorator.py", line 130, in wrapped_function
+    resp = make_response(f(*args, **kwargs))
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/flask_limiter/extension.py", line 1299, in __inner
+    return cast(R, flask.current_app.ensure_sync(obj)(*a, **k))
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+  File "/Users/izzatfahmialasadi/Documents/GitHub/DMC_dashboard/search_engine/routes.py", line 89, in home
+    user_checks = Guest.query.filter_by(checked_by=current_user.username).count()
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/orm/query.py", line 3111, in count
+    self._legacy_from_self(col).enable_eagerloads(False).scalar()
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/orm/query.py", line 2804, in scalar
+    ret = self.one()
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/orm/query.py", line 2777, in one
+    return self._iter().one()  # type: ignore
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/orm/query.py", line 2826, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 2306, in execute
+    return self._execute_internal(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 2191, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/orm/context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1408, in execute
+    return meth(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/sql/elements.py", line 513, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1630, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1839, in _execute_context
+    return self._exec_single_context(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1979, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 2335, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1960, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/izzatfahmialasadi/Desktop/DMC/Project/name_search_engine/new-env/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.DataError: (psycopg2.errors.InvalidTextRepresentation) invalid input syntax for type integer: "admin"
+LINE 4: WHERE guest.checked_by = 'admin') AS anon_1
+                                 ^
+
+[SQL: SELECT count(*) AS count_1 
+FROM (SELECT guest.id AS guest_id, guest.booking AS guest_booking, guest.first_name AS guest_first_name, guest.last_name AS guest_last_name, guest.flight_id AS guest_flight_id, guest.departure_from AS guest_departure_from, guest.arriving_date AS guest_arriving_date, guest.arrival_time AS guest_arrival_time, guest.transportation AS guest_transportation, guest.status AS guest_status, guest.checked_time AS guest_checked_time, guest.checked_by AS guest_checked_by, guest.comments AS guest_comments 
+FROM guest 
+WHERE guest.checked_by = %(checked_by_1)s) AS anon_1]
+[parameters: {'checked_by_1': 'admin'}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+INFO:werkzeug:127.0.0.1 - - [14/May/2024 15:18:59] "[35m[1mGET / HTTP/1.1[0m" 500 -
+INFO:apscheduler.scheduler:Scheduler has been shut down
