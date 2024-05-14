@@ -5,9 +5,6 @@ class Config(object):
     SECRET_KEY = 'CPr4ftfxzHDhzxRwJxv3aNEv5ItikxsCNxhUNmaDag8='
     FLASK_APP = 'run.py'
     FLASK_ENV = 'development'
-
-    # Database
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///mydatabase.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Session
@@ -18,16 +15,17 @@ class Config(object):
 
     # CSRF
     WTF_CSRF_ENABLED = True
-    
+
     # File
     UPLOAD_FOLDER = '/Data/uploads/'
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///mydatabase.db'
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'  # Use in-memory SQLite database for tests
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
 
 class ProductionConfig(Config):
     FLASK_ENV = 'production'
@@ -41,7 +39,6 @@ class ProductionConfig(Config):
         uri = os.getenv("DATABASE_URL")
         if uri and uri.startswith("postgres://"):
             uri = uri.replace("postgres://", "postgresql://", 1)
-        # Append SSL mode if the URI exists
         if uri:
             uri += "?sslmode=require"
         return uri
