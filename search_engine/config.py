@@ -1,8 +1,7 @@
 import os
 
 class Config(object):
-    # General Config
-    SECRET_KEY = 'CPr4ftfxzHDhzxRwJxv3aNEv5ItikxsCNxhUNmaDag8='
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'CPr4ftfxzHDhzxRwJxv3aNEv5ItikxsCNxhUNmaDag8=')
     FLASK_APP = 'run.py'
     FLASK_ENV = 'development'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -32,13 +31,10 @@ class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
     SESSION_COOKIE_SECURE = True
-    SECRET_KEY = os.environ.get('SECRET_KEY')
 
     @property
     def SQLALCHEMY_DATABASE_URI(self):
         uri = os.getenv("DATABASE_URL")
         if uri and uri.startswith("postgres://"):
             uri = uri.replace("postgres://", "postgresql://", 1)
-        if uri:
-            uri += "?sslmode=require"
         return uri
