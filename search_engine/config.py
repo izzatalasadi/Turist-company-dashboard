@@ -28,14 +28,14 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     FLASK_ENV = 'production'
-    FLASK_APP = 'run.py'
     DEBUG = False
     TESTING = False
     SESSION_COOKIE_SECURE = True
     SECRET_KEY = os.environ.get('SECRET_KEY')
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    
-    # CSRF
-    WTF_CSRF_ENABLED = True
 
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///default.db')
+    @property
+    def SQLALCHEMY_DATABASE_URI(self):
+        uri = os.getenv("DATABASE_URL")
+        if uri and uri.startswith("postgres://"):
+            uri = uri.replace("postgres://", "postgresql://", 1)
+        return uri
