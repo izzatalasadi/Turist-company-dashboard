@@ -84,7 +84,7 @@ def create_app(config_class=Config):
         )
         db.session.add(new_user)
         db.session.commit()
-        print('Admin user created successfully.')
+        logging.info(f'{new_user.username} user created successfully.')
     
     app.cli.add_command(create_admin)
 
