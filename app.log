@@ -1,22 +1,7 @@
 INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
 INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
 INFO:apscheduler.scheduler:Scheduler started
-ERROR:flask_migrate:Error: Path doesn't exist: '/Users/izzatfahmialasadi/Documents/GitHub/DMC_dashboard/migrations'.  Please use the 'init' command to create a new scripts folder.
 INFO:apscheduler.scheduler:Scheduler has been shut down
-INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
-INFO:apscheduler.scheduler:Scheduler started
-INFO:apscheduler.scheduler:Scheduler has been shut down
-INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
-INFO:apscheduler.scheduler:Scheduler started
-INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
-INFO:apscheduler.scheduler:Scheduler started
-INFO:apscheduler.scheduler:Scheduler has been shut down
-INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
-INFO:apscheduler.scheduler:Scheduler started
 INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
 INFO:apscheduler.scheduler:Added job "update_flight_info" to job store "default"
 INFO:apscheduler.scheduler:Scheduler started
