@@ -127,6 +127,7 @@ wcwidth==0.2.13
 weasyprint==62.1
 webencodings==0.5.1
 Werkzeug==3.0.1
+whitenoise==6.6.0
 wrapt==1.16.0
 wsproto==1.2.0
 WTForms==3.1.2
@@ -134,4 +135,3 @@ XlsxWriter==3.2.0
 yarg==0.1.9
 zipp==3.17.0
 zopfli==0.2.3
-whitenoise
