@@ -10,6 +10,7 @@ from pyflightdata import FlightData
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 from search_engine.flight_data import FlightInfo
+from whitenoise import WhiteNoise
 
 def update_flight_info(app):
     print("Updating flight info periodically")
@@ -54,6 +55,10 @@ def create_app(config_class=Config):
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
     app.register_blueprint(app_bp)
+    
+    # Wrap the app with WhiteNoise
+    app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/')
+
     
     db.init_app(app)
     migrate.init_app(app, db)

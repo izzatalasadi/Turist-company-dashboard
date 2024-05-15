@@ -1,1 +1,1 @@
-web: FLASK_APP=manage.py gunicorn manage:app
+web: gunicorn app:app
