@@ -23,7 +23,7 @@ def update_flight_info(app):
         for flight in flights:
             try:
                 # Fetch latest flight data from the API
-                logging.info(f"Flight-{flight.flight_number}: {flights_info[flight.flight_number]}", )
+                logging.info(f"Flight-{flight.flight_number}: {flights_info[flight.flight_number]}")
                 
                 if flights_info:
                     new_arrival_date = flights_info[flight.flight_number][0]
@@ -36,7 +36,7 @@ def update_flight_info(app):
                         flight.arrival_date = new_arrival_date 
                     
                     db.session.commit()
-                    logging.info(f"Updated flight: {flight.flight_number},  arrival time: {flight.arrival_time}")
+                    logging.info(f"Updated flight: {flight.flight_number}, arrival time: {flight.arrival_time}")
                 else:
                     logging.warning(f"No new data found for flight {flight.flight_number}")
             except Exception as e:
@@ -55,7 +55,6 @@ def create_app(config_class=Config):
     app.register_blueprint(main_bp)
     app.register_blueprint(app_bp)
     
-      
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
