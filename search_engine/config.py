@@ -30,6 +30,10 @@ class ProductionConfig(Config):
     SECRET_KEY = os.environ.get('SECRET_KEY','key')
     FLASK_APP = os.environ.get('FLASK_APP', 'manage.py')
     FLASK_ENV = os.environ.get('FLASK_ENV', 'production')
+    
+    # CSRF
+    WTF_CSRF_ENABLED = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = False
     TESTING = False
     SESSION_COOKIE_SECURE = True
