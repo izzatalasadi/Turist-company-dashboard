@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config(object):
-    SECRET_KEY = os.environ.get('SECRET_KEY','BvCeOY__sqL5npiX4MQrCFcKE6vggTABGI2l_hPEmew=')
+    SECRET_KEY = os.environ.get('SECRET_KEY','key')
     FLASK_APP = 'run.py'
     FLASK_ENV = 'development'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -29,13 +29,8 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
 
 class ProductionConfig(Config):
-    SECRET_KEY = os.environ.get('SECRET_KEY','key')
     FLASK_APP = os.environ.get('FLASK_APP', 'manage.py')
     FLASK_ENV = os.environ.get('FLASK_ENV', 'production')
-    
-    # CSRF
-    WTF_CSRF_ENABLED = True
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = False
     TESTING = False
     SESSION_COOKIE_SECURE = True
