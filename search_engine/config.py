@@ -1,7 +1,7 @@
 import os
 
 class Config(object):
-    SECRET_KEY = os.environ.get('SECRET_KEY','key')
+    SECRET_KEY = os.environ.get('SECRET_KEY','BvCeOY__sqL5npiX4MQrCFcKE6vggTABGI2l_hPEmew=')
     FLASK_APP = 'run.py'
     FLASK_ENV = 'development'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
