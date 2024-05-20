@@ -27,8 +27,8 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
 
 class ProductionConfig(Config):
-    FLASK_APP = os.environ.get('FLASK_APP','manage.py')
-    FLASK_ENV = os.environ.get('FLASK_ENV','development')
+    FLASK_APP = os.environ.get('FLASK_APP', 'manage.py')
+    FLASK_ENV = os.environ.get('FLASK_ENV', 'production')
     DEBUG = False
     TESTING = False
     SESSION_COOKIE_SECURE = True
