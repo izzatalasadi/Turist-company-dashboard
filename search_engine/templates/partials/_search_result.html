@@ -38,22 +38,6 @@
                     {% endif %}
                 </div>
             </div>
-
-            <div class="card mt-4 mb-5">
-                <div class="card-body">
-                    <h3 class="card-title">Notifications</h3>
-                    {% if notification_results %}
-                        {% for notification in notification_results %}
-                            <div class="py-2">
-                                <p>{{ notification.content }}</p>
-                                <small>Received on {{ notification.timestamp }}</small>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <p>No notification results found.</p>
-                    {% endif %}
-                </div>
-            </div>
         </div>
     </div>
 </div>

@@ -3,22 +3,33 @@
 {% block title %}PDF Viewer{% endblock %}
 
 {% block body %}
+{% block notification %}{% endblock %}
 <div class="container mt-5">
     <div class="row">
         <div class="col-12 col-md-8">
-            <ul class="list-group">
-                {% for filename, file_url in pdf_files.items() %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <a href="#" class="pdf-link" data-url="{{ file_url }}" data-bs-toggle="modal" data-bs-target="#pdfModal">
-                        {{ filename }}
-                    </a>
-                    {% if current_user.is_admin %}
-                    <button class="btn btn-danger delete-pdf-btn" data-filename="{{ filename }}" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" title="Delete PDF">
-                        <i class="mdi mdi-delete"></i>
-                    </button>
-                    {% endif %}
-                </li>
-                {% endfor %}
+            <ul class="list-group"> 
+                {% if pdf_files %}
+                    {% for filename, file_url in pdf_files.items() %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="#" class="pdf-link" data-url="{{ file_url }}" data-bs-toggle="modal" data-bs-target="#pdfModal">
+                                {{ filename }}
+                            </a>
+                            
+                            {% if current_user.is_admin %}
+                                <button class="btn btn-danger delete-pdf-btn" data-filename="{{ filename }}" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" title="Delete PDF">
+                                    <i class="mdi mdi-delete"></i>
+                                </button>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <div class="container-fluid">
+                    </li>
+                         
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <p class="text-center">You have no file uploaded.</p>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
@@ -61,7 +72,6 @@
                             </button>
                         </div>
                         <span class="badge bg-secondary">Page: <span id="page-num"></span> of <span id="page-count"></span></span>
-                        
                     </div>
                     <canvas class="pdf-canvas" id="pdf-render"></canvas>
                 </div>

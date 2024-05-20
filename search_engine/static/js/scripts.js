@@ -478,24 +478,7 @@ function registerEventHandlers() {
             document.exitFullscreen();
         }
     });
-
-    $('.delete-pdf-btn').click(function() {
-        filenameToDelete = $(this).data('filename');  // Store the filename to delete
-    });
-
-    $('#deletePdfBtn').click(function() {
-        $.ajax({
-            url: '/delete_pdf',  // Your route to handle the deletion
-            type: 'POST',
-            data: { filename: filenameToDelete },
-            success: function(response) {
-                window.location.reload();  // Reload the page on successful deletion
-            },
-            error: function() {
-                displayFlashMessage('Failed to delete the PDF, try again later', 'danger');
-            }
-        });
-    });
+    
 }
 // Function to display flash messages dynamically
 function displayFlashMessage(message, type) {

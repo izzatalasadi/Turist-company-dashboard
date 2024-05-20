@@ -370,3 +370,18 @@ canvas {
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.box {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  height: 100%;
+}
+.box h5 {
+  margin-bottom: 15px;
+}
+.btn-link {
+  text-decoration: none;
+  color: #007bff;
+}

@@ -1,22 +1,10 @@
-
-<nav
-  class="navbar default-layout col-lg-12 col-12 fixed-top d-flex align-items-top flex-row mt-auto pt-auto"
->
-  <div
-    class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start"
-  >
+<nav class="navbar default-layout col-12 fixed-top d-flex align-items-top flex-row mt-auto pt-auto">
+  <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
     <div class="mt-3">
-      <button
-        class="navbar-toggler navbar-toggler align-self-center"
-        type="button"
-        data-bs-toggle="minimize"
-      >
+      <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
         <span class="mdi mdi-menu"></span>
         <a class="navbar-brand brand-logo">
-          <img
-            src="{{ url_for('static', filename='images/logo.svg') }}"
-            alt="logo"
-          />
+          <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="logo" />
         </a>
       </button>
     </div>
@@ -31,133 +19,79 @@
       </li>
     </ul>
     <ul class="navbar-nav ms-auto">
-      
+
       <!--Search bar -->
       <li class="nav-item">
-        <form
-          class="search-form"
-          action="{{ url_for('app.search_results') }}"
-          method="GET"
-        >
+        <form class="search-form" action="{{ url_for('app.search_results') }}" method="GET">
           <i class="mdi mdi-magnify"></i>
-          <input
-            type="search"
-            name="query"
-            class="form-control"
-            placeholder="Search Here"
-            title="Search here"
-          />
+          <input type="search" name="query" class="form-control" placeholder="Search Here" title="Search here" />
         </form>
       </li>
       <!--End search bar -->
 
       <!-- Messages Dropdown -->
       <li class="nav-item dropdown">
-        <a
-            class="nav-link count-indicator dropdown-toggle"
-            id="messageDropdown"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-        >
-            <i class="mdi mdi-email mdi-24px"></i>
-            <span class="count">{{ unread_count }}</span>
+        <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="mdi mdi-email mdi-24px"></i>
+          <span class="count">{{ unread_count }}</span>
         </a>
-        <ul
-            class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
-            aria-labelledby="messageDropdown"
-        >
-            {% if messages|length > 0 %}
-                {% for message in messages %}
-                    <li class="{{ 'bg-light' if not message.read }}">
-                        <a class="dropdown-item" href="#">
-                            <div class="d-flex">
-                                <div class="flex-shrink-0">
-                                    <img
-                                        src="{{ url_for('static', filename='images/faces/' ~ message.sender.profile_picture) }}"
-                                        alt="Profile Image"
-                                        class="img-sm profile-pic"
-                                    />
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <p class="mb-0"><strong>From: {{ message.sender.username }}</strong></p>
-                                    <p class="mb-1">{{ message.content }}</p>
-                                    
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                {% endfor %}
-            {% else %}
-                <li><a class="dropdown-item text-center">No messages</a></li>
-            {% endif %}
-            <li><a class="dropdown-item text-center" href="/messages">show all messages</a></li>
+        <ul class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list pb-0" aria-labelledby="messageDropdown">
+          {% if messages|length > 0 %}
+            {% for message in messages %}
+              <li class="{{ 'bg-light' if not message.read }}">
+                <a class="dropdown-item" href="#">
+                  <div class="d-flex">
+                    <div class="flex-shrink-0">
+                      <img src="{{ url_for('static', filename='images/faces/' ~ message.sender.profile_picture) }}" alt="Profile Image" class="img-sm profile-pic" />
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                      <p class="mb-0"><strong>From: {{ message.sender.username }}</strong></p>
+                      <p class="mb-1">{{ message.content }}</p>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li><a class="dropdown-item text-center">No messages</a></li>
+          {% endif %}
+          <li><a class="dropdown-item text-center" href="/messages">show all messages</a></li>
         </ul>
       </li>
       <!-- End Messages Dropdown -->
 
       <!-- User profile -->
       <li class="nav-item dropdown">
-        <a
-          class="nav-link dropdown-toggle"
-          id="UserDropdown"
-          href="#"
-          role="button"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          <img
-            class="img-xs rounded-circle"
-            src="{{ url_for('static', filename='images/faces/face1.jpeg') }}"
-            alt="Profile image"
-          />
+        <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <img class="img-xs rounded-circle" src="{{ url_for('static', filename='images/faces/face1.jpeg') }}" alt="Profile image" />
         </a>
-        <ul
-          class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
-          aria-labelledby="UserDropdown"
-        >
+        <ul class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list pb-0" aria-labelledby="UserDropdown">
           <!-- Dropdown header with user information -->
           <li>
             <div class="dropdown-header text-center">
-              <img
-                class="img-md rounded-circle"
-                src="{{ url_for('static', filename='images/faces/face1.jpeg') }}"
-                alt="Profile image"
-              />
-              <p class="mb-1 mt-3 font-weight-semibold">
-                {{ current_user.username }}
-              </p>
+              <img class="img-md rounded-circle" src="{{ url_for('static', filename='images/faces/face1.jpeg') }}" alt="Profile image" />
+              <p class="mb-1 mt-3 font-weight-semibold">{{ current_user.username }}</p>
               <p class="fw-light text-muted mb-0">{{ current_user.email }}</p>
             </div>
           </li>
           
           <!-- Menu items -->
           <li>
-            <a class="dropdown-item" href="{{ url_for('auth.profile') }}"
-              ><i
-                class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"
-              ></i
-              >My Profile</a
-            >
+            <a class="dropdown-item" href="{{ url_for('auth.profile') }}">
+              <i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile
+            </a>
           </li>
           <li>
-            <a class="dropdown-item" href="{{ url_for('auth.logout') }}"
-              ><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i
-              >Sign Out</a
-            >
+            <a class="dropdown-item" href="{{ url_for('auth.logout') }}">
+              <i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i> Sign Out
+            </a>
           </li>
         </ul>
       </li>
     </ul>
     <!--End User profile -->
-    <button
-      class="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
-      type="button"
-      data-bs-toggle="offcanvas"
-    >
+    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
       <span class="mdi mdi-menu"></span>
     </button>
   </div>
 </nav>
-

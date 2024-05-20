@@ -540,14 +540,24 @@ def search():
     if form.validate_on_submit():
         search_query = form.search_query.data.lower()
         flight_filter = request.args.get('flight', None)
+        arrival_time_filter = request.args.get('arrival_time', None)
+        departure_from_filter = request.args.get('departure_from', None)
     else:
         search_query = request.form.get('search_query', '').lower()
         flight_filter = request.args.get('flight', None)
+        arrival_time_filter = request.args.get('arrival_time', None)
+        departure_from_filter = request.args.get('departure_from', None)
 
     guests_query = Guest.query
 
     if flight_filter:
         guests_query = guests_query.join(Flight).filter(Flight.flight_number.ilike(f'%{flight_filter}%'))
+
+    if arrival_time_filter:
+        guests_query = guests_query.join(Flight).filter(Flight.arrival_time.ilike(f'%{arrival_time_filter}%'))
+
+    if departure_from_filter:
+        guests_query = guests_query.join(Flight).filter(Flight.departure_from.ilike(f'%{departure_from_filter}%'))
 
     if search_query:
         guests_query = guests_query.filter(or_(Guest.first_name.ilike(f'%{search_query}%'), Guest.last_name.ilike(f'%{search_query}%')))
@@ -563,8 +573,14 @@ def search():
     # Assign a color to each unique flight in the filtered data
     flights = set(guest.flight for guest in filtered_data if guest.flight)
     flight_colors = {flight.flight_number: '#' + hashlib.md5(flight.flight_number.encode()).hexdigest()[:6] for flight in flights if flight and flight.flight_number}
+    
+    arrival_times = set(flight.arrival_time for flight in filtered_data if flight.arrival_time)
+    arrival_time_colors = {arrival_time: '#' + hashlib.md5(arrival_time.encode()).hexdigest()[:6] for arrival_time in arrival_times}
+    
+    departure_froms = set(flight.departure_from for flight in filtered_data if flight.departure_from)
+    departure_from_colors = {departure_from: '#' + hashlib.md5(departure_from.encode()).hexdigest()[:6] for departure_from in departure_froms}
 
-    return render_template('search_engine.html', form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors)
+    return render_template('search_engine.html', form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors, arrival_time_colors=arrival_time_colors, departure_from_colors=departure_from_colors)
 
 @app_bp.route('/update_status', methods=['POST'])
 @login_required

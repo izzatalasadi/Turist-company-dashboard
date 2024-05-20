@@ -8,4 +8,4 @@ app = create_app(ProductionConfig)
 if __name__ == '__main__':
     # Run the app with SocketIO support and debugging enabled
     #app.run()
-    socketio.run(app, DEBUG = False)
+    socketio.run(app)
