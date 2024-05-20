@@ -100,6 +100,7 @@ PyJWT==2.8.0
 pyphen==0.15.0
 pytest==8.0.2
 python-dateutil==2.9.0.post0
+python-dotenv==1.0.1
 python-engineio==4.9.0
 python-socketio==5.11.2
 pytz==2024.1
