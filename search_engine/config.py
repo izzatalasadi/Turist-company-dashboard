@@ -1,9 +1,7 @@
 import os
-from dotenv import load_dotenv
-load_dotenv()
 
 class Config(object):
-    SECRET_KEY = os.environ.get('SECRET_KEY','key')
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'key')
     FLASK_APP = 'run.py'
     FLASK_ENV = 'development'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
