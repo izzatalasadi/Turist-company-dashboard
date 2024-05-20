@@ -2,7 +2,7 @@ import os
 
 class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY','key')
-    FLASK_APP = 'run.py'
+    FLASK_APP = os.environ.get('FLASK_APP')
     FLASK_ENV = 'development'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -27,9 +27,10 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
 
 class ProductionConfig(Config):
-    FLASK_ENV = 'production'
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    FLASK_APP = os.environ.get('FLASK_APP')
+    FLASK_ENV = os.environ.get('FLASK_ENV')
     DEBUG = False
     TESTING = False
     SESSION_COOKIE_SECURE = True
-    SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///site.db').replace("postgres://", "postgresql://", 1) if os.environ.get('DATABASE_URL') else 'sqlite:///site.db'
