@@ -42,9 +42,9 @@ def update_flight_info(app):
             except Exception as e:
                 logging.error(f"Failed to fetch or update data for flight {flight.flight_number}: {e}")
 
-def create_app(config_class=Config):
+def create_app(config_class):
     app = Flask(__name__)
-    app.config.from_object(config_class or Config)
+    app.config.from_object(config_class)
 
     with app.app_context():
         from . import routes

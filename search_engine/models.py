@@ -1,9 +1,9 @@
 # search_engine/models.py
 from datetime import datetime, timedelta
+import logging
 from .extensions import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy.orm import relationship
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,8 +28,13 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
     
     def update_last_seen(self):
-        self.last_seen = datetime.utcnow()
-        db.session.commit()
+        try:
+            self.last_seen = datetime.utcnow()
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            logging.error(f"Error updating last seen: {e}")
+
     
     def is_online(self):
         if self.last_seen:
