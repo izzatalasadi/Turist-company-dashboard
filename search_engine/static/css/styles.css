@@ -385,3 +385,12 @@ canvas {
   text-decoration: none;
   color: #007bff;
 }
+
+.error-container {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}

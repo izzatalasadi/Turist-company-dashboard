@@ -335,7 +335,9 @@ function registerEventHandlers() {
         updateStatus(bookingNumber, status, $(this));
         saveButtonState(bookingNumber, status, $(this));
         toggleButtons(bookingNumber, status, $(this));
-        location.reload();
+        setTimeout(function () {
+            location.reload();
+          }, 300);
     
     });
     $('.wrapper').on('submit', 'form', function(event) {
@@ -675,6 +677,5 @@ function updateActivitiesList() {
     });
 }
 
-// Periodically update activities list every 30 seconds
 setInterval(updateActivitiesList, 30000);
 

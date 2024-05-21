@@ -1,12 +1,12 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error</title>
-</head>
-<body>
-    <h1>An error occurred</h1>
-    <p>{{ error }}</p>
-</body>
-</html>
+
+{% extends 'base.html' %}
+
+{% block title %}DMC Nordic - Error{% endblock %}
+
+{% block body %}
+<div class="error-container">
+  <h1>Oops! Something went wrong.</h1>
+  <p>{{ error }}</p>
+  <a href="/">Go Back to Home</a>
+</div>
+{% endblock %}
