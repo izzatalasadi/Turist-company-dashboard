@@ -81,33 +81,43 @@ def on_leave(data):
 @limiter.limit("10 per minute")  # Apply specific rate limit
 @login_required
 def home():
-    # Assuming you already have some logic here
-    # Add logic for guest statistics
-    total_guests = Guest.query.count()
-    checked_guests = Guest.query.filter_by(status='Checked').count()
-    arrived_guests = Guest.query.filter_by(status='Arrived').count()
-    user_checks = Guest.query.filter_by(checked_by=current_user.username).count()
+    try:
+        logging.debug("Home route accessed")
+        
+        total_guests = Guest.query.count()
+        logging.debug(f"Total guests: {total_guests}")
 
-    checked_percentage = (checked_guests / total_guests * 100) if total_guests > 0 else 0
-    arrived_percentage = (arrived_guests / total_guests * 100) if total_guests > 0 else 0
+        checked_guests = Guest.query.filter_by(status='Checked').count()
+        logging.debug(f"Checked guests: {checked_guests}")
+
+        arrived_guests = Guest.query.filter_by(status='Arrived').count()
+        logging.debug(f"Arrived guests: {arrived_guests}")
+
+        user_checks = Guest.query.filter_by(checked_by=current_user.username).count()
+        logging.debug(f"User checks: {user_checks}")
+
+        checked_percentage = (checked_guests / total_guests * 100) if total_guests > 0 else 0
+        arrived_percentage = (arrived_guests / total_guests * 100) if total_guests > 0 else 0
+        
+        all_messages = Message.query.filter_by(receiver_id=current_user.id).order_by(Message.timestamp.desc()).all()
+        unread_count = Message.query.filter_by(receiver_id=current_user.id, read=False).count()
+        logging.debug(f"Unread messages: {unread_count}")
+
+        flight_details = {
+            'total_guests': total_guests,
+            'total_checked': checked_guests,
+            'total_unchecked': total_guests - checked_guests,
+        }
+
+        return render_template('index.html', flight_details=flight_details, 
+                               total_guests=total_guests, checked_guests=checked_guests, 
+                               arrived_guests=arrived_guests, user_checks=user_checks, 
+                               checked_percentage=checked_percentage, arrived_percentage=arrived_percentage,
+                               messages=all_messages, unread_count=unread_count)
+    except Exception as e:
+        logging.error(f"Error in home route: {e}")
+        return render_template('error.html', error=str(e)), 500
     
-    all_messages = Message.query.filter_by(receiver_id=current_user.id).order_by(Message.timestamp.desc()).all()
-    unread_count = Message.query.filter_by(receiver_id=current_user.id, read=False).count()
-
-    # Existing or additional logic for the page
-    flight_details = {
-        'total_guests': total_guests,
-        'total_checked': checked_guests,
-        'total_unchecked': total_guests - checked_guests,
-    }
-
-    return render_template('index.html', flight_details=flight_details, 
-                           total_guests=total_guests, checked_guests=checked_guests, 
-                           arrived_guests=arrived_guests, user_checks=user_checks, 
-                           checked_percentage=checked_percentage, arrived_percentage=arrived_percentage,
-                           messages=all_messages, unread_count=unread_count)
-
-
 @main_bp.route('/users')
 @login_required
 def display_users():
