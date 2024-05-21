@@ -10,6 +10,7 @@ from pyflightdata import FlightData
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 from search_engine.flight_data import FlightInfo
+from sqlalchemy import text
 
 def update_flight_info(app):
     print("Updating flight info periodically")
@@ -63,13 +64,13 @@ def create_app(config_class):
 
     try:
         with app.app_context():
-            db.session.execute('SELECT 1')
+            # Explicitly declare the SQL as a text expression
+            db.session.execute(text('SELECT 1'))
             app.logger.debug("Database connection successful")
     except Exception as e:
         app.logger.error(f"Database connection failed: {e}")
 
-    
-    
+
     migrate.init_app(app, db)
     login_manager.init_app(app)
     csrf.init_app(app) 
