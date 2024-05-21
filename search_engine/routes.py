@@ -93,7 +93,7 @@ def home():
         arrived_guests = Guest.query.filter_by(status='Arrived').count()
         logging.debug(f"Arrived guests: {arrived_guests}")
 
-        user_checks = Guest.query.filter_by(checked_by=current_user.username).count()
+        user_checks = Guest.query.filter_by(checked_by=current_user.id).count()
         logging.debug(f"User checks: {user_checks}")
 
         checked_percentage = (checked_guests / total_guests * 100) if total_guests > 0 else 0
