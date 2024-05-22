@@ -16,10 +16,10 @@ from search_engine.models import User, Message, Guest, Activity, Flight
 import uuid
 from search_engine.extensions import db
 from search_engine.clean_data import ExcelProcessor
-from search_engine.flight_data import FlightInfo
 from search_engine import socketio, limiter
-from threading import Thread
-from flask_wtf.csrf import csrf_exempt
+from flask_wtf.csrf import generate_csrf
+
+
 
 logging.basicConfig(filename='app.log', level=logging.INFO)
 
@@ -540,10 +540,17 @@ def search():
 
     return render_template('search_engine.html', form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors, arrival_time_colors=arrival_time_colors, departure_from_colors=departure_from_colors)
 
+
+
+
+@app_bp.route('/refresh-csrf-token', methods=['GET'])
+def refresh_csrf_token():
+    new_csrf_token = generate_csrf()
+    return jsonify({'csrf_token': new_csrf_token})
+
 @app_bp.route('/update_status', methods=['POST'])
 @cross_origin()
 @login_required
-@csrf_exempt
 def update_status():
     try:
         booking_number = request.form.get('booking_number')

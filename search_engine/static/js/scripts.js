@@ -563,27 +563,55 @@ function submitGuestEdit() {
 // Update status and handle UI feedback
 function updateStatus(bookingNumber, status, callback) {
     console.log(`Updating status. Booking number: ${bookingNumber}, Status: ${status}`);
-    
     $.ajax({
         url: '/update_status',
         type: 'POST',
         data: {
             booking_number: bookingNumber,
             status: status,
-            csrf_token: $('input[name="csrf_token"]').val() 
+            csrf_token: $('input[name="csrf_token"]').val()  // Ensure CSRF token is included
         },
         success: function(response) {
-            console.log("Response from server:", response);
+            console.log('Response from server:', response);
             if (response.status === 'success') {
-                if (callback) callback();
-                displayFlashMessage(response.message, 'success');
+                if (callback) callback();  // Execute callback if provided and update was successful
+                displayFlashMessage(response.message, 'success');  // Show success message
             } else {
-                displayFlashMessage(response.message, 'warning');
+                displayFlashMessage(response.message, 'warning');  // Show warning or error message from server
             }
         },
         error: function(xhr, errorStatus, error) {
             console.error("Error updating status: ", error);
-            displayFlashMessage("Failed to update status. Please try again.", "danger");
+            if (xhr.status === 500 && xhr.responseJSON && xhr.responseJSON.error === 'csrf_token_mismatch') {
+                // Refresh CSRF token
+                $.get('/refresh-csrf-token', function(data) {
+                    // Retry the failed AJAX call with the new CSRF token
+                    $.ajax({
+                        url: '/update_status',
+                        type: 'POST',
+                        data: {
+                            booking_number: bookingNumber,
+                            status: status,
+                            csrf_token: data.csrf_token  // Use the new CSRF token
+                        },
+                        success: function(response) {
+                            console.log('Response from server after retry:', response);
+                            if (response.status === 'success') {
+                                if (callback) callback();  // Execute callback if provided and update was successful
+                                displayFlashMessage(response.message, 'success');  // Show success message
+                            } else {
+                                displayFlashMessage(response.message, 'warning');  // Show warning or error message from server
+                            }
+                        },
+                        error: function(xhr, errorStatus, error) {
+                            console.error("Error updating status after retry: ", error);
+                            displayFlashMessage("Failed to update status after retry. Please try again.", "danger");
+                        }
+                    });
+                });
+            } else {
+                displayFlashMessage("Failed to update status. Please try again.", "danger");
+            }
         }
     });
 }
