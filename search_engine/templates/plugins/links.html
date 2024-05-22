@@ -1,5 +1,9 @@
 <!-- plugins:css -->
-<link rel="manifest" href="{{ url_for('static', filename='manifest/manifest.json') }}">
+<!-- Link to the manifest file -->
+<link rel="manifest" href="{{ url_for('static', filename='manifest/manifest.json') }}" />
+
+<!-- Link to the favicon -->
+<link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/x-icon" />
 
 <link
   rel="stylesheet"
@@ -15,10 +19,6 @@
   href="{{ url_for('static', filename='css/styles.css') }}"
 />
 
-<link
-  rel="shortcut icon"
-  href="{{ url_for('static', filename='images/favicon.png') }}"
-/>
 <!-- Additional CSS Files -->
 {% block additional_css %} 
 <link href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css" rel="stylesheet">
