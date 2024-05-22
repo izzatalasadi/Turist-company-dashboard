@@ -51,7 +51,6 @@ def handle_send_message(message):
 # =========== Bp section main ================
 
 @main_bp.route('/', methods=['GET'])
-@cross_origin()
 @limiter.limit("10 per minute")
 @login_required
 def home():
@@ -436,7 +435,6 @@ def manifest():
     return send_from_directory('static', 'manifest/manifest.json')
 
 @app_bp.route('/get_guest_details/<int:id>')
-@cross_origin()
 @login_required
 def get_guest_details(id):
     guest = Guest.query.get_or_404(id)
@@ -444,7 +442,6 @@ def get_guest_details(id):
     return jsonify(guest_details)
 
 @app_bp.route('/update_guest_details', methods=['POST'])
-@cross_origin()
 @login_required
 def update_guest_details():
     logging.info("Update guest details route hit")
@@ -461,7 +458,6 @@ def update_guest_details():
     return jsonify({'status': 'success', 'message': 'Guest details updated successfully!'})
 
 @app_bp.route('/dashboard_stats')
-@cross_origin()
 @login_required
 def dashboard_stats():
     total_guests = Guest.query.count()
@@ -489,7 +485,6 @@ def search_results():
                             message_results=message_results)
 
 @app_bp.route('/search', methods=['POST', 'GET'])
-@cross_origin()
 @limiter.limit("30 per minute")
 @login_required
 def search():
@@ -539,9 +534,7 @@ def search():
     return render_template('search_engine.html', form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors, arrival_time_colors=arrival_time_colors, departure_from_colors=departure_from_colors)
 
 @app_bp.route('/update_status', methods=['POST'])
-@cross_origin()
 @login_required
-@csrf.exempt
 def update_status():
     try:
         booking_number = request.form.get('booking_number')
@@ -637,7 +630,6 @@ def save_excel():
         return redirect(url_for('app.download_page'))
     
 @app_bp.route('/development-rates')
-@cross_origin()
 @limiter.limit("10 per minute")
 @login_required
 def development_rates():
