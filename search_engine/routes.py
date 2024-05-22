@@ -540,30 +540,35 @@ def search():
     return render_template('search_engine.html', form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors, arrival_time_colors=arrival_time_colors, departure_from_colors=departure_from_colors)
 
 @app_bp.route('/update_status', methods=['POST'])
+@cross_origin()
 @login_required
 def update_status():
-    booking_number = request.form.get('booking_number')
-    new_status = request.form.get('status')
-    
     try:
-        guest = Guest.query.filter_by(booking=booking_number).first()
-        if not guest:
-            return jsonify({'status': 'error', 'message': 'Booking number not found'}), 404
-        
-        guest.status = new_status
-        if new_status == "Checked":
-            guest.checked_time = datetime.utcnow()
-            guest.checked_by = current_user.username
-        elif new_status == "Unchecked":
-            guest.checked_time = None
-            guest.checked_by = None
+        booking_number = request.form.get('booking_number')
+        new_status = request.form.get('status')
 
-        db.session.commit()
-        return jsonify({'status': 'success', 'message': 'Status updated successfully'}), 200
+        logging.info(f"Received request to update status. Booking number: {booking_number}, New status: {new_status}")
+
+        guest = Guest.query.filter_by(booking=booking_number).first()
+        if guest:
+            guest.status = new_status
+            if new_status == "Checked":
+                guest.checked_time = datetime.utcnow()
+                guest.checked_by = current_user.username
+            elif new_status == "Unchecked":
+                guest.checked_time = None
+                guest.checked_by = None
+
+            db.session.commit()
+            logging.info(f"Successfully updated status for booking number: {booking_number}")
+            return jsonify({'status': 'success', 'message': 'Status updated successfully'}), 200
+        else:
+            logging.warning(f"Booking number not found: {booking_number}")
+            return jsonify({'status': 'error', 'message': 'Booking number not found'}), 404
     except Exception as e:
         db.session.rollback()
         logging.error(f"Error updating status: {e}")
-        return jsonify({'status': 'error', 'message': 'Internal server error'}), 500
+        return jsonify({'status': 'error', 'message': 'Failed to update status'}), 500
         
 @app_bp.route('/download')
 @login_required

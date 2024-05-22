@@ -562,8 +562,10 @@ function submitGuestEdit() {
 
 // Update status and handle UI feedback
 function updateStatus(bookingNumber, status, callback) {
+    console.log(`Updating status. Booking number: ${bookingNumber}, Status: ${status}`);
+    
     $.ajax({
-        url: '/update_status', // Make sure this matches your Flask route
+        url: '/update_status',
         type: 'POST',
         data: {
             booking_number: bookingNumber,
@@ -571,12 +573,12 @@ function updateStatus(bookingNumber, status, callback) {
             csrf_token: $('input[name="csrf_token"]').val() 
         },
         success: function(response) {
-            // Handle UI updates or logic based on response from the server
+            console.log("Response from server:", response);
             if (response.status === 'success') {
-                if (callback) callback(); // Execute callback if provided and the update was successful
-                displayFlashMessage(response.message, 'success'); // Show success message
+                if (callback) callback();
+                displayFlashMessage(response.message, 'success');
             } else {
-                displayFlashMessage(response.message, 'warning'); // Show warning or error message from server
+                displayFlashMessage(response.message, 'warning');
             }
         },
         error: function(xhr, errorStatus, error) {
