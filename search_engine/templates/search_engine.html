@@ -84,7 +84,6 @@
           action="{{ url_for('app.search') }}"
           class="input-group"
         >
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
           {{ form.hidden_tag() }}
           <input
             type="text"
