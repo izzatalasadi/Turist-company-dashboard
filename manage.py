@@ -4,7 +4,7 @@ from search_engine.config import ProductionConfig,DevelopmentConfig,TestingConfi
 import os
 
 # Create app instance with specific config
-app = create_app(ProductionConfig)
+app = create_app(DevelopmentConfig)
 
 if __name__ == '__main__':
     # Run the app with SocketIO support and debugging enabled

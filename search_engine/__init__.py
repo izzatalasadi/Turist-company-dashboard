@@ -68,7 +68,7 @@ def create_app(config_class):
     csrf.init_app(app) 
     socketio.init_app(app, cors_allowed_origins="*")
     limiter.init_app(app)
-    cors.init_app(app, resources={r"/*": {"origins": "*"}})
+    cors.init_app(app, resources={r"/*": {"origins": ["https://dmc-dashboard-ca47203886a9.herokuapp.com"]}})
     
     @login_manager.user_loader
     def load_user(user_id):
