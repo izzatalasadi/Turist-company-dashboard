@@ -329,6 +329,13 @@ function setupInteractiveElements() {
 
 // Register event handlers for UI elements
 function registerEventHandlers() {
+    $('.flash-messages .alert').each(function() {
+        const element = $(this);
+        element.delay(5000).fadeOut(200, function() {
+            element.remove();
+        });
+    });
+    
     $(".add-btn, .remove-btn").click(function () {
         var bookingNumber = $(this).data("booking-number");
         var status = $(this).hasClass("add-btn") ? "Checked" : "Unchecked";
