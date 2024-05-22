@@ -17,7 +17,6 @@ import uuid
 from search_engine.extensions import db
 from search_engine.clean_data import ExcelProcessor
 from search_engine import socketio, limiter
-from flask_wtf import csrf
 
 logging.basicConfig(filename='app.log', level=logging.INFO)
 
