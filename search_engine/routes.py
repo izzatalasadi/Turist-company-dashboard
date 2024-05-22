@@ -269,8 +269,8 @@ def login():
             
             return redirect(url_for('main.home'))  # Adjust according to your home page route
         else:
-            flash('Invalid username or password', 'danger')
-    return render_template('auth/login.html', form=form)
+            flash('Invalid username or password', 'warning')
+            return render_template('auth/login.html', form=form)
 
 
 @auth_bp.route('/logout')
