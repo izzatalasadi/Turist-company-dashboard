@@ -568,7 +568,7 @@ function updateStatus(bookingNumber, status, callback) {
         data: {
             booking_number: bookingNumber,
             status: status,
-            csrf_token: $('input[name="csrf_token"]').val() // Ensure CSRF token is correctly included
+            csrf_token: $('input[name="csrf_token"]').val() 
         },
         success: function(response) {
             // Handle UI updates or logic based on response from the server
