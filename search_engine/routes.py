@@ -534,7 +534,6 @@ def search():
 
 @app_bp.route('/update_status', methods=['POST'])
 @login_required
-@csrf.exempt
 def update_status():
     try:
         booking_number = request.form.get('booking_number')
