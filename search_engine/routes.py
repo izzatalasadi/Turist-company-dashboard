@@ -539,22 +539,16 @@ def search():
 
     return render_template('search_engine.html', form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors, arrival_time_colors=arrival_time_colors, departure_from_colors=departure_from_colors)
 
-@app_bp.route('/update_status', methods=['POST'])
+@app.route('/update_status', methods=['POST'])
 @login_required
 def update_status():
+    booking_number = request.form.get('booking_number')
+    new_status = request.form.get('status')
+    
     try:
-        booking_number = request.form.get('booking_number')
-        new_status = request.form.get('status')
-        csrf_token = request.form.get('csrf_token')
-        
-        # Log the received values
-        logging.info(f"Received booking_number: {booking_number}, new_status: {new_status}, csrf_token: {csrf_token}")
-        
         guest = Guest.query.filter_by(booking=booking_number).first()
-        
         if not guest:
-            logging.warning(f"Booking number {booking_number} not found.")
-            return jsonify({'message': 'Booking number not found', 'status': 'warning'}), 404
+            return jsonify({'status': 'error', 'message': 'Booking number not found'}), 404
         
         guest.status = new_status
         if new_status == "Checked":
@@ -563,15 +557,14 @@ def update_status():
         elif new_status == "Unchecked":
             guest.checked_time = None
             guest.checked_by = None
-        
+
         db.session.commit()
-        logging.info(f"Status for booking {booking_number} updated to {new_status}")
-        return jsonify({'message': 'Status updated successfully', 'status': 'success'}), 200
+        return jsonify({'status': 'success', 'message': 'Status updated successfully'}), 200
     except Exception as e:
         db.session.rollback()
-        logging.error(f"Error updating status: {e}")
-        return jsonify({'message': str(e), 'status': 'error'}), 500
-    
+        app.logger.error(f"Error updating status: {e}")
+        return jsonify({'status': 'error', 'message': 'Internal server error'}), 500
+        
 @app_bp.route('/download')
 @login_required
 def download_page():
