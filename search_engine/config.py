@@ -1,13 +1,14 @@
 import os
 from dotenv import load_dotenv
 
+# Load environment variables from .env file
 load_dotenv()
 
 class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY', 'key')
     FLASK_APP = 'manage.py'
     FLASK_ENV = 'development'
-    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI', 'sqlite:///local_db.sqlite3')
+    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI', 'sqlite:///site.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Session
@@ -22,16 +23,16 @@ class Config(object):
     # File
     UPLOAD_FOLDER = '/Data/uploads/'
 
-class DevelopmentConfig(Config):
-    DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///mydatabase.db'
-
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'  # Use in-memory SQLite database for testing
+    WTF_CSRF_ENABLED = False  # Disable CSRF protection for testing
+
+class DevelopmentConfig(Config):
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///site.db'
 
 class ProductionConfig(Config):
-    #FLASK_APP = os.environ.get('FLASK_APP', 'manage.py')
     FLASK_ENV = os.environ.get('FLASK_ENV', 'production')
     DEBUG = False
     TESTING = False

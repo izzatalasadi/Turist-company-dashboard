@@ -1,6 +1,6 @@
 # manage.py
 from search_engine import create_app, socketio
-from search_engine.config import ProductionConfig,DevelopmentConfig
+from search_engine.config import ProductionConfig,DevelopmentConfig,TestingConfig
 import os
 
 # Create app instance with specific config

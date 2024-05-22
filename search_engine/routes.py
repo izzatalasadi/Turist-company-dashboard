@@ -1,7 +1,3 @@
-#TO- do
-# change the Excel file if its not will be added to database to PDF
-# User emit to notify the system with update for "messages"
-
 import os
 import pandas as pd
 import hashlib
@@ -131,17 +127,21 @@ def display_users():
 @main_bp.route('/activities')
 @login_required
 def activities():
-    # Fetch activities from the database ordered by timestamp
-    activities = Activity.query.order_by(Activity.timestamp.desc()).all()
+    try:
+        # Fetch activities from the database ordered by timestamp
+        activities = Activity.query.order_by(Activity.timestamp.desc()).all()
 
-    # Calculate total and remaining activities (assuming you track completion)
-    total_activities = len(activities)
-    remaining_activities = sum(not activity.checked_in for activity in activities)
+        # Calculate total and remaining activities (assuming you track completion)
+        total_activities = len(activities)
+        remaining_activities = sum(not activity.checked_in for activity in activities)
 
-    return render_template('partials/_activities.html', 
-                           activities=activities,
-                           total_activities=total_activities, 
-                           remaining_activities=remaining_activities)
+        return render_template('partials/_activities.html', 
+                            activities=activities,
+                            total_activities=total_activities, 
+                            remaining_activities=remaining_activities)
+    except Exception as e:
+        logging.error(f"Error fetching activities: {e}")
+        return jsonify({"error": "Internal server error"}), 500
     
 def log_activity(event, description):
     if not current_user.is_authenticated:
@@ -255,6 +255,7 @@ def profile():
     return render_template('auth/profile.html', title='Profile', form=form, image_file=image_file)
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
+@limiter.limit("50 per minute")
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))  # Adjust according to your home page route
@@ -475,6 +476,7 @@ def delete_pdf():
         # Assuming the PDFs are stored in a directory accessible to the app
         directory = os.path.join(current_app.root_path, 'static', 'pdf')
         os.remove(os.path.join(directory, filename))
+        flash('PDF deleted successfully.', 'success')
         return jsonify({'message': 'PDF deleted successfully'}), 200
     except Exception as e:
         current_app.logger.error(f'Failed to delete PDF {filename}: {str(e)}')
@@ -497,6 +499,7 @@ def get_guest_details(id):
 
 @app_bp.route('/update_guest_details', methods=['POST'])
 @cross_origin()
+@login_required
 def update_guest_details():
     logging.info("Update guest details route hit")
     id = request.form.get('id')
@@ -509,10 +512,12 @@ def update_guest_details():
         
     log_activity('Guest', f'"{guest.last_name}, {guest.first_name}" has been added successfully')
     db.session.commit()
+    flash('Guest details updated successfully', 'success')
     return jsonify({'status': 'success', 'message': 'Guest details updated successfully!'})
 
 @app_bp.route('/dashboard_stats')
 @cross_origin()  # Apply specific CORS policy
+@login_required
 def dashboard_stats():
     total_guests = Guest.query.count()
     total_checked = Guest.query.filter_by(status='Checked').count()
@@ -620,6 +625,7 @@ def update_status():
         return jsonify({'message': 'Booking number not found', 'status': 'warning'}), 404        
     
 @app_bp.route('/download')
+@login_required
 def download_page():
     return render_template('file_management/download_file.html')
 
@@ -674,6 +680,7 @@ def save_excel():
 @app_bp.route('/development-rates')
 @cross_origin()  # Apply specific CORS policy
 @limiter.limit("10 per minute")  # Apply specific rate limit
+@login_required
 def development_rates():
     return render_template('rates.html', hourly_rate=450)
 
@@ -705,22 +712,26 @@ def send_message(user_id):
 def delete_message(message_id):
     # Retrieve the message or return a 404 if it doesn't exist
     message = Message.query.get_or_404(message_id)
+    
+    if message is None:
+        return jsonify({'error': 'Message not found.'}), 404
 
     # Check if the current user is authorized to delete the message
     if message.sender_id != current_user.id and message.receiver_id != current_user.id:
         # If the user is neither the sender nor the receiver, deny access
         return jsonify({'error': 'Unauthorized access'}), 403
-
+    
     # Attempt to delete the message
     try:
         db.session.delete(message)
         db.session.commit()
+        flash('Message deleted successfully.', 'success')
         return jsonify({'message': 'Message deleted successfully'}), 200
+    
     except Exception as e:
         # Handle any exceptions that occur during the delete operation
         db.session.rollback()
         # Log the exception to your logging framework
-        # e.g., app.logger.error(f'Error deleting message: {e}')
         return jsonify({'error': 'Failed to delete message, please try again later.'}), 500
     
 @app_bp.route('/reply_message/<int:message_id>', methods=['POST'])
@@ -739,6 +750,7 @@ def reply_message(message_id):
     )
     db.session.add(reply_message)
     db.session.commit()
+    flash('Reply sent', 'success')
     return jsonify({'message': 'Reply sent'}), 200
 
 @app_bp.route('/messages')
@@ -747,6 +759,10 @@ def messages():
     all_messages = Message.query.filter_by(receiver_id=current_user.id).order_by(Message.timestamp.desc()).all()
     unread_count = Message.query.filter_by(receiver_id=current_user.id, read=False).count()
     return render_template('partials/_messages.html', messages=all_messages, unread_count=unread_count)
+@app_bp.route('/protected')
+@login_required
+def protected_route():
+    return "This is a protected route."
 
 @app_bp.route('/read_message/<int:message_id>', methods=['POST'])
 @login_required

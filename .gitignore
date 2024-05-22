@@ -6,3 +6,6 @@ instance/
 flask_session/
 *.sqlite
 *.log
+tests/
+.pytest_cache/
+Documentation/

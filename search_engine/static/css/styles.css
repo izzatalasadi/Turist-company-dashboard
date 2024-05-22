@@ -271,9 +271,22 @@ canvas {
 }
 
 .flash-message {
-  margin-bottom: 10px;
+  margin: 10px;
   border: 1px solid transparent;
   border-radius: 4px;
+}
+.flash-messages .alert {
+  margin: 0.5rem;
+}
+
+.flash-messages .alert {
+  margin: 0.5rem;
+}
+.flash-container {
+  position: relative;
+  top: 0;
+  width: 100%;
+  z-index: 1050;
 }
 
 @media (max-width: 768px) {
@@ -326,7 +339,7 @@ canvas {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  border: 2px solid #fff;
+  border: 2px solid #000;
 }
 
 .message-input {
@@ -377,6 +390,9 @@ canvas {
   border-radius: 5px;
   background-color: #f9f9f9;
   height: 100%;
+}
+span.count {
+  color: #000;
 }
 .box h5 {
   margin-bottom: 15px;

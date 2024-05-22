@@ -62,15 +62,7 @@ def create_app(config_class):
     logging.basicConfig(level=logging.DEBUG)
     app.logger.debug(f"Database URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
 
-    try:
-        with app.app_context():
-            # Explicitly declare the SQL as a text expression
-            db.session.execute(text('SELECT 1'))
-            app.logger.debug("Database connection successful")
-    except Exception as e:
-        app.logger.error(f"Database connection failed: {e}")
-
-
+    
     migrate.init_app(app, db)
     login_manager.init_app(app)
     csrf.init_app(app) 

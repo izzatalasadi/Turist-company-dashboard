@@ -337,7 +337,7 @@ function registerEventHandlers() {
         toggleButtons(bookingNumber, status, $(this));
         setTimeout(function () {
             location.reload();
-          }, 300);
+          }, 500);
     
     });
     $('.wrapper').on('submit', 'form', function(event) {
@@ -484,13 +484,21 @@ function registerEventHandlers() {
 }
 // Function to display flash messages dynamically
 function displayFlashMessage(message, type) {
-    const flashMessageHtml = `<div class="alert alert-${type} flash-message" style="display: none;">${message}</div>`;
-    const flashMessageElement = $(flashMessageHtml).click(function() {
-        $(this).stop().fadeOut(200, function() { $(this).remove(); });
-    });
+    console.log('Displaying flash message:', message, 'with type:', type);
+
+    // Clear existing flash messages
+    $('.flash-messages').empty();
+
+    const flashMessageHtml = `
+    <div class="alert alert-${type} alert-dismissible fade show flash-message" role="alert">
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>`;
+    
+    const flashMessageElement = $(flashMessageHtml).hide().fadeIn(200);
 
     $('.flash-messages').append(flashMessageElement);
-    flashMessageElement.fadeIn(200).delay(2000).fadeOut(200, function() {
+    flashMessageElement.delay(5000).fadeOut(500, function() {
         $(this).remove();
     });
 }
@@ -639,7 +647,7 @@ function deleteMessage(messageId) {
             type: 'POST',
             success: function(response) {
                 $('article[data-message-id="' + messageId + '"]').remove();
-                displayFlashMessage('Message deleted successfully.', 'success');;  // User feedback
+                displayFlashMessage('Message deleted successfully.', 'success');  // User feedback
             },
             error: function(response) {
                 displayFlashMessage('Failed to delete message. ', 'danger');
