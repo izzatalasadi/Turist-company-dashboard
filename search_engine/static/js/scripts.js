@@ -98,7 +98,6 @@ function setupCSRFToken() {
     });
 }
 
-
 // Setup form handlers, primarily for search functionality
 function setupFormHandlers() {
     $("#search_form").submit(function(event) {
@@ -123,14 +122,13 @@ function fetchSearchResults(query) {
     });
 }
 
-
-
 // Load user details on startup
 function loadUserDetails() {
     $.get('/users', function(data) {
         $('#userContainer').html(data);
     });
 }
+
 // Function to save the state of a button to local storage
 function saveButtonState(bookingNumber, status) {
     const buttonStates = JSON.parse(localStorage.getItem('buttonStates') || '{}');
@@ -138,14 +136,12 @@ function saveButtonState(bookingNumber, status) {
     localStorage.setItem('buttonStates', JSON.stringify(buttonStates));
 }
 
-
 function requestPageRender(pageNum) {
     clearTimeout(renderDebounceTimeout);
     renderDebounceTimeout = setTimeout(() => {
         renderPDFPage(pageNum);
     }, throttlePeriod); 
 }
-
 
 // Enhanced Zoom Features with Throttling
 function setupZoomSlider() {
@@ -174,6 +170,7 @@ function toggleNightMode() {
         modalContent.style.color = '';  // Reset to default
     }
 }
+
 // Enhanced PDF Thumbnails
 function generateThumbnails(pdfDoc) {
     for (let page = 1; page <= pdfDoc.numPages; page++) {
@@ -210,7 +207,6 @@ function updateToolbarResponsive() {
         console.log('Toolbar element not found');
     }
 }
-
 
 // Initialize PDF Viewer
 function setupPDFViewer() {
@@ -292,8 +288,6 @@ function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-
- 
 function toggleFullScreen() {
     var elem = document.getElementById('pdfModal');
     if (!document.fullscreenElement) {
@@ -303,9 +297,8 @@ function toggleFullScreen() {
     } else {
       document.exitFullscreen();
     }
-  }
+}
 
-  
 // Setup service worker for offline capabilities
 function setupServiceWorker() {
     if ('serviceWorker' in navigator) {
@@ -335,18 +328,16 @@ function registerEventHandlers() {
             element.remove();
         });
     });
-    
+
     $(".add-btn, .remove-btn").click(function () {
         var bookingNumber = $(this).data("booking-number");
         var status = $(this).hasClass("add-btn") ? "Checked" : "Unchecked";
-        updateStatus(bookingNumber, status, $(this));
-        saveButtonState(bookingNumber, status, $(this));
-        toggleButtons(bookingNumber, status, $(this));
-        setTimeout(function () {
-            location.reload();
-          }, 500);
-    
+        updateStatus(bookingNumber, status, function() {
+            saveButtonState(bookingNumber, status);
+            toggleButtons(bookingNumber, status);
+        });
     });
+
     $('.wrapper').on('submit', 'form', function(event) {
         event.preventDefault();  // Prevent the default form submission behavior
         const form = $(this);
@@ -388,19 +379,14 @@ function registerEventHandlers() {
         });
     });
     
-    
     $(document).on('click', '#editButton', function() {
         var guestId = $(this).data('id');
         openEditModal(guestId);
     });
     
-    $(document).ready(function () {
-        $('#saveChangesButton').click(function() {
-            submitGuestEdit();
-        });
+    $('#saveChangesButton').click(function() {
+        submitGuestEdit();
     });
-    
-    
     
     $('.input-group').on('submit', 'form', function(event) {
         event.preventDefault();  // Prevent the default form submission behavior
@@ -443,7 +429,6 @@ function registerEventHandlers() {
         var messageId = $(this).data('message-id');
         deleteMessage(messageId);
     });
-    
 
     // Navigation buttons
     $('#prev-page').on('click', function () {
@@ -468,7 +453,7 @@ function registerEventHandlers() {
     });
      
     // Night Mode Toggle
-     $('#night-mode-toggle').on('click', function () {
+    $('#night-mode-toggle').on('click', function () {
         toggleNightMode();
     });
 
@@ -487,8 +472,8 @@ function registerEventHandlers() {
             document.exitFullscreen();
         }
     });
-    
 }
+
 // Function to display flash messages dynamically
 function displayFlashMessage(message, type) {
     console.log('Displaying flash message:', message, 'with type:', type);
@@ -505,7 +490,7 @@ function displayFlashMessage(message, type) {
     const flashMessageElement = $(flashMessageHtml).hide().fadeIn(200);
 
     $('.flash-messages').append(flashMessageElement);
-    flashMessageElement.delay(5000).fadeOut(500, function() {
+    flashMessageElement.delay(2000).fadeOut(200, function() {
         $(this).remove();
     });
 }
@@ -556,6 +541,7 @@ function openEditModal(guestId) {
         $('#editGuestModal').modal('show');
     });
 }
+
 function submitGuestEdit() {
     // Retrieve the guest ID stored earlier
     var guestId = $('#editGuestForm').data('guestId');
@@ -564,18 +550,14 @@ function submitGuestEdit() {
 
     $.post('/update_guest_details', formData)
         .done(function(response) {
-            
             $('#editGuestModal').modal('hide');
-            
             // refresh the page or update the UI as needed
             location.reload();
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             console.error("Error with request: ", textStatus, errorThrown);
-            
         });
 }
-
 
 // Update status and handle UI feedback
 function updateStatus(bookingNumber, status, callback) {
@@ -591,15 +573,14 @@ function updateStatus(bookingNumber, status, callback) {
             // Handle UI updates or logic based on response from the server
             if (response.status === 'success') {
                 if (callback) callback(); // Execute callback if provided and the update was successful
-                socket.emit('update_status', { bookingNumber: bookingNumber, status: status }); // Notify other clients
-                displayFlashMessages(response.message, 'success'); // Show success message
+                displayFlashMessage(response.message, 'success'); // Show success message
             } else {
-                displayFlashMessages(response.message, 'warning'); // Show warning or error message from server
+                displayFlashMessage(response.message, 'warning'); // Show warning or error message from server
             }
         },
         error: function(xhr, errorStatus, error) {
             console.error("Error updating status: ", error);
-            displayFlashMessages("Failed to update status. Please try again.", "danger");
+            displayFlashMessage("Failed to update status. Please try again.", "danger");
         }
     });
 }
@@ -616,23 +597,13 @@ function toggleButtons(bookingNumber, currentStatus) {
     }
 }
 
-
-// Display status update messages
-function displayFlashMessage(message, type) {
-    const flashMessage = `<div class="alert alert-${type}">${message}</div>`;
-    $('.flash-messages').html(flashMessage).fadeIn().delay(5000).fadeOut();
-}
-
-
-
 // Function to send a reply
 function sendReply(messageId, content) {
     $.ajax({
-        url: '/send-reply', // Update with your API endpoint
+        url: '/reply_message/' + messageId, // Update with your API endpoint
         type: 'POST',
         data: {
-            messageId: messageId,
-            content: content,
+            reply_content: content,
             csrf_token: $('meta[name="csrf-token"]').attr('content')
         },
         success: function(response) {
@@ -647,21 +618,19 @@ function sendReply(messageId, content) {
 
 // Function to delete a message
 function deleteMessage(messageId) {
-    $('.delete-btn').on('click', function() {
-        var messageId = $(this).data('message-id');
-        $.ajax({
-            url: '/delete_message/' + messageId,
-            type: 'POST',
-            success: function(response) {
-                $('article[data-message-id="' + messageId + '"]').remove();
-                displayFlashMessage('Message deleted successfully.', 'success');  // User feedback
-            },
-            error: function(response) {
-                displayFlashMessage('Failed to delete message. ', 'danger');
-            }
-        });
+    $.ajax({
+        url: '/delete_message/' + messageId,
+        type: 'POST',
+        success: function(response) {
+            $('article[data-message-id="' + messageId + '"]').remove();
+            displayFlashMessage('Message deleted successfully.', 'success');  // User feedback
+        },
+        error: function(response) {
+            displayFlashMessage('Failed to delete message.', 'danger');
+        }
     });
 }
+
 function updateActivitiesList() {
     $.ajax({
         url: '/api/activities',  // Adjust if the route differs
@@ -693,4 +662,3 @@ function updateActivitiesList() {
 }
 
 setInterval(updateActivitiesList, 30000);
-
