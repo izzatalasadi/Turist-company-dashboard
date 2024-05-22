@@ -569,7 +569,8 @@ function updateStatus(bookingNumber, status, callback) {
         type: 'POST',
         data: {
             booking_number: bookingNumber,
-            status: status, 
+            status: status,
+            csrf_token: $('input[name="csrf_token"]').val(), 
         },
         success: function(response) {
             console.log("Response from server:", response);

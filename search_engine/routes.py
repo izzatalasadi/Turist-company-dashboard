@@ -538,7 +538,8 @@ def update_status():
     try:
         booking_number = request.form.get('booking_number')
         new_status = request.form.get('status')
-
+        csrf_token = request.form.get('csrf_token')
+        
         logging.info(f"Received request to update status. Booking number: {booking_number}, New status: {new_status}")
 
         guest = Guest.query.filter_by(booking=booking_number).first()
