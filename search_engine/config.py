@@ -37,6 +37,7 @@ class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
     SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
     database_url = os.environ.get('DATABASE_URL')
     if database_url:
         database_url = database_url.replace("postgres://", "postgresql://", 1)
