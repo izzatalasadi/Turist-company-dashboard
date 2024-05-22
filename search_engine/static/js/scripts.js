@@ -322,9 +322,10 @@ function setupInteractiveElements() {
 
 // Register event handlers for UI elements
 function registerEventHandlers() {
+    $('.flash-messages').empty();
     $('.flash-messages .alert').each(function() {
         const element = $(this);
-        element.delay(5000).fadeOut(200, function() {
+        element.delay(2000).fadeOut(200, function() {
             element.remove();
         });
     });
