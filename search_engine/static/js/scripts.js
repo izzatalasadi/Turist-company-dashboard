@@ -573,6 +573,13 @@ function updateStatus(bookingNumber, status, callback) {
             csrf_token: $('input[name="csrf_token"]').val() 
         },
         success: function(response) {
+            // Check if the response is an HTML page (indicating a redirect to login)
+            if (typeof response === 'string' && response.includes('<html')) {
+                displayFlashMessage('Session expired. Please log in again.', 'warning');
+                window.location.href = '/login'; // Redirect to login page
+                return;
+            }
+
             console.log("Response from server:", response);
             if (response.status === 'success') {
                 if (callback) callback();
