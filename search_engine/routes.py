@@ -18,6 +18,8 @@ from search_engine.extensions import db, csrf
 from search_engine.clean_data import ExcelProcessor
 from search_engine import socketio, limiter
 
+from flask_wtf.csrf import validate_csrf
+
 logging.basicConfig(filename='app.log', level=logging.INFO)
 
 # Blueprint Registration
@@ -539,6 +541,8 @@ def update_status():
         booking_number = request.form.get('booking_number')
         new_status = request.form.get('status')
         csrf_token = request.form.get('csrf_token')
+        
+        validate_csrf(csrf_token)
         
         logging.info(f"Received request to update status. Booking number: {booking_number}, New status: {new_status}")
 
