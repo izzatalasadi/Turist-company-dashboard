@@ -20,7 +20,6 @@ from search_engine import socketio, limiter
 from flask_wtf.csrf import generate_csrf
 
 
-
 logging.basicConfig(filename='app.log', level=logging.INFO)
 
 # Blueprint Registration
@@ -555,6 +554,11 @@ def update_status():
     try:
         booking_number = request.form.get('booking_number')
         new_status = request.form.get('status')
+        csrf_token = request.form.get('csrf_token')
+        if not validate_csrf(csrf_token):
+            logging.error('CSRF token mismatch')
+            return jsonify({'status': 'error', 'error': 'csrf_token_mismatch'}), 500
+
 
         logging.info(f"Received request to update status. Booking number: {booking_number}, New status: {new_status}")
 

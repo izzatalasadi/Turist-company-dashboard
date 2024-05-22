@@ -595,12 +595,11 @@ function updateStatus(bookingNumber, status, callback) {
                             csrf_token: data.csrf_token  // Use the new CSRF token
                         },
                         success: function(response) {
-                            console.log('Response from server after retry:', response);
                             if (response.status === 'success') {
                                 if (callback) callback();  // Execute callback if provided and update was successful
                                 displayFlashMessage(response.message, 'success');  // Show success message
                             } else {
-                                displayFlashMessage(response.message, 'warning');  // Show warning or error message from server
+                                displayFlashMessage(response.message, 'danger');  // Show warning or error message from server
                             }
                         },
                         error: function(xhr, errorStatus, error) {
