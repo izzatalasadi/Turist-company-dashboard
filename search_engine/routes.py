@@ -539,7 +539,7 @@ def search():
 
     return render_template('search_engine.html', form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors, arrival_time_colors=arrival_time_colors, departure_from_colors=departure_from_colors)
 
-@app.route('/update_status', methods=['POST'])
+@app_bp.route('/update_status', methods=['POST'])
 @login_required
 def update_status():
     booking_number = request.form.get('booking_number')
@@ -562,7 +562,7 @@ def update_status():
         return jsonify({'status': 'success', 'message': 'Status updated successfully'}), 200
     except Exception as e:
         db.session.rollback()
-        app.logger.error(f"Error updating status: {e}")
+        logging.error(f"Error updating status: {e}")
         return jsonify({'status': 'error', 'message': 'Internal server error'}), 500
         
 @app_bp.route('/download')
