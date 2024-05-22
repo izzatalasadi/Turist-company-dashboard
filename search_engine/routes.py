@@ -17,9 +17,7 @@ import uuid
 from search_engine.extensions import db
 from search_engine.clean_data import ExcelProcessor
 from search_engine import socketio, limiter
-from flask_wtf.csrf import generate_csrf
-
-
+from flask_wtf import csrf
 
 logging.basicConfig(filename='app.log', level=logging.INFO)
 
@@ -494,6 +492,7 @@ def search_results():
 @cross_origin()
 @limiter.limit("30 per minute")
 @login_required
+@csrf.exempt
 def search():
     form = SearchForm()
     if form.validate_on_submit():
@@ -539,14 +538,6 @@ def search():
     departure_from_colors = {departure_from: '#' + hashlib.md5(departure_from.encode()).hexdigest()[:6] for departure_from in departure_froms}
 
     return render_template('search_engine.html', form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors, arrival_time_colors=arrival_time_colors, departure_from_colors=departure_from_colors)
-
-
-
-
-@app_bp.route('/refresh-csrf-token', methods=['GET'])
-def refresh_csrf_token():
-    new_csrf_token = generate_csrf()
-    return jsonify({'csrf_token': new_csrf_token})
 
 @app_bp.route('/update_status', methods=['POST'])
 @cross_origin()
