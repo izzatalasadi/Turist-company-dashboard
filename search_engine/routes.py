@@ -492,7 +492,6 @@ def search_results():
 @cross_origin()
 @limiter.limit("30 per minute")
 @login_required
-@csrf.exempt
 def search():
     form = SearchForm()
     if form.validate_on_submit():
@@ -542,6 +541,7 @@ def search():
 @app_bp.route('/update_status', methods=['POST'])
 @cross_origin()
 @login_required
+@csrf.exempt
 def update_status():
     try:
         booking_number = request.form.get('booking_number')
