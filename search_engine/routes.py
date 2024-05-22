@@ -10,11 +10,11 @@ from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, send_file, send_from_directory, current_app
 from flask_login import login_user, logout_user, login_required, current_user
-from flask_cors import cross_origin
+#from flask_cors import cross_origin
 from search_engine.forms import LoginForm, AddUserForm, DeleteUserForm, UpdateProfileForm, SearchForm
 from search_engine.models import User, Message, Guest, Activity, Flight
 import uuid
-from search_engine.extensions import db
+from search_engine.extensions import db, csrf
 from search_engine.clean_data import ExcelProcessor
 from search_engine import socketio, limiter
 
@@ -534,6 +534,7 @@ def search():
 
 @app_bp.route('/update_status', methods=['POST'])
 @login_required
+@csrf.exempt
 def update_status():
     try:
         booking_number = request.form.get('booking_number')
