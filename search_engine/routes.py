@@ -542,11 +542,20 @@ def search():
 @app_bp.route('/update_status', methods=['POST'])
 @login_required
 def update_status():
-    booking_number = request.form.get('booking_number')
-    new_status = request.form.get('status')
-
-    guest = Guest.query.filter_by(booking=booking_number).first()
-    if guest:
+    try:
+        booking_number = request.form.get('booking_number')
+        new_status = request.form.get('status')
+        csrf_token = request.form.get('csrf_token')
+        
+        # Log the received values
+        logging.info(f"Received booking_number: {booking_number}, new_status: {new_status}, csrf_token: {csrf_token}")
+        
+        guest = Guest.query.filter_by(booking=booking_number).first()
+        
+        if not guest:
+            logging.warning(f"Booking number {booking_number} not found.")
+            return jsonify({'message': 'Booking number not found', 'status': 'warning'}), 404
+        
         guest.status = new_status
         if new_status == "Checked":
             guest.checked_time = datetime.utcnow()
@@ -554,22 +563,15 @@ def update_status():
         elif new_status == "Unchecked":
             guest.checked_time = None
             guest.checked_by = None
-
-        try:
-            db.session.commit()
-            socketio.emit('status_changed', {
-                'booking_number': booking_number,
-                'new_status': new_status
-            })
-            flash('Status updated successfully', 'success')
-            return jsonify({'message': 'Status updated successfully', 'status': 'success'}), 200
-        except Exception as e:
-            db.session.rollback()
-            return jsonify({'message': str(e), 'status': 'error'}), 500
-    else:
-        flash('Booking number not found', 'warning')
-        return jsonify({'message': 'Booking number not found', 'status': 'warning'}), 404
-
+        
+        db.session.commit()
+        logging.info(f"Status for booking {booking_number} updated to {new_status}")
+        return jsonify({'message': 'Status updated successfully', 'status': 'success'}), 200
+    except Exception as e:
+        db.session.rollback()
+        logging.error(f"Error updating status: {e}")
+        return jsonify({'message': str(e), 'status': 'error'}), 500
+    
 @app_bp.route('/download')
 @login_required
 def download_page():
