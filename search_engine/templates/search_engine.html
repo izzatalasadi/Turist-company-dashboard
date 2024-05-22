@@ -13,7 +13,6 @@
       <div class="container mb-5">
         <form method="POST" action="{{ url_for('app.search') }}" class="input-group">
           {{ form.hidden_tag() }}
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <input
             type="text"
             class="form-control"
@@ -176,7 +175,6 @@
       </div>
       <div class="modal-body">
         <form id="editGuestForm">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           {{ form.hidden_tag() }}
         </form>
       </div>
