@@ -9,3 +9,12 @@ flask_session/
 tests/
 .pytest_cache/
 Documentation/
+.pytest_cache/
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+venv.bak/
+*.sqlite3

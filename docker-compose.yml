@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  web:
+    build: .
+    command: flask run --host=0.0.0.0 --port=8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=development
+      - PORT=8000
+      - DATABASE_URL=postgres://cdlqzqdzbwazts:1ac5403f0dc15012b1bc656d2922fd308455b61aead9b583abbd486b01fcb774@ec2-3-226-99-95.compute-1.amazonaws.com:5432/d3f1qvhhkhgrsp
