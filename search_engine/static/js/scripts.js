@@ -322,8 +322,6 @@ function setupInteractiveElements() {
 
 // Register event handlers for UI elements
 function registerEventHandlers() {
-    $('.dropdown-toggle').dropdown();
-    $('.offcanvas').offcanvas();
     
     $('.flash-messages').empty();
     $('.flash-messages .alert').each(function() {
