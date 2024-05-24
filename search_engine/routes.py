@@ -539,6 +539,7 @@ def update_status():
         new_status = request.form.get('status')
         csrf_token = request.form.get('csrf_token')
         
+        # Validate CSRF token
         validate_csrf(csrf_token)
         
         logging.info(f"Received request to update status. Booking number: {booking_number}, New status: {new_status}")
@@ -562,8 +563,8 @@ def update_status():
     except Exception as e:
         db.session.rollback()
         logging.error(f"Error updating status: {e}")
-        return jsonify({'status': 'error', 'message': 'Failed to update status'}), 500
-        
+        return jsonify({'status': 'error', 'message': f'Failed to update status: {e}'}), 500
+            
 @app_bp.route('/download')
 @login_required
 def download_page():

@@ -570,14 +570,15 @@ function submitGuestEdit() {
 // Update status and handle UI feedback
 function updateStatus(bookingNumber, status, callback) {
     console.log(`Updating status. Booking number: ${bookingNumber}, Status: ${status}`);
-    
+    const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+
     $.ajax({
         url: '/update_status',
         type: 'POST',
         data: {
             booking_number: bookingNumber,
             status: status,
-            csrf_token: $('input[name="csrf_token"]').val(), 
+            csrf_token: csrfToken, 
         },
         success: function(response) {
             console.log("Response from server:", response);
