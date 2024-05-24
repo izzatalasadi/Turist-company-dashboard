@@ -8,8 +8,7 @@ class ExcelProcessor:
             "NO Viking Air, Transfer included",
             "Transfer not included"
         ]
-    # After df = df.ffill()
-
+    
     def extract_transportation(self,row):
         # Split the 'Transportation' column on space and take the last part which should be "VAN" or "BUS"
         transportation_parts = str(row['Transportation']).split()
@@ -31,8 +30,7 @@ class ExcelProcessor:
         
         df = df.ffill()
         df['COMMENTS'] = df.apply(self.extract_comments, axis=1)
-        #df = df.apply(self.remove_search_strings, axis=1)
-
+        
         df = df[df['BOOKING'].ne('In total:')]
         df = df[df['LAST NAME'].ne('GA')]
         
@@ -62,6 +60,3 @@ class ExcelProcessor:
                         row[col] = row[col].replace(s, '')  # Remove the string
         return row
 
-# processor = ExcelProcessor("file.xlsx")
-# df = processor.read_and_process_excel()
-# print(df.columns)
