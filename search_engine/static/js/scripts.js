@@ -326,7 +326,7 @@ function registerEventHandlers() {
     $('.flash-messages').empty();
     $('.flash-messages .alert').each(function() {
         const element = $(this);
-        element.delay(2000).fadeOut(200, function() {
+        element.delay(3000).fadeOut(300, function() {
             element.remove();
         });
     });
@@ -495,10 +495,10 @@ function displayFlashMessage(message, type) {
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>`;
     
-    const flashMessageElement = $(flashMessageHtml).hide().fadeIn(200);
+    const flashMessageElement = $(flashMessageHtml).hide().fadeIn(500);
 
     $('.flash-messages').append(flashMessageElement);
-    flashMessageElement.delay(2000).fadeOut(200, function() {
+    flashMessageElement.delay(5000).fadeOut(500, function() {
         $(this).remove();
     });
 }
