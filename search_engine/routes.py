@@ -326,44 +326,44 @@ def import_file():
 
     return render_template('file_management/upload_file.html')
 
-def process_excel(file):
-    processor = ExcelProcessor(file)
-    
-    try:
-        df = processor.read_and_process_excel()
-        for _, row in df.iterrows():
-            flight = Flight.query.filter_by(flight_number=str(row['FLIGHT']).strip()).first()
-            
-            if not flight:
-                flight = Flight(
-                    flight_number=str(row['FLIGHT']).strip(),
-                    departure_from=str(row['FROM']).strip(),
-                    arrival_time=str(row.get('TIME', '')).strip()
-                )
-                db.session.add(flight)
-                
-            existing_guest = Guest.query.filter_by(booking=str(row['BOOKING'])).first()
-            if not existing_guest:
-                guest = Guest(
-                    booking=str(row['BOOKING']),
-                    first_name=str(row['FIRST NAME']),
-                    last_name=str(row['LAST NAME']),
-                    flight_id=flight.id,
-                    departure_from=flight.departure_from,
-                    arrival_time=flight.arrival_time,
-                    arriving_date=flight.arrival_date,
-                    transportation=str(row['TRANSPORTATION']),
-                    status=str(row['STATUS']),
-                    comments=str(row['COMMENTS'])
-                )
-                db.session.add(guest)
-            else:
-                logging.warning(f"Guest with booking {row['BOOKING']} already exists. Skipping.")
 
-        db.session.commit()
+@app_bp.route('/update_status', methods=['POST'])
+@login_required
+def update_status():
+    try:
+        booking_number = request.form.get('booking_number')
+        new_status = request.form.get('status')
+        csrf_token = request.form.get('csrf_token')
+        
+        # Validate CSRF token
+        validate_csrf(csrf_token)
+        
+        logging.info(f"Received request to update status. Booking number: {booking_number}, New status: {new_status}")
+
+        guest = Guest.query.filter_by(booking=booking_number).first()
+        if guest:
+            guest.status = new_status
+            guest_id = guest.id
+            
+            logging.info(f"Guest ID: {guest_id}")
+            
+            if new_status == "Checked":
+                guest.checked_time = datetime.utcnow()
+                guest.checked_by = current_user.id  # Ensure this is the user ID
+            elif new_status == "Unchecked":
+                guest.checked_time = None
+                guest.checked_by = None
+
+            db.session.commit()
+            logging.info(f"Successfully updated status for booking number: {booking_number}")
+            return jsonify({'status': 'success', 'message': 'Status updated successfully'}), 200
+        else:
+            logging.warning(f"Booking number not found: {booking_number}")
+            return jsonify({'status': 'error', 'message': 'Booking number not found'}), 404
     except Exception as e:
         db.session.rollback()
-        logging.error(f"Failed to process file: {e}")
+        logging.error(f"Error updating status: {e}")
+        return jsonify({'status': 'error', 'message': f'Failed to update status: {e}'}), 500
 
 def save_pdf(file):
     directory = os.path.join(current_app.root_path, 'static', 'pdf')

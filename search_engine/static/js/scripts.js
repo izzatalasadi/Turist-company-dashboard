@@ -569,7 +569,6 @@ function submitGuestEdit() {
 
 // Update status and handle UI feedback
 function updateStatus(bookingNumber, status, callback) {
-    console.log(`Updating status. Booking number: ${bookingNumber}, Status: ${status}`);
     const csrfToken = document.querySelector('input[name="csrf_token"]').value;
 
     $.ajax({
@@ -578,20 +577,13 @@ function updateStatus(bookingNumber, status, callback) {
         data: {
             booking_number: bookingNumber,
             status: status,
-            csrf_token: csrfToken, 
+            csrf_token: csrfToken
         },
         success: function(response) {
-            console.log("Response from server:", response);
-            if (response.status === 'success') {
-                if (callback) callback();
-                displayFlashMessage(response.message, 'success');
-            } else {
-                displayFlashMessage(response.message, 'warning');
-            }
+            callback(null, response);
         },
-        error: function(xhr, errorStatus, error) {
-            console.error("Error updating status: ", error);
-            displayFlashMessage("Failed to update status. Please try again.", "danger");
+        error: function(xhr, status, error) {
+            callback(new Error('Failed to update status: ' + xhr.responseText));
         }
     });
 }

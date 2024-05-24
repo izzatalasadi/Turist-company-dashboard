@@ -14,9 +14,7 @@
           action="{{ url_for('app.search') }}"
           class="input-group"
         >
-          {{ form.hidden_tag() }}
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-
+          
           <input
             type="text"
             class="form-control"
@@ -24,7 +22,10 @@
             name="search_query"
             placeholder="Search for guests, flights, or booking numbers..."
             aria-label="Search"
-          /><button class="btn btn-outline-secondary" type="submit">
+          />
+          {{ form.hidden_tag() }}
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <button class="btn btn-outline-secondary" type="submit">
             <i class="fas fa-search"></i>
           </button>
         </form>

@@ -85,10 +85,9 @@ class Guest(db.Model):
     transportation = db.Column(db.String(100))
     status = db.Column(db.String(100))  # Checked, Unchecked
     checked_time = db.Column(db.DateTime, default=None)
-    checked_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    checked_by = db.Column(db.Integer, db.ForeignKey('user.id'))  
     comments = db.Column(db.Text)
 
-    # Relationship to link Guest directly to the Flight model
     flight = db.relationship('Flight', backref='guests')
 
     def __repr__(self):
