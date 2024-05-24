@@ -474,6 +474,12 @@ function registerEventHandlers() {
             document.exitFullscreen();
         }
     });
+
+    // Tooltip Initialization
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipList)
+    });
 }
 
 // Function to display flash messages dynamically

@@ -18,3 +18,5 @@ venv/
 ENV/
 venv.bak/
 *.sqlite3
+Dockerfile
+docker-compose.yml

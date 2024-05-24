@@ -1,7 +1,7 @@
 {% if current_user.is_authenticated %}
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
-    <li class="nav-item {{ 'active' if request.endpoint == 'main.home' }} mt-4">
+    <li class="nav-item {% if request.endpoint == 'main.home' %}active{% endif %} mt-4">
       <a class="nav-link" href="{{ url_for('main.home') }}">
         <i class="mdi mdi-grid-large menu-icon"></i>
         <span class="menu-title">Dashboard</span>
@@ -62,8 +62,7 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('auth.delete_guest_page') }}">Delete data</a>
-        </li>
-        
+          </li>
         </ul>
       </div>
     </li>
@@ -74,12 +73,6 @@
       <a class="nav-link" href="{{ url_for('app.search') }}">
         <i class="menu-icon mdi mdi-account-search"></i>
         <span class="menu-title">Check-in</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{{ url_for('auth.pdf_viewer') }}">
-        <i class="menu-icon mdi mdi-account-search"></i>
-        <span class="menu-title">PDF-viewer</span>
       </a>
     </li>
   </ul>

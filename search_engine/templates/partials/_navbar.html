@@ -39,7 +39,7 @@
           {% if messages|length > 0 %}
             {% for message in messages %}
               <li class="{{ 'bg-light' if not message.read }}">
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item">
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img src="{{ url_for('static', filename='images/faces/' ~ message.sender.profile_picture) }}" alt="Profile Image" class="img-sm profile-pic" />

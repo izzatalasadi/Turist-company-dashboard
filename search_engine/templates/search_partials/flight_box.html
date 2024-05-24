@@ -1,0 +1,21 @@
+<div class="col-lg-12 col-md-12 col-sm-12 mb-3">
+    <div class="box">
+      <h5>
+        <a class="btn btn-link" data-bs-toggle="collapse" href="#flightsCollapse" role="button" aria-expanded="false" aria-controls="flightsCollapse">
+          Flights
+        </a>
+      </h5>
+      <div class="collapse" id="flightsCollapse">
+        <div class="d-flex flex-wrap flight-filter scrollable">
+          {% for flight, color in (flight_colors|default({})).items() %}
+            <a href="{{ url_for('app.search', search_query=request.args.get('search_query', ''), flight=flight) }}"
+               class="btn flight-filter-btn m-1"
+               style="background-color: {{ color }}; color: #fff;">
+              {{ flight }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  

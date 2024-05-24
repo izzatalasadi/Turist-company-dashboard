@@ -384,13 +384,6 @@ def save_pdf(file):
     logging.info(f'File saved at {filepath}')
     return redirect(url_for('auth.import_file'))
 
-@auth_bp.route('/pdf_viewer')
-def pdf_viewer():
-    directory = os.path.join(current_app.root_path, 'static', 'pdf')
-    pdf_files = [f for f in os.listdir(directory) if f.endswith('.pdf')]
-    pdf_files_urls = {file: url_for('static', filename='pdf/' + file) for file in pdf_files}
-    return render_template('partials/_pdf_viewer.html', pdf_files=pdf_files_urls)
-
 @auth_bp.route('/delete_guest_page')
 @login_required
 def delete_guest_page():
@@ -489,6 +482,10 @@ def search_results():
 @limiter.limit("30 per minute")
 @login_required
 def search():
+    directory = os.path.join(current_app.root_path, 'static', 'pdf')
+    pdf_files = [f for f in os.listdir(directory) if f.endswith('.pdf')]
+    pdf_files_urls = {file: url_for('static', filename='pdf/' + file) for file in pdf_files}
+    
     form = SearchForm()
     if form.validate_on_submit():
         search_query = form.search_query.data.lower()
@@ -532,7 +529,7 @@ def search():
     departure_froms = set(flight.departure_from for flight in filtered_data if flight.departure_from)
     departure_from_colors = {departure_from: '#' + hashlib.md5(departure_from.encode()).hexdigest()[:6] for departure_from in departure_froms}
 
-    return render_template('search_engine.html', form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors, arrival_time_colors=arrival_time_colors, departure_from_colors=departure_from_colors)
+    return render_template('search_engine.html', form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors, arrival_time_colors=arrival_time_colors, departure_from_colors=departure_from_colors,pdf_files=pdf_files_urls)
 
 @app_bp.route('/update_status', methods=['POST'])
 @login_required
