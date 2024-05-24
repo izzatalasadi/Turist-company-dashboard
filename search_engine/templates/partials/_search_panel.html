@@ -1,28 +1,28 @@
 <div class="theme-setting-wrapper">
   <div id="settings-trigger"><i class="mdi mdi-airplane mdi-24px"></i></div>
-  
+
   <div id="theme-settings" class="settings-panel">
-      <i class="settings-close mdi mdi-close"></i>
-      
-      <div class="d-flex align-items-center mb-3">
-          <i class="mdi mdi-file-pdf-box mdi-24px me-2 mt-2"></i>
-          <p class="mb-0">PDF Lists</p>
-      </div>
-      <!-- partial:partials/_settings-panel.html -->
-      {% include 'partials/_pdf_floating.html' %}
-      <!-- partial -->
+    <i class="settings-close mdi mdi-close"></i>
 
-      <div class="d-flex align-items-center mb-3">
-          <i class="mdi mdi-airplane mdi-24px me-2 mt-2"></i>
-          <p class="mb-0">Flights Filter</p>
-      </div>
-      <!-- Flights Box -->
-      {% include 'search_partials/flight_box.html' %}
+    <div class="d-flex align-items-center mb-3">
+      <i class="mdi mdi-file-pdf-box mdi-24px me-2 mt-2"></i>
+      <p class="mb-0">PDF Lists</p>
+    </div>
+    <!-- partial:partials/_settings-panel.html -->
+    {% include 'partials/_pdf_floating.html' %}
+    <!-- partial -->
 
-      <!-- Arrival Times Box -->
-      {% include 'search_partials/arrival_time_box.html' %}
+    <div class="d-flex align-items-center mb-3">
+      <i class="mdi mdi-airplane mdi-24px me-2 mt-2"></i>
+      <p class="mb-0">Flights Filter</p>
+    </div>
+    <!-- Flights Box -->
+    {% include 'search_partials/flight_box.html' %}
 
-      <!-- Departure Locations Box -->
-      {% include 'search_partials/departure_location.html' %}
+    <!-- Arrival Times Box -->
+    {% include 'search_partials/arrival_time_box.html' %}
+
+    <!-- Departure Locations Box -->
+    {% include 'search_partials/departure_location.html' %}
   </div>
 </div>
