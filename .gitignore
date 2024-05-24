@@ -12,7 +12,6 @@ Documentation/
 .pytest_cache/
 *.pyo
 *.pyd
-.Python
 env/
 venv/
 ENV/
