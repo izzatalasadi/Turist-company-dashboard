@@ -418,3 +418,39 @@ span.count {
   margin-right: -15px; /* Optional: to align content properly */
 }
 
+/* settings panel */
+
+
+.settings-panel {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+}
+.settings-panel .section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 10px;
+  background-color: #e9ecef;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+.settings-panel .section-header:hover {
+  background-color: #dfe3e6;
+}
+.settings-panel .section-content {
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+.settings-close {
+  cursor: pointer;
+  float: right;
+}
+@media (max-width: 767px) {
+  .settings-panel {
+      padding: 15px;
+  }
+}
