@@ -9,7 +9,6 @@ flask_session/
 tests/
 .pytest_cache/
 Documentation/
-.pytest_cache/
 *.pyo
 *.pyd
 env/
