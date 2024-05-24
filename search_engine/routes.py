@@ -492,11 +492,13 @@ def search():
         flight_filter = request.args.get('flight', None)
         arrival_time_filter = request.args.get('arrival_time', None)
         departure_from_filter = request.args.get('departure_from', None)
+        transport_filter = request.args.get('transportation', None)
     else:
         search_query = request.form.get('search_query', '').lower()
         flight_filter = request.args.get('flight', None)
         arrival_time_filter = request.args.get('arrival_time', None)
         departure_from_filter = request.args.get('departure_from', None)
+        transport_filter = request.args.get('transportation', None)
 
     guests_query = Guest.query
 
@@ -508,6 +510,9 @@ def search():
 
     if departure_from_filter:
         guests_query = guests_query.join(Flight).filter(Flight.departure_from.ilike(f'%{departure_from_filter}%'))
+    
+    if transport_filter:
+        guests_query = guests_query.join(Flight).filter(Guest.transportation.ilike(f'%{transport_filter}%'))
 
     if search_query:
         guests_query = guests_query.filter(or_(Guest.first_name.ilike(f'%{search_query}%'), Guest.last_name.ilike(f'%{search_query}%')))
@@ -528,8 +533,11 @@ def search():
     
     departure_froms = set(flight.departure_from for flight in filtered_data if flight.departure_from)
     departure_from_colors = {departure_from: '#' + hashlib.md5(departure_from.encode()).hexdigest()[:6] for departure_from in departure_froms}
+    
+    transportations = set(guest.transportation for guest in filtered_data if guest.transportation)
+    transportation_colors = {transportation: '#' + hashlib.md5(transportation.encode()).hexdigest()[:6] for transportation in transportations}
 
-    return render_template('search_engine.html', form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors, arrival_time_colors=arrival_time_colors, departure_from_colors=departure_from_colors,pdf_files=pdf_files_urls)
+    return render_template('search_engine.html', form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors, arrival_time_colors=arrival_time_colors, departure_from_colors=departure_from_colors,transportation_colors=transportation_colors, pdf_files=pdf_files_urls)
 
 @app_bp.route('/update_status', methods=['POST'])
 @login_required

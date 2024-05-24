@@ -1,0 +1,21 @@
+<div class="col-lg-12 col-md-12 col-sm-12 mb-3">
+    <div class="box">
+      <h5>
+        <a class="btn btn-link" data-bs-toggle="collapse" href="#transportationsCollapse" role="button" aria-expanded="false" aria-controls="departureLocationsCollapse">
+          Transportations
+        </a>
+      </h5>
+      <div class="collapse" id="transportationsCollapse">
+        <div class="d-flex flex-wrap departure-from-filter scrollable">
+          {% for transportation, color in (transportation_colors|default({})).items() %}
+            <a href="{{ url_for('app.search', search_query=request.args.get('search_query', ''), departure_from=departure_from) }}"
+               class="btn departure-from-filter-btn m-1"
+               style="background-color: {{ color }}; color: #fff;">
+              {{ transportation }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  
