@@ -412,7 +412,7 @@ span.count {
 }
 
 .scrollable {
-  max-height: 200px; /* Adjust the height as needed */
+  max-height: 300px; /* Adjust the height as needed */
   overflow-y: auto;
   padding-right: 15px; /* Optional: to avoid scrollbar overlaying content */
   margin-right: -15px; /* Optional: to align content properly */

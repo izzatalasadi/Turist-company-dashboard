@@ -326,7 +326,7 @@ function registerEventHandlers() {
     $('.flash-messages').empty();
     $('.flash-messages .alert').each(function() {
         const element = $(this);
-        element.delay(3000).fadeOut(300, function() {
+        element.delay(5000).fadeOut(500, function() {
             element.remove();
         });
     });
@@ -664,4 +664,4 @@ function updateActivitiesList() {
     });
 }
 
-setInterval(updateActivitiesList, 30000);
+setInterval(updateActivitiesList, 3000);
