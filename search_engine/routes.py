@@ -536,9 +536,10 @@ def search():
     departure_froms = set(flight.departure_from for flight in filtered_data if flight.departure_from)
     departure_from_colors = {departure_from: '#' + hashlib.md5(departure_from.encode()).hexdigest()[:6] for departure_from in departure_froms}
     
-    #transportations = set(guest.transportation for guest in filtered_data if guest.transportation)
-    #transportation_colors = {transportation: '#' + hashlib.md5(transportation.encode()).hexdigest()[:6] for transportation in transportations} # transportation_colors=transportation_colors,
-    return render_template('search_engine.html', form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors, arrival_time_colors=arrival_time_colors, departure_from_colors=departure_from_colors, pdf_files=pdf_files_urls)
+    transportations = set(guest.transportation for guest in filtered_data if guest.transportation)
+    transportation_colors = {transportation: '#' + hashlib.md5(transportation.encode()).hexdigest()[:6] for transportation in transportations}
+
+    return render_template('search_engine.html', form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors, arrival_time_colors=arrival_time_colors, departure_from_colors=departure_from_colors,transportation_colors=transportation_colors, pdf_files=pdf_files_urls)
 
 @app_bp.route('/update_status', methods=['POST'])
 @login_required
