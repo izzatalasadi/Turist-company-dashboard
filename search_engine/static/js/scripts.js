@@ -122,6 +122,12 @@ function fetchSearchResults(query) {
     });
 }
 
+// Load user details on startup
+function loadUserDetails() {
+    $.get('/users', function(data) {
+        $('#userContainer').html(data);
+    });
+}
 
 // Function to save the state of a button to local storage
 function saveButtonState(bookingNumber, status) {
