@@ -17,9 +17,8 @@ import uuid
 from search_engine.extensions import db, csrf
 from search_engine.clean_data import ExcelProcessor
 from search_engine import socketio, limiter
-from sqlalchemy.orm import joinedload
+
 from flask_wtf.csrf import validate_csrf
-from sqlalchemy import or_
 
 logging.basicConfig(filename='app.log', level=logging.INFO)
 
@@ -525,8 +524,7 @@ def search():
         flight_filter = request.args.get('flight', None)
         arrival_time_filter = request.args.get('arrival_time', None)
         departure_from_filter = request.args.get('departure_from', None)
-        transportation_filter = request.args.get('transportation', None)
-
+        
     guests_query = Guest.query
 
     if flight_filter:
@@ -538,20 +536,10 @@ def search():
     if departure_from_filter:
         guests_query = guests_query.join(Flight).filter(Flight.departure_from.ilike(f'%{departure_from_filter}%'))
     
-    if transportation_filter:
-        guests_query = guests_query.filter(Guest.transportation == transportation_filter)
-
     if search_query:
-        guests_query = guests_query.join(Flight).filter(
-            or_(
-                Guest.first_name.ilike(f'%{search_query}%'), 
-                Guest.last_name.ilike(f'%{search_query}%'), 
-                Flight.flight_number.ilike(f'%{search_query}%'), 
-                Guest.departure_from.ilike(f'%{search_query}%')
-            )
-        )
+        guests_query = guests_query.filter(or_(Guest.first_name.ilike(f'%{search_query}%'), Guest.last_name.ilike(f'%{search_query}%'), Guest.flight.ilike(f'%{search_query}%'), Guest.departure_from.ilike(f'%{search_query}%')))
 
-    filtered_data = guests_query.options(joinedload(Guest.flight)).all()
+    filtered_data = guests_query.all()
     flight_details = {
         'count': guests_query.count(),
         'total_items': len(filtered_data),
@@ -568,9 +556,7 @@ def search():
     departure_froms = set(flight.departure_from for flight in filtered_data if flight.departure_from)
     departure_from_colors = {departure_from: '#' + hashlib.md5(departure_from.encode()).hexdigest()[:6] for departure_from in departure_froms}
     
-    transportations = set(guest.transportation for guest in filtered_data if guest.transportation)
-    transportation_colors = {transportation: '#' + hashlib.md5(transportation.encode()).hexdigest()[:6] for transportation in transportations}
-
+    
     return render_template('search_engine.html', form=form, 
                             filtered_data=filtered_data,
                             search_query=search_query, 
@@ -578,10 +564,8 @@ def search():
                             flight_colors=flight_colors, 
                             arrival_time_colors=arrival_time_colors, 
                             departure_from_colors=departure_from_colors,
-                            transportation_colors=transportation_colors, 
                             pdf_files=pdf_files_urls)
-    
-    
+
 @app_bp.route('/update_status', methods=['POST'])
 @login_required
 def update_status():
@@ -704,6 +688,13 @@ def send_message(user_id):
         db.session.add(message)
         db.session.commit()
         
+        # Emit socket event for new message
+        socketio.emit('new_message', {
+            'sender_id': sender_id,
+            'receiver_id': receiver_id,
+            'content': content,
+            'timestamp': message.timestamp.isoformat()
+        }, room=receiver_id)
 
         flash('Message been sent.', 'success')
         return redirect(url_for('main.home'))
@@ -745,6 +736,14 @@ def reply_message(message_id):
     db.session.add(reply_message)
     db.session.commit()
     
+    # Emit socket event for new message
+    socketio.emit('new_message', {
+        'sender': current_user.username,
+        'receiver_id': original_message.sender_id,
+        'content': reply_content,
+        'timestamp': reply_message.timestamp.isoformat()
+    }, room=original_message.sender_id)
+
     flash('Reply sent', 'success')
     return jsonify({'message': 'Reply sent'}), 200
 
