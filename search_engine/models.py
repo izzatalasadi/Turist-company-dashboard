@@ -85,7 +85,7 @@ class Guest(db.Model):
     transportation = db.Column(db.String(100))
     status = db.Column(db.String(100))  # Checked, Unchecked
     checked_time = db.Column(db.DateTime, default=None)
-    checked_by = db.Column(db.Integer, db.ForeignKey('user.id'))  
+    checked_by = db.Column(db.String(100))  # Changed to String to store username
     comments = db.Column(db.Text)
 
     flight = db.relationship('Flight', backref='guests')
