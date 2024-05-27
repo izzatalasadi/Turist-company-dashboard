@@ -704,13 +704,6 @@ def send_message(user_id):
         db.session.add(message)
         db.session.commit()
         
-        # Emit socket event for new message
-        socketio.emit('new_message', {
-            'sender_id': sender_id,
-            'receiver_id': receiver_id,
-            'content': content,
-            'timestamp': message.timestamp.isoformat()
-        }, room=receiver_id)
 
         flash('Message been sent.', 'success')
         return redirect(url_for('main.home'))
@@ -752,14 +745,6 @@ def reply_message(message_id):
     db.session.add(reply_message)
     db.session.commit()
     
-    # Emit socket event for new message
-    socketio.emit('new_message', {
-        'sender': current_user.username,
-        'receiver_id': original_message.sender_id,
-        'content': reply_content,
-        'timestamp': reply_message.timestamp.isoformat()
-    }, room=original_message.sender_id)
-
     flash('Reply sent', 'success')
     return jsonify({'message': 'Reply sent'}), 200
 
