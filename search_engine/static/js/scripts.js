@@ -357,7 +357,6 @@ function registerEventHandlers() {
         updateStatus(bookingNumber, status, function() {
             saveButtonState(bookingNumber, status);
             toggleButtons(bookingNumber, status);
-            location.reload();
         });
     });
 
