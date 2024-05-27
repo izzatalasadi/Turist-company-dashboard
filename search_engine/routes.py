@@ -17,8 +17,9 @@ import uuid
 from search_engine.extensions import db, csrf
 from search_engine.clean_data import ExcelProcessor
 from search_engine import socketio, limiter
-
+from sqlalchemy.orm import joinedload
 from flask_wtf.csrf import validate_csrf
+from sqlalchemy import or_
 
 logging.basicConfig(filename='app.log', level=logging.INFO)
 
@@ -541,9 +542,16 @@ def search():
         guests_query = guests_query.filter(Guest.transportation == transportation_filter)
 
     if search_query:
-        guests_query = guests_query.filter(or_(Guest.first_name.ilike(f'%{search_query}%'), Guest.last_name.ilike(f'%{search_query}%'), Guest.flight.ilike(f'%{search_query}%'), Guest.departure_from.ilike(f'%{search_query}%')))
+        guests_query = guests_query.join(Flight).filter(
+            or_(
+                Guest.first_name.ilike(f'%{search_query}%'), 
+                Guest.last_name.ilike(f'%{search_query}%'), 
+                Flight.flight_number.ilike(f'%{search_query}%'), 
+                Guest.departure_from.ilike(f'%{search_query}%')
+            )
+        )
 
-    filtered_data = guests_query.all()
+    filtered_data = guests_query.options(joinedload(Guest.flight)).all()
     flight_details = {
         'count': guests_query.count(),
         'total_items': len(filtered_data),
@@ -572,7 +580,8 @@ def search():
                             departure_from_colors=departure_from_colors,
                             transportation_colors=transportation_colors, 
                             pdf_files=pdf_files_urls)
-
+    
+    
 @app_bp.route('/update_status', methods=['POST'])
 @login_required
 def update_status():
