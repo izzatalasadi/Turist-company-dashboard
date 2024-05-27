@@ -4,7 +4,6 @@
       <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
         <span class="mdi mdi-menu"></span>
         <a class="navbar-brand brand-logo">
-          <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="logo" />
         </a>
       </button>
     </div>
@@ -63,13 +62,13 @@
       <!-- User profile -->
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <img class="img-xs rounded-circle" src="{{ url_for('static', filename='images/faces/face1.jpeg') }}" alt="Profile image" />
+          <img class="img-xs rounded-circle" src="{{ url_for('static', filename='images/faces/' + (current_user.profile_picture|default('face1.jpeg', true))) }}" alt="User's profile picture">
         </a>
         <ul class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list pb-0" aria-labelledby="UserDropdown">
           <!-- Dropdown header with user information -->
           <li>
             <div class="dropdown-header text-center">
-              <img class="img-md rounded-circle" src="{{ url_for('static', filename='images/faces/face1.jpeg') }}" alt="Profile image" />
+              <img class="img-md rounded-circle" src="{{ url_for('static', filename='images/faces/' + (current_user.profile_picture|default('face1.jpeg', true))) }}" alt="User's profile picture">
               <p class="mb-1 mt-3 font-weight-semibold">{{ current_user.username }}</p>
               <p class="fw-light text-muted mb-0">{{ current_user.email }}</p>
             </div>
