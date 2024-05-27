@@ -227,7 +227,7 @@ def login():
         
         else:
             flash('Invalid username or password', 'warning')
-            return jsonify({'Login': 'Invalid username or password'}), 500
+            return redirect(url_for('auth.login'))
     
     return render_template('auth/login.html', form=form)
 
