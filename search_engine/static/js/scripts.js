@@ -337,6 +337,7 @@ function registerEventHandlers() {
         updateStatus(bookingNumber, status, function() {
             saveButtonState(bookingNumber, status);
             toggleButtons(bookingNumber, status);
+            location.reload();
         });
     });
 
@@ -495,7 +496,7 @@ function displayFlashMessage(message, type) {
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>`;
     
-    const flashMessageElement = $(flashMessageHtml).hide().fadeIn(500);
+    const flashMessageElement = $(flashMessageHtml).hide().fadeIn(5000);
 
     $('.flash-messages').append(flashMessageElement);
     flashMessageElement.delay(5000).fadeOut(500, function() {
@@ -507,7 +508,7 @@ function openEditModal(guestId) {
     $('#editGuestForm').data('guestId', guestId);
     // Fetch guest details from the server
     $.get(`/get_guest_details/${guestId}`, function(data) {
-        const editableFields = ['comments', 'arrival_time', 'arriving_date', 'booking', 'departure_from', 'flight', 'transportation'];
+        const editableFields = ['comments', 'arrival_time', 'arriving_date', 'booking', 'departure_from', 'flight_number', 'transportation'];
         const form = $('#editGuestForm');
         const modalTitle = $('#editGuestModalLabel');
 
@@ -544,6 +545,26 @@ function openEditModal(guestId) {
             }
         });
 
+        // Flight selection input with datalist
+        form.append(`
+            <div class="form-group">
+                <label for="flight_number">Flight</label>
+                <input list="flights" class="form-control" name="flight_number" id="flight_number" value="${data.flight_number}" placeholder="Start typing flight number...">
+                <datalist id="flights">
+                    <!-- Options will be populated dynamically -->
+                </datalist>
+            </div>
+        `);
+
+        // Fetch and populate flight options
+        $.get(`/get_flights`, function(flights) {
+            let flightOptions = '';
+            flights.forEach(flight => {
+                flightOptions += `<option value="${flight.flight_number}">`;
+            });
+            $('#flights').html(flightOptions);
+        });
+
         // Append a hidden input to store the guest ID
         form.append(`<input type="hidden" name="guestId" value="${guestId}">`);
         $('#editGuestModal').modal('show');
@@ -566,6 +587,24 @@ function submitGuestEdit() {
             console.error("Error with request: ", textStatus, errorThrown);
         });
 }
+
+function submitGuestEdit() {
+    // Retrieve the guest ID stored earlier
+    var guestId = $('#editGuestForm').data('guestId');
+    var formData = $('#editGuestForm').serialize();
+    formData += '&id=' + encodeURIComponent(guestId); // Append the guestId to formData
+
+    $.post('/update_guest_details', formData)
+        .done(function(response) {
+            $('#editGuestModal').modal('hide');
+            // refresh the page or update the UI as needed
+            location.reload();
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            console.error("Error with request: ", textStatus, errorThrown);
+        });
+}
+
 
 // Update status and handle UI feedback
 function updateStatus(bookingNumber, status, callback) {

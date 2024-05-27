@@ -430,12 +430,31 @@ def delete_pdf():
 def manifest():
     return send_from_directory('static', 'manifest/manifest.json')
 
-@app_bp.route('/get_guest_details/<int:id>')
+@app_bp.route('/get_guest_details/<int:guest_id>', methods=['GET'])
 @login_required
-def get_guest_details(id):
-    guest = Guest.query.get_or_404(id)
-    guest_details = {column.name: getattr(guest, column.name) for column in guest.__table__.columns}
-    return jsonify(guest_details)
+def get_guest_details(guest_id):
+    guest = Guest.query.get_or_404(guest_id)
+    flight = Flight.query.get(guest.flight_id)
+    guest_data = {
+        'id': guest.id,
+        'first_name': guest.first_name,
+        'last_name': guest.last_name,
+        'booking': guest.booking,
+        'departure_from': guest.departure_from,
+        'arriving_date': guest.arriving_date,
+        'arrival_time': guest.arrival_time,
+        'transportation': guest.transportation,
+        'comments': guest.comments,
+        'flight': flight.flight_number if flight else 'No flight assigned'
+    }
+    return jsonify(guest_data)
+
+@app_bp.route('/get_flights', methods=['GET'])
+@login_required
+def get_flights():
+    flights = Flight.query.all()
+    flights_data = [{'id': flight.id, 'flight_number': flight.flight_number} for flight in flights]
+    return jsonify(flights_data)
 
 @app_bp.route('/update_guest_details', methods=['POST'])
 @login_required
@@ -446,12 +465,26 @@ def update_guest_details():
     guest = Guest.query.get_or_404(id)
     
     for key in request.form:
-        setattr(guest, key, request.form[key])
-        
-    log_activity('Guest', f'"{guest.last_name}, {guest.first_name}" has been updated successfully')
+        if key == 'flight_number':
+            flight_number = request.form[key]
+            flight = Flight.query.filter_by(flight_number=flight_number).first()
+            if not flight:
+                flight = Flight(
+                    flight_number=flight_number,
+                    departure_from=request.form.get('departure_from', ''),
+                    arrival_time=request.form.get('arrival_time', ''),
+                    arrival_date=request.form.get('arriving_date', '')
+                )
+                db.session.add(flight)
+                db.session.commit()
+            guest.flight_id = flight.id
+        else:
+            setattr(guest, key, request.form[key])
+    
     db.session.commit()
+    log_activity('Guest', f'"{guest.last_name}, {guest.first_name}" has been updated successfully')
     flash('Guest details updated successfully', 'success')
-    return jsonify({'status': 'success', 'message': 'Guest details updated successfully!'})
+    return jsonify({'status': 'success', 'message': f'"{guest.last_name}, {guest.first_name}" has been updated successfully'})
 
 @app_bp.route('/dashboard_stats')
 @login_required
@@ -494,13 +527,14 @@ def search():
         flight_filter = request.args.get('flight', None)
         arrival_time_filter = request.args.get('arrival_time', None)
         departure_from_filter = request.args.get('departure_from', None)
-        transport_filter = request.args.get('transportation', None)
+        transportation_filter = request.args.get('transportation', None)
+
     else:
         search_query = request.form.get('search_query', '').lower()
         flight_filter = request.args.get('flight', None)
         arrival_time_filter = request.args.get('arrival_time', None)
         departure_from_filter = request.args.get('departure_from', None)
-        transport_filter = request.args.get('transportation', None)
+        transportation_filter = request.args.get('transportation', None)
 
     guests_query = Guest.query
 
@@ -513,11 +547,11 @@ def search():
     if departure_from_filter:
         guests_query = guests_query.join(Flight).filter(Flight.departure_from.ilike(f'%{departure_from_filter}%'))
     
-    if transport_filter:
-        guests_query = guests_query.join(Flight).filter(Guest.transportation.ilike(f'%{transport_filter}%'))
+    if transportation_filter:
+        guests_query = guests_query.filter(Guest.transportation == transportation_filter)
 
     if search_query:
-        guests_query = guests_query.filter(or_(Guest.first_name.ilike(f'%{search_query}%'), Guest.last_name.ilike(f'%{search_query}%')))
+        guests_query = guests_query.filter(or_(Guest.first_name.ilike(f'%{search_query}%'), Guest.last_name.ilike(f'%{search_query}%'), Guest.flight.ilike(f'%{search_query}%'), Guest.departure_from.ilike(f'%{search_query}%')))
 
     filtered_data = guests_query.all()
     flight_details = {
@@ -539,7 +573,15 @@ def search():
     transportations = set(guest.transportation for guest in filtered_data if guest.transportation)
     transportation_colors = {transportation: '#' + hashlib.md5(transportation.encode()).hexdigest()[:6] for transportation in transportations}
 
-    return render_template('search_engine.html', form=form, filtered_data=filtered_data, flight_details=flight_details, flight_colors=flight_colors, arrival_time_colors=arrival_time_colors, departure_from_colors=departure_from_colors,transportation_colors=transportation_colors, pdf_files=pdf_files_urls)
+    return render_template('search_engine.html', form=form, 
+                            filtered_data=filtered_data,
+                            search_query=search_query, 
+                            flight_details=flight_details, 
+                            flight_colors=flight_colors, 
+                            arrival_time_colors=arrival_time_colors, 
+                            departure_from_colors=departure_from_colors,
+                            transportation_colors=transportation_colors, 
+                            pdf_files=pdf_files_urls)
 
 @app_bp.route('/update_status', methods=['POST'])
 @login_required
