@@ -340,7 +340,7 @@ function registerEventHandlers() {
             toggleButtons(bookingNumber, status);
             setTimeout(function() {
                 location.reload();
-            }, 1000);
+            }, 500);
         });
     });
 
