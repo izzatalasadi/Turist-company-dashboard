@@ -69,18 +69,8 @@ function setupSocketIO() {
             displayNotification(data);
         }
     });
-    return socket;
-}
 
-function displayNotification(message) {
-    let notificationHtml = `
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            <strong>New Message from ${message.sender}!</strong>
-            <p>${message.content}</p>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    `;
-    $('#notification-container').html(notificationHtml);
+    return socket;
 }
 
 // Prevent default install prompt and show a custom install button
@@ -353,7 +343,7 @@ function registerEventHandlers() {
         updateStatus(bookingNumber, status, function() {
             saveButtonState(bookingNumber, status);
             toggleButtons(bookingNumber, status);
-            
+            location.reload();
         });
     });
 
@@ -391,7 +381,6 @@ function registerEventHandlers() {
             success: function(response) {
                 $('#replyModal_' + messageId).modal('hide');
                 displayFlashMessage('Message been replied successfully.','success');  // Use the response message for user feedback
-                location.reload();
             },
             error: function(response) {
                 displayFlashMessage('Failed to send reply. ','warning');
@@ -448,7 +437,6 @@ function registerEventHandlers() {
     $('.list-group').on('click', '.delete-btn', function() {
         var messageId = $(this).data('message-id');
         deleteMessage(messageId);
-        location.reload();
     });
 
     // Navigation buttons
