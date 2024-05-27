@@ -64,11 +64,6 @@ function setupSocketIO() {
             removeBtn.hide();
         }
     });
-    socket.on('new_message', function(data) {
-        if (data.receiver_id === currentUserId) {
-            displayNotification(data);
-        }
-    });
 
     return socket;
 }
