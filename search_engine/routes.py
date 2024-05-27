@@ -604,7 +604,7 @@ def update_status():
             
             if new_status == "Checked":
                 guest.checked_time = datetime.utcnow()
-                guest.checked_by = current_user.username  # Ensure this is the user ID
+                guest.checked_by = current_user.id  # Ensure this is the user ID
             elif new_status == "Unchecked":
                 guest.checked_time = None
                 guest.checked_by = None
