@@ -454,3 +454,40 @@ span.count {
       padding: 15px;
   }
 }
+
+/* Message threads*/ 
+.message-thread {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  max-width: 70%;
+}
+
+.sender-message {
+  align-self: flex-start;
+  background-color: #f1f1f1;
+  border-radius: 10px 10px 10px 0;
+  padding: 10px;
+}
+
+.receiver-message {
+  align-self: flex-end;
+  background-color: #d1f1d1;
+  border-radius: 10px 10px 0 10px;
+  padding: 10px;
+}
+
+.message-thread p {
+  margin: 0;
+}
+
+.message-thread time {
+  align-self: flex-end;
+  font-size: 0.8rem;
+  color: #888;
+}
+.ui-draggable .ui-draggable-handle {
+  cursor: move;
+}

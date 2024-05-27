@@ -1,46 +1,102 @@
-{% extends 'base.html' %}
-{% block title %}Messages{% endblock %}
-{% block body %}
+{% extends 'base.html' %} {% block title %}Messages{% endblock %} {% block body
+%}
 <div class="container mt-4 mb-3">
-    <h2 class="display-6 text-center">Messages</h2>
-    {% if messages %}
-    <div class="list-group">
-        {% for message in messages %}
-        <article class="list-group-item {{ 'bg-light' if not message.read }}" data-message-id="{{ message.id }}">
-            <header class="d-flex justify-content-between align-items-center">
-                <label class="mb-1"><strong>From:</strong> {{ message.sender.username }}</label>
-                <time datetime="{{ message.timestamp.isoformat() }}" class="small text-muted">
-                    {{ message.timestamp.strftime('%Y-%m-%d %H:%M') }}
+  <h2 class="display-6 text-center">Messages</h2>
+  {% if messages %}
+  <div class="list-group">
+    {% for message in messages %}
+    <article
+      class="list-group-item {{ 'bg-light' if not message.read }}"
+      data-message-id="{{ message.id }}"
+    >
+      <header class="d-flex justify-content-between align-items-center">
+        <label class="mb-1"
+          ><strong>From:</strong> {{ message.sender.username }}</label
+        >
+        <time
+          datetime="{{ message.timestamp.isoformat() }}"
+          class="small text-muted"
+        >
+          {{ message.timestamp.strftime('%Y-%m-%d %H:%M') }}
+        </time>
+      </header>
+      <p class="mb-1"><strong>Message:</strong> {{ message.content }}</p>
+      <div class="d-flex justify-content-end gap-2">
+        <button
+          class="btn btn-danger delete-btn"
+          data-message-id="{{ message.id }}"
+        >
+        <i class="mdi mdi-delete mdi-24px"></i>
+        </button>
+        <button
+          class="btn btn-outline-primary reply-btn"
+          data-bs-toggle="modal"
+          data-bs-target="#replyModal_{{ message.id }}"
+        >
+        <i class="mdi mdi-send mdi-24px"></i>
+        </button>
+      </div>
+      <!-- Modal for replying to message -->
+      <div
+        class="modal fade"
+        id="replyModal_{{ message.id }}"
+        tabindex="-1"
+        aria-labelledby="replyModalLabel_{{ message.id }}"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="replyModalLabel_{{ message.id }}">
+                Reply to {{ message.sender.username }}
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              {% set thread = message_thread(message.sender_id, current_user.id)
+              %} {% for msg in thread %}
+              <div
+                class="message-thread {% if msg.sender_id == current_user.id %}receiver-message{% else %}sender-message{% endif %}"
+              >
+                <p>
+                  <strong>{{ msg.sender.username }}:</strong> {{ msg.content }}
+                </p>
+                <time
+                  datetime="{{ msg.timestamp.isoformat() }}"
+                  class="small text-muted"
+                >
+                  {{ msg.timestamp.strftime('%Y-%m-%d %H:%M') }}
                 </time>
-            </header>
-            <p class="mb-1"><strong>Message:</strong> {{ message.content }}</p>
-            <div class="d-flex justify-content-end gap-2">
-                <button class="btn btn-danger delete-btn" data-message-id="{{ message.id }}">Delete</button>
-                <button class="btn btn-primary reply-btn" data-bs-toggle="modal" data-bs-target="#replyModal_{{ message.id }}">Reply</button>
+              </div>
+              {% endfor %}
+              <textarea
+                class="form-control mt-3"
+                id="replyContent_{{ message.id }}"
+                placeholder="Write your reply here"
+              ></textarea>
             </div>
-            <!-- Modal for replying to message -->
-            <div class="modal fade" id="replyModal_{{ message.id }}" tabindex="-1" aria-labelledby="replyModalLabel_{{ message.id }}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="replyModalLabel_{{ message.id }}">Reply to {{ message.sender.username }}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <textarea class="form-control" id="replyContent_{{ message.id }}" placeholder="Write your reply here"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary send-btn" data-message-id="{{ message.id }}">Send</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline-primary send-btn"
+                data-message-id="{{ message.id }}"
+              >
+              <i class="mdi mdi-send mdi-24px"></i>
+              </button>
             </div>
-        </article>
-        {% endfor %}
-    </div>
-    {% else %}
-    <p class="text-center">You have no messages.</p>
-    {% endif %}
+          </div>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-center">You have no messages.</p>
+  {% endif %}
 </div>
 {% endblock %}

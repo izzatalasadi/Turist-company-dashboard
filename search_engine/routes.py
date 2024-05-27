@@ -36,17 +36,6 @@ def handle_connect():
 @socketio.on('disconnect')
 def handle_disconnect():
     logging.info('Client disconnected')
-    
-@socketio.on('send_message')
-def handle_send_message(message):
-    new_message = Message(sender_id=message['sender_id'], receiver_id=message['receiver_id'], content=message['content'])
-    db.session.add(new_message)
-    db.session.commit()
-
-    socketio.emit('receive_message', {
-        'content': message['content'],
-        'sender_id': message['sender_id']
-    }, room=message['receiver_id'])
 
 
 # =========== Bp section main ================
@@ -235,9 +224,10 @@ def login():
             user.update_last_seen()
             log_activity('Login', f'User {current_user.username} logged in successfully')
             return redirect(url_for('main.home'))  # Adjust according to your home page route
+        
         else:
             flash('Invalid username or password', 'warning')
-            return render_template('auth/login.html', form=form)
+            return jsonify({'login': 'error', 'message': 'Wrong username or password, try again'}), 404
     
     return render_template('auth/login.html', form=form)
 
@@ -704,6 +694,15 @@ def send_message(user_id):
         message = Message(sender_id=sender_id, receiver_id=receiver_id, content=content, timestamp=datetime.utcnow())
         db.session.add(message)
         db.session.commit()
+        
+        # Emit socket event for new message
+        socketio.emit('new_message', {
+            'sender_id': sender_id,
+            'receiver_id': receiver_id,
+            'content': content,
+            'timestamp': message.timestamp.isoformat()
+        }, room=receiver_id)
+
         flash('Message been sent.', 'success')
         return redirect(url_for('main.home'))
     else:
@@ -743,6 +742,15 @@ def reply_message(message_id):
     )
     db.session.add(reply_message)
     db.session.commit()
+    
+    # Emit socket event for new message
+    socketio.emit('new_message', {
+        'sender': current_user.username,
+        'receiver_id': original_message.sender_id,
+        'content': reply_content,
+        'timestamp': reply_message.timestamp.isoformat()
+    }, room=original_message.sender_id)
+
     flash('Reply sent', 'success')
     return jsonify({'message': 'Reply sent'}), 200
 
@@ -751,8 +759,14 @@ def reply_message(message_id):
 def messages():
     all_messages = Message.query.filter_by(receiver_id=current_user.id).order_by(Message.timestamp.desc()).all()
     unread_count = Message.query.filter_by(receiver_id=current_user.id, read=False).count()
-    return render_template('partials/_messages.html', messages=all_messages, unread_count=unread_count)
+    return render_template('partials/_messages.html', messages=all_messages, unread_count=unread_count, message_thread=message_thread)
 
+def message_thread(user1_id, user2_id):
+    return Message.query.filter(
+        ((Message.sender_id == user1_id) & (Message.receiver_id == user2_id)) |
+        ((Message.sender_id == user2_id) & (Message.receiver_id == user1_id))
+    ).order_by(Message.timestamp).all()
+        
 @app_bp.route('/protected')
 @login_required
 def protected_route():
