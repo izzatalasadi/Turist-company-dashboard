@@ -67,13 +67,7 @@ function setupSocketIO() {
     socket.on('new_message', function(data) {
         if (data.receiver_id === currentUserId) {
             displayNotification(data);
-            location.reload();
         }
-    });
-    // Listen for receive_message event
-    socket.on('receive_message', function (data) {
-        // Reload the page when a new message is received
-        location.reload();
     });
     return socket;
 }
@@ -101,6 +95,7 @@ function setupInstallPrompt(deferredPrompt) {
         if (deferredPrompt) {
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then((choiceResult) => {
+                console.log(choiceResult.outcome === 'accepted' ? 'User accepted the A2HS prompt' : 'User dismissed the A2HS prompt');
                 deferredPrompt = null;
                 $('#installButton').hide();
             });
@@ -256,6 +251,7 @@ function renderPDFPage(pageNum) {
 
     if (isRendering && renderTask) {
         renderTask.cancel(); // Ensure the current rendering task is cancelled
+        console.log(`Rendering for page ${currentPage} cancelled as new request for page ${pageNum} received.`);
     }
 
     clearCanvas();
@@ -278,10 +274,10 @@ function renderPDFPage(pageNum) {
             document.getElementById('page-num').textContent = pageNum;
             document.getElementById('page-count').textContent = totalPages;
             isRendering = false;
-        
+            console.log(`Rendered page ${pageNum}.`);
         }).catch(function(renderError) {
             if (renderError.name === 'RenderingCancelledException') {
-                
+                console.log(`Rendering for page ${pageNum} was cancelled.`);
             } else {
                 console.error("Rendering error:", renderError);
             }
@@ -357,6 +353,9 @@ function registerEventHandlers() {
         updateStatus(bookingNumber, status, function() {
             saveButtonState(bookingNumber, status);
             toggleButtons(bookingNumber, status);
+            setTimeout(function() {
+                location.reload();
+            }, 1000);
         });
     });
 
@@ -507,7 +506,8 @@ function registerEventHandlers() {
 
 // Function to display flash messages dynamically
 function displayFlashMessage(message, type) {
-    
+    console.log('Displaying flash message:', message, 'with type:', type);
+
     // Clear existing flash messages
     $('.flash-messages').empty();
 
@@ -719,7 +719,7 @@ function updateActivitiesList() {
             $('.bullet-line-list').html(activitiesHtml);
         },
         error: function(error) {
-            console.error('Error updating activities:', error);
+            console.log('Error updating activities:', error);
         }
     });
 }
