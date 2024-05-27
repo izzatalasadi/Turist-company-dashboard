@@ -338,9 +338,7 @@ function registerEventHandlers() {
         updateStatus(bookingNumber, status, function() {
             saveButtonState(bookingNumber, status);
             toggleButtons(bookingNumber, status);
-            setTimeout(function() {
-                location.reload();
-            }, 500);
+            location.reload();
         });
     });
 
