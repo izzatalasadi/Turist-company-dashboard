@@ -6,13 +6,13 @@ const urlsToCache = [
   '/static/css/styles.css',
   '/static/js/scripts.js',
   '/static/js/vendor.bundle.base.js',
-  '/static/js/bootstrap-datepicker.min.js',
   '/static/js/off-canvas.js',
   '/static/js/hoverable-collapse.js',
   '/static/js/template.js',
   '/static/js/settings.js',
-  '/static/images/faces/face1.jpeg', // Example image
-  
+  '/static/images/faces/face1.jpeg',
+  '/static/images/faces/favicon.ico',
+
 ];
 
 // Install event - cache static assets
@@ -30,52 +30,82 @@ self.addEventListener('install', function(event) {
   event.waitUntil(
     fetch('/api/guests')
       .then(response => {
+        console.log('Guest data response:', response);
         if (!response.ok) {
           throw new Error('Failed to fetch guests data');
         }
-        return response.json().catch(() => {
-          throw new Error('Guest data is not valid JSON');
+        return response.text().then(text => {
+          try {
+            return JSON.parse(text);
+          } catch (e) {
+            throw new Error('Guest data is not valid JSON');
+          }
         });
       })
       .then(guests => {
+        console.log('Parsed guest data:', guests);
         if (!Array.isArray(guests)) {
           throw new Error('Guest data is not an array');
         }
-        const guestRequests = guests.map(guest => {
-          return new Request(`/guests/${guest.id}`, { cache: 'reload' });
-        });
-        return caches.open(CACHE_NAME).then(cache => {
-          return cache.addAll(guestRequests);
-        });
-      }).catch(error => {
-        console.error('Failed to cache guest data:', error);
+        const guestRequests = guests.map(guest => new Request(`/guests/${guest.id}`, { cache: 'reload' }));
+        return caches.open(CACHE_NAME)
+          .then(cache => {
+            return Promise.allSettled(guestRequests.map(request => fetch(request).then(response => {
+              if (!response.ok) throw new Error(`Request failed: ${request.url}`);
+              return cache.put(request, response);
+            })));
+          })
+          .then(results => {
+            results.forEach(result => {
+              if (result.status === 'rejected') {
+                console.error('Caching guest data failed:', result.reason);
+              }
+            });
+          })
+          .catch(error => console.error('Caching guest data process failed:', error));
       })
+      .catch(error => console.error('Failed to cache guest data:', error))
   );
 
   // Fetch PDFs and add them to the cache
   event.waitUntil(
     fetch('/api/pdfs')
       .then(response => {
+        console.log('PDF data response:', response);
         if (!response.ok) {
           throw new Error('Failed to fetch PDFs data');
         }
-        return response.json().catch(() => {
-          throw new Error('PDF data is not valid JSON');
+        return response.text().then(text => {
+          try {
+            return JSON.parse(text);
+          } catch (e) {
+            throw new Error('PDF data is not valid JSON');
+          }
         });
       })
       .then(pdfs => {
+        console.log('Parsed PDF data:', pdfs);
         if (!Array.isArray(pdfs)) {
           throw new Error('PDF data is not an array');
         }
-        const pdfRequests = pdfs.map(pdf => {
-          return new Request(`/static/pdf/${pdf.filename}`, { cache: 'reload' });
-        });
-        return caches.open(CACHE_NAME).then(cache => {
-          return cache.addAll(pdfRequests);
-        });
-      }).catch(error => {
-        console.error('Failed to cache PDF files:', error);
+        const pdfRequests = pdfs.map(pdf => new Request(`/static/pdf/${pdf.filename}`, { cache: 'reload' }));
+        return caches.open(CACHE_NAME)
+          .then(cache => {
+            return Promise.allSettled(pdfRequests.map(request => fetch(request).then(response => {
+              if (!response.ok) throw new Error(`Request failed: ${request.url}`);
+              return cache.put(request, response);
+            })));
+          })
+          .then(results => {
+            results.forEach(result => {
+              if (result.status === 'rejected') {
+                console.error('Caching PDF files failed:', result.reason);
+              }
+            });
+          })
+          .catch(error => console.error('Caching PDF files process failed:', error));
       })
+      .catch(error => console.error('Failed to cache PDF files:', error))
   );
 });
 

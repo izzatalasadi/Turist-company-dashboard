@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 from flask import Flask
 from search_engine.extensions import db, migrate, login_manager, socketio, limiter, cors, csrf
@@ -60,10 +60,10 @@ def update_flight_info(app):
 def create_app(config_class):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7) 
 
     with app.app_context():
-        from . import routes
-        from search_engine.models import User, Flight
+        from search_engine.models import User
 
     from .routes import main_bp, auth_bp, app_bp
     app.register_blueprint(auth_bp)

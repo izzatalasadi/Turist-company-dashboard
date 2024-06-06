@@ -42,7 +42,28 @@ $(document).ready(function () {
 
     // Event handlers for buttons and other UI interactions
     registerEventHandlers();
+
+    // Bootstrap Offcanvas and Collapse Initialization
+    initializeBootstrapComponents();
+    
+    navtoggler()
+    
 });
+
+function navtoggler() {
+    document.querySelectorAll('.navbar-toggler').forEach(function (toggler) {
+        toggler.addEventListener('click', function () {
+          const icon = toggler.querySelector('i');
+          if (toggler.getAttribute('aria-expanded') === 'true') {
+            icon.classList.remove('mdi-chevron-up');
+            icon.classList.add('mdi-chevron-down');
+          } else {
+            icon.classList.remove('mdi-chevron-down');
+            icon.classList.add('mdi-chevron-up');
+          }
+        });
+      });
+  };
 
 // Socket.IO setup
 function setupSocketIO() {
@@ -172,7 +193,7 @@ function toggleNightMode() {
     }
 }
 
-// Enhanced PDF Thumbnails
+// PDF Thumbnails
 function generateThumbnails(pdfDoc) {
     for (let page = 1; page <= pdfDoc.numPages; page++) {
         pdfDoc.getPage(page).then(function(page) {
@@ -492,6 +513,7 @@ function registerEventHandlers() {
         }
     });
 
+    
     // Tooltip Initialization
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -722,10 +744,7 @@ function updateActivitiesList() {
         url: '/api/activities',  // Adjust if the route differs
         type: 'GET',
         success: function(data) {
-            if (!Array.isArray(data)) {
-                console.error('Error in Activity with expected array');
-                return;
-            }
+           
             let activitiesHtml = '';
             data.forEach(function(activity) {
                 activitiesHtml += `
@@ -742,9 +761,38 @@ function updateActivitiesList() {
             $('.bullet-line-list').html(activitiesHtml);
         },
         error: function(error) {
-            console.log('Error updating activities:', error);
+            console.error('Error updating activities:', error);
         }
     });
 }
+
+// Function to initialize Bootstrap Offcanvas and Collapse components
+function initializeBootstrapComponents() {
+    // Ensure Offcanvas elements are initialized
+    const offcanvasElementList = [].slice.call(document.querySelectorAll('.offcanvas'));
+    const offcanvasList = offcanvasElementList.map(function (offcanvasEl) {
+        return new bootstrap.Offcanvas(offcanvasEl);
+    });
+
+    // Ensure Collapse elements are initialized
+    const collapseElementList = [].slice.call(document.querySelectorAll('.collapse'));
+    const collapseList = collapseElementList.map(function (collapseEl) {
+        return new bootstrap.Collapse(collapseEl, {
+            toggle: false
+        });
+    });
+
+    // Add event listeners to collapse triggers
+    document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(button => {
+        button.addEventListener('click', function () {
+            let target = document.querySelector(button.getAttribute('data-bs-target'));
+            if (target) {
+                let collapseInstance = bootstrap.Collapse.getOrCreateInstance(target);
+                collapseInstance.toggle();
+            }
+        });
+    });
+}
+
 
 setInterval(updateActivitiesList, 3000);

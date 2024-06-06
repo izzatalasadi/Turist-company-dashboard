@@ -130,14 +130,22 @@ def log_activity(event, description):
 @main_bp.route('/api/activities')
 @login_required
 def api_activities():
-    activities = Activity.query.order_by(Activity.timestamp.desc()).all()
-    activity_list = [{
-        'username': activity.user.username,
-        'event': activity.event,
-        'description': activity.description,
-        'timestamp': activity.timestamp.strftime('%Y-%m-%d %H:%M:%S')
-    } for activity in activities]
-    return jsonify(activity_list)
+    try:
+        if current_user.is_authenticated:
+            activities = Activity.query.order_by(Activity.timestamp.desc()).all()
+            activity_list = [{
+                'username': activity.user.username,
+                'event': activity.event,
+                'description': activity.description,
+                'timestamp': activity.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+            } for activity in activities]
+            return jsonify(activity_list)
+        else:
+            current_app.logger.error("User is not authenticated")
+            return jsonify({'error': 'User is not authenticated'}), 401
+    except Exception as e:
+        current_app.logger.error(f"Error fetching activities: {e}")
+        return jsonify({'error': 'Failed to fetch activities'}), 500
 
 @main_bp.route('/api/messages')
 @login_required

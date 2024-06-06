@@ -500,7 +500,7 @@ span.count {
 /* scroll botton */
 #scrollToTopBtn {
   position: fixed;
-  bottom: 5px;
+  bottom: 50px;
   left: 10px;
   height: 45px;
   width: 45px;
@@ -547,5 +547,98 @@ span.count {
   to {
     opacity: 0;
     display: none;
+  }
+}
+
+/* Default hide bottom navigation */
+.navbar.fixed-bottom {
+  display: none;
+}
+
+/* Show bottom navigation on tablets and mobile devices */
+@media (max-width: 767.98px) {
+  .navbar.fixed-bottom {
+    display: flex;
+  }
+
+  .sidebar-offcanvas {
+    display: none;
+  }
+  .navbar-toggler {
+    padding:0px
+  }
+  .navbar-toggler.span {
+    display: none;
+  }
+}
+
+.navbar.fixed-bottom {
+  box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .nav-item {
+  flex: 1;
+  text-align: center;
+}
+
+.navbar .nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #555;
+}
+
+.navbar .nav-link .menu-icon {
+  font-size: 24px;
+}
+
+.navbar .nav-link .menu-title {
+  font-size: 12px;
+}
+
+.navbar .nav-item.active .nav-link {
+  color: #007bff;
+}
+
+/* Center and animate toggle button */
+.navbar-toggler {
+  transition: transform 0.3s ease;
+}
+
+.navbar-toggler.collapsed i {
+  transform: rotate(0);
+}
+
+.navbar-toggler i {
+  transform: rotate(180deg);
+}
+
+.collapse {
+  animation: slideDown 0.3s ease-out;
+}
+
+.collapse.show {
+  animation: slideUp 0.3s ease-in;
+}
+
+@keyframes slideDown {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: auto;
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    height: auto;
+    opacity: 1;
+  }
+  to {
+    height: 0;
+    opacity: 0;
   }
 }
