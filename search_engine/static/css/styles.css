@@ -491,3 +491,61 @@ span.count {
 .ui-draggable .ui-draggable-handle {
   cursor: move;
 }
+
+/* updated flight color */
+.updated-flight {
+  background-color: #d4edda; /* Light green */
+}
+
+/* scroll botton */
+#scrollToTopBtn {
+  position: fixed;
+  bottom: 5px;
+  left: 10px;
+  height: 45px;
+  width: 45px;
+  z-index: 99;
+  display: none;
+  border: none;
+  background-color: #959393;
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+  opacity: 0.8; /* 80% transparent */
+  transition: opacity 0.3s, background-color 0.3s, transform 0.3s;
+}
+
+#scrollToTopBtn:hover {
+  background-color: #333;
+  opacity: 1; /* Fully opaque on hover */
+  transform: scale(1.1); /* Slightly increase size on hover */
+}
+
+#scrollToTopBtn.show {
+  display: block;
+  animation: fadeIn 0.5s;
+}
+
+#scrollToTopBtn.hide {
+  display: block;
+  animation: fadeOut 0.5s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.8;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 0.8;
+  }
+  to {
+    opacity: 0;
+    display: none;
+  }
+}

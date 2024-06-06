@@ -1,48 +1,62 @@
+from datetime import datetime
 import logging
-from flask import Flask, current_app
+from flask import Flask
 from search_engine.extensions import db, migrate, login_manager, socketio, limiter, cors, csrf
-from search_engine.config import Config
-from search_engine.models import User, Flight
+from search_engine.models import Flight
 from werkzeug.security import generate_password_hash
 from flask.cli import with_appcontext
 import click
-from pyflightdata import FlightData
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 from search_engine.flight_data import FlightInfo
-from sqlalchemy import text
+
 
 def update_flight_info(app):
-    print("Updating flight info periodically")
-    
-    with app.app_context():  # Ensure you have the app context for DB access
-        flights = Flight.query.all()  # Retrieve all flights from your database
-        logging.info(f"All flights: {flights}")
-        flight_info_obj = FlightInfo(flights)
-        flights_info = flight_info_obj.get_flights_info()
+    with app.app_context():
+        try:
+            logging.info("Starting update of flight info.")
+            flights = Flight.query.all()
+            if not flights:
+                logging.warning("No flights found in the database.")
+                return
 
-        for flight in flights:
-            try:
-                # Fetch latest flight data from the API
-                logging.info(f"Flight-{flight.flight_number}: {flights_info[flight.flight_number]}")
-                
-                if flights_info:
-                    new_arrival_date = flights_info[flight.flight_number][0]
-                    new_arrival_time = flights_info[flight.flight_number][1]
-                    
-                    # Parse the data and update the database record
-                    if flight.arrival_time != new_arrival_time:
-                        flight.arrival_time = new_arrival_time
-                    if flight.arrival_date != new_arrival_date:
-                        flight.arrival_date = new_arrival_date 
-                    
-                    db.session.commit()
-                    logging.info(f"Updated flight: {flight.flight_number}, arrival time: {flight.arrival_time}")
-                else:
-                    logging.warning(f"No new data found for flight {flight.flight_number}")
-            except Exception as e:
-                logging.error(f"Failed to fetch or update data for flight {flight.flight_number}: {e}")
+            logging.info(f"Found {len(flights)} flights to update.")
+            flight_info_obj = FlightInfo([flight.flight_number for flight in flights])
+            flights_info = flight_info_obj.get_flights_info()
 
+            for flight in flights:
+                try:
+                    if flight.flight_number in flights_info:
+                        flight_data = flights_info[flight.flight_number]
+                        new_arrival_date = flight_data[0]
+                        new_arrival_time = flight_data[1]
+
+                        updated = False
+                        if flight.arrival_date != new_arrival_date:
+                            flight.arrival_date = new_arrival_date
+                            updated = True
+                        if flight.arrival_time != new_arrival_time:
+                            flight.arrival_time = new_arrival_time
+                            updated = True
+
+                        flight.updated = updated  # Set the updated flag
+                        db.session.commit()
+
+                        if updated:
+                            logging.info(f"Updated flight {flight.flight_number}: arrival_date={flight.arrival_date}, arrival_time={flight.arrival_time}")
+                        else:
+                            logging.info(f"No changes for flight {flight.flight_number}")
+
+                    else:
+                        logging.warning(f"No data found for flight {flight.flight_number}")
+
+                except Exception as e:
+                    logging.error(f"Error updating flight {flight.flight_number}: {e}")
+
+        except Exception as e:
+            logging.error(f"Failed to update flight info: {e}")
+            
+# Create app
 def create_app(config_class):
     app = Flask(__name__)
     app.config.from_object(config_class)
@@ -97,7 +111,7 @@ def create_app(config_class):
 
     # Initialize the scheduler with the Flask app context
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=update_flight_info, args=[app], trigger="interval", minutes=10)
+    scheduler.add_job(func=update_flight_info, args=[app], trigger="interval", minutes=3)
     scheduler.start()
 
     # Shut down the scheduler when exiting the app

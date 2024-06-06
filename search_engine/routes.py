@@ -4,7 +4,7 @@ import hashlib
 import logging
 from io import BytesIO
 from datetime import datetime
-from operator import or_
+
 from PIL import Image
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
@@ -12,9 +12,9 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_user, logout_user, login_required, current_user
 #from flask_cors import cross_origin
 from search_engine.forms import LoginForm, AddUserForm, DeleteUserForm, UpdateProfileForm, SearchForm
-from search_engine.models import User, Message, Guest, Activity, Flight
+from search_engine.models import User, Message, Guest, Activity, Flight, Transportation
 import uuid
-from search_engine.extensions import db, csrf
+from search_engine.extensions import db
 from search_engine.clean_data import ExcelProcessor
 from search_engine import socketio, limiter
 from sqlalchemy.orm import joinedload
@@ -319,45 +319,113 @@ def import_file():
 
     return render_template('file_management/upload_file.html')
 
+
 def process_excel(file):
     processor = ExcelProcessor(file)
     
     try:
         df = processor.read_and_process_excel()
+        
+        # Ensure the DataFrame is not empty
+        if df.empty:
+            logging.warning("No guest data found in the Excel file.")
+            flash("No guest data found in the Excel file.", 'warning')
+            return
+
+        # First, add all flights to the database
         for _, row in df.iterrows():
-            flight = Flight.query.filter_by(flight_number=str(row['FLIGHT']).strip()).first()
+            flight_number = row.get('flight', '')
+            if flight_number:
+                flight = Flight.query.filter_by(flight_number=flight_number).first()
+                if not flight:
+                    try:
+                        flight = Flight(
+                            flight_number=flight_number,
+                            departure_from=row.get('org_city', ''),
+                            arrival_time=row.get('transfer_time', ''),
+                            arrival_date=row.get('"arrival_date"', '')
+                        )
+                        db.session.add(flight)
+                        db.session.flush()
+                    except Exception as e:
+                        logging.error(f"Failed to create flight: {e}")
+                        flash(f"Failed to create flight: {e}", 'danger')
+                        return
+
+        # Commit all flight additions
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            logging.error(f"Failed to add flights to the database: {e}")
+            flash(f"Failed to add flights to the database: {e}", 'danger')
+            return
+        
+        
+        # Then, handle guests and transportations
+        for _, row in df.iterrows():
+            flight_number = row.get('flight', '')
+            if flight_number:
+                flight = Flight.query.filter_by(flight_number=flight_number).first()
+                flight = Flight.query.filter_by(flight_number=flight_number).first()
             
-            if not flight:
-                flight = Flight(
-                    flight_number=str(row['FLIGHT']).strip(),
-                    departure_from=str(row['FROM']).strip(),
-                    arrival_time=str(row.get('TIME', '')).strip()
-                )
-                db.session.add(flight)
-                
-            existing_guest = Guest.query.filter_by(booking=str(row['BOOKING'])).first()
-            if not existing_guest:
-                guest = Guest(
-                    booking=str(row['BOOKING']),
-                    first_name=str(row['FIRST NAME']),
-                    last_name=str(row['LAST NAME']),
-                    flight_id=flight.id,
-                    departure_from=flight.departure_from,
-                    arrival_time=flight.arrival_time,
-                    arriving_date=flight.arrival_date,
-                    transportation=str(row['TRANSPORTATION']),
-                    status=str(row['STATUS']),
-                    comments=str(row['COMMENTS'])
-                )
-                db.session.add(guest)
-            else:
-                logging.warning(f"Guest with booking {row['BOOKING']} already exists. Skipping.")
+                existing_guest = Guest.query.filter_by(booking=str(row.get('booking_no', ''))).first()
 
-        db.session.commit()
+                if not existing_guest:
+                    try:
+                        guest = Guest(
+                            booking=str(row.get('booking_no', '')),
+                            first_name=str(row.get('first_name', '')),
+                            last_name=str(row.get('last_name', '')),
+                            flight_id=flight.id if flight else None,
+                            departure_from=flight.departure_from if flight else None,
+                            arrival_time=flight.arrival_time if flight else None,
+                            arriving_date = datetime.strptime(str(row.get('arrival_date', '')).split()[0], '%Y-%m-%d').strftime('%d-%m-%y'),
+                            cabin = str(row.get('cabin', '')),
+                            status=str(row.get('STATUS', '')),
+                            comments=str(row.get('COMMENTS', ''))
+                        )
+                        db.session.add(guest)
+                        db.session.flush()
+                        guest_id = guest.id
+                        
+                    except Exception as e:
+                        db.session.rollback()
+                        logging.error(f"Failed to create guest: {e}")
+                        flash(f"Failed to create guest: {e}", 'danger')
+                        continue
+                else:
+                    guest_id = existing_guest.id
+
+                try:
+                    # Fetch the transportation related to this guest
+                    exist_transportation = Transportation.query.filter_by(guest_id=guest_id).first()
+                    if not exist_transportation:
+                        # Add transportation record
+                        transportation = Transportation(
+                            guest_id=guest_id,
+                            transport_type=str(row.get('TRANSPORTATION', '')),
+                            transport_details=str(row.get('transport_details', ''))  # Adjust based on your Excel structure
+                        )
+                        db.session.add(transportation)
+                except Exception as e:
+                    db.session.rollback()
+                    logging.error(f"Failed to create transportation record: {e}")
+                    flash(f"Failed to create transportation record: {e}", 'danger')
+                    continue
+
+        try:
+            db.session.commit()
+            flash('Excel information added to database', 'success')
+        except Exception as e:
+            db.session.rollback()
+            logging.error(f"Failed to add guest or transportation records to the database: {e}")
+            flash(f"Failed to add guest or transportation records to the database: {e}", 'danger')
+
     except Exception as e:
-        db.session.rollback()
         logging.error(f"Failed to process file: {e}")
-
+        flash(f"Failed to process file: {e}", 'danger')
+        
 def save_pdf(file):
     directory = os.path.join(current_app.root_path, 'static', 'pdf')
     os.makedirs(directory, exist_ok=True)
@@ -390,13 +458,17 @@ def delete_all_guests():
         return redirect(url_for('auth.home'))
 
     try:
-        num_deleted = Guest.query.delete()
+        num_deleted_guests = Guest.query.delete()
+        num_deleted_trans = Transportation.query.delete()
+        num_deleted_flights = Flight.query.delete()
         db.session.commit()
-        flash(f'Successfully deleted {num_deleted} guests from the database.', 'success')
+        flash(f'Successfully deleted {num_deleted_guests} guests, transportation {num_deleted_trans}, and flights {num_deleted_flights} from the database.', 'success')
+    
     except Exception as e:
         db.session.rollback()
-        flash('Failed to delete guests due to an error.', 'danger')
+        flash('Failed to delete data due to an error.', 'danger')
         logging.error(f'Error deleting all guests: {e}')
+    
     return redirect(url_for('auth.delete_guest_page'))
 
 @auth_bp.route('/delete_pdf', methods=['POST'])
@@ -425,7 +497,6 @@ def manifest():
 @login_required
 def get_guest_details(guest_id):
     guest = Guest.query.get_or_404(guest_id)
-    flight = Flight.query.get(guest.flight_id)
     guest_data = {
         'id': guest.id,
         'first_name': guest.first_name,
@@ -434,9 +505,9 @@ def get_guest_details(guest_id):
         'departure_from': guest.departure_from,
         'arriving_date': guest.arriving_date,
         'arrival_time': guest.arrival_time,
-        'transportation': guest.transportation,
         'comments': guest.comments,
-        'flight': flight.flight_number if flight else 'No flight assigned'
+        'flight_number': guest.flight.flight_number if guest.flight else None,
+        'transportations': [transport.to_dict() for transport in guest.transportation]
     }
     return jsonify(guest_data)
 
@@ -482,7 +553,7 @@ def update_guest_details():
 def dashboard_stats():
     total_guests = Guest.query.count()
     total_checked = Guest.query.filter_by(status='Checked').count()
-    total_unchecked = Guest.query.filter_by(status='Unchecked').count()
+    total_unchecked = total_guests - total_checked
 
     stats = {
         'total_guests': total_guests,
@@ -504,6 +575,7 @@ def search_results():
                             user_results=user_results, 
                             message_results=message_results)
 
+
 @app_bp.route('/search', methods=['POST', 'GET'])
 @limiter.limit("30 per minute")
 @login_required
@@ -515,17 +587,13 @@ def search():
     form = SearchForm()
     if form.validate_on_submit():
         search_query = form.search_query.data.lower()
-        flight_filter = request.args.get('flight', None)
-        arrival_time_filter = request.args.get('arrival_time', None)
-        departure_from_filter = request.args.get('departure_from', None)
-        transportation_filter = request.args.get('transportation', None)
-
     else:
         search_query = request.form.get('search_query', '').lower()
-        flight_filter = request.args.get('flight', None)
-        arrival_time_filter = request.args.get('arrival_time', None)
-        departure_from_filter = request.args.get('departure_from', None)
-        transportation_filter = request.args.get('transportation', None)
+
+    flight_filter = request.args.get('flight', None)
+    arrival_time_filter = request.args.get('arrival_time', None)
+    departure_from_filter = request.args.get('departure_from', None)
+    transportation_filter = request.args.get('transportation', None)
 
     guests_query = Guest.query
 
@@ -539,7 +607,7 @@ def search():
         guests_query = guests_query.join(Flight).filter(Flight.departure_from.ilike(f'%{departure_from_filter}%'))
     
     if transportation_filter:
-        guests_query = guests_query.filter(Guest.transportation == transportation_filter)
+        guests_query = guests_query.join(Transportation).filter(Transportation.transport_type.ilike(f'%{transportation_filter}%'))
 
     if search_query:
         guests_query = guests_query.join(Flight).filter(
@@ -552,24 +620,30 @@ def search():
         )
 
     filtered_data = guests_query.options(joinedload(Guest.flight)).all()
+    total_guests = Guest.query.count()
+    total_checked = Guest.query.filter_by(status='Checked').count()
+    
+    
     flight_details = {
-        'count': guests_query.count(),
+        'count': total_guests,
         'total_items': len(filtered_data),
-        'total_unchecked': guests_query.filter(Guest.status == 'Unchecked').count(),
-        'total_checked': guests_query.filter(Guest.status == 'Checked').count()
+        'total_checked': total_checked
     }
 
     flights = set(guest.flight for guest in filtered_data if guest.flight)
     flight_colors = {flight.flight_number: '#' + hashlib.md5(flight.flight_number.encode()).hexdigest()[:6] for flight in flights if flight and flight.flight_number}
     
-    arrival_times = set(flight.arrival_time for flight in filtered_data if flight.arrival_time)
+    arrival_times = set(flight.arrival_time for flight in flights if flight.arrival_time)
     arrival_time_colors = {arrival_time: '#' + hashlib.md5(arrival_time.encode()).hexdigest()[:6] for arrival_time in arrival_times}
     
-    departure_froms = set(flight.departure_from for flight in filtered_data if flight.departure_from)
+    departure_froms = set(flight.departure_from for flight in flights if flight.departure_from)
     departure_from_colors = {departure_from: '#' + hashlib.md5(departure_from.encode()).hexdigest()[:6] for departure_from in departure_froms}
     
-    transportations = set(guest.transportation for guest in filtered_data if guest.transportation)
-    transportation_colors = {transportation: '#' + hashlib.md5(transportation.encode()).hexdigest()[:6] for transportation in transportations}
+    transportations = set()
+    for guest in filtered_data:
+        for transportation in guest.transportation:
+            transportations.add(transportation)
+    transportation_colors = {transport.transport_type: '#' + hashlib.md5(transport.transport_type.encode()).hexdigest()[:6] for transport in transportations}
 
     return render_template('search_engine.html', form=form, 
                             filtered_data=filtered_data,
@@ -580,7 +654,6 @@ def search():
                             departure_from_colors=departure_from_colors,
                             transportation_colors=transportation_colors, 
                             pdf_files=pdf_files_urls)
-    
     
 @app_bp.route('/update_status', methods=['POST'])
 @login_required

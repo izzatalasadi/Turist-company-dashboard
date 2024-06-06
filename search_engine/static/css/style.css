@@ -14658,8 +14658,8 @@ ol li {
 
 #settings-trigger {
   position: fixed;
-  bottom: 40px;
-  right: 30px;
+  bottom: 60px;
+  left: 10px;
   height: 45px;
   width: 45px;
   background: #1F3BB3;
@@ -14695,9 +14695,4 @@ ol li {
 .rtl #settings-trigger {
   right: auto;
   left: 30px;
-}
-@media (max-width: 991px) {
-  #settings-trigger {
-    display: none;
-  }
 }

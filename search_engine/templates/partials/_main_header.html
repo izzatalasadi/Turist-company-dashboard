@@ -10,15 +10,12 @@
         </h3>
       </div>
       <div>
+        <p class="statistics-title"></p>
+      </div>
+      <div>
         <p class="statistics-title">Checked</p>
         <h3 class="rate-percentage" id="total_checked">
           {{ flight_details['total_checked'] | default(0, true) }}
-        </h3>
-      </div>
-      <div>
-        <p class="statistics-title">Unchecked</p>
-        <h3 class="rate-percentage" id="total_unchecked">
-          {{ flight_details['total_unchecked'] | default(0, true) }}
         </h3>
       </div>
     </div>

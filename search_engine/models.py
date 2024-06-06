@@ -68,27 +68,46 @@ class Flight(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     flight_number = db.Column(db.String(100), nullable=False)
     departure_from = db.Column(db.String(100), nullable=True)
-    arrival_time = db.Column(db.String(100), nullable=True)  # Changed from String to DateTime for better handling
-    arrival_date = db.Column(db.String(100), nullable=True)  # Changed from String to DateTime for better handling
+    arrival_time = db.Column(db.String(100), nullable=True)
+    arrival_date = db.Column(db.String(100), nullable=True)
 
     def __str__(self):
         return f"{self.flight_number}"
+
 class Guest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     booking = db.Column(db.String(100), nullable=False)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
-    flight_id = db.Column(db.Integer, db.ForeignKey('flight.id'))  
+    flight_id = db.Column(db.Integer, db.ForeignKey('flight.id'))
     departure_from = db.Column(db.String(100), nullable=True)
     arriving_date = db.Column(db.String(100), nullable=True)
-    arrival_time = db.Column(db.String(100), nullable=True)  
-    transportation = db.Column(db.String(100))
+    arrival_time = db.Column(db.String(100), nullable=True)
     status = db.Column(db.String(100))  # Checked, Unchecked
+    cabin = db.Column(db.String(100), default=None)
     checked_time = db.Column(db.DateTime, default=None)
-    checked_by = db.Column(db.Integer, db.ForeignKey('user.id')) 
-    comments = db.Column(db.Text)
+    checked_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    comments = db.Column(db.Text, default=None)
 
     flight = db.relationship('Flight', backref='guests')
+    transportation = db.relationship('Transportation', backref='guest_transportation', lazy=True, cascade='all, delete-orphan', overlaps="transportation_details,guest")
 
     def __repr__(self):
         return f'<Guest {self.booking}>'
+
+class Transportation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    guest_id = db.Column(db.Integer, db.ForeignKey('guest.id'), nullable=False)
+    transport_type = db.Column(db.String(100), nullable=False)
+    transport_details = db.Column(db.String(255), nullable=True)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'guest_id': self.guest_id,
+            'transport_type': self.transport_type,
+            'transport_details': self.transport_details
+        }
+
+    def __repr__(self):
+        return f'<{self.transport_type}>'

@@ -259,10 +259,9 @@ function renderPDFPage(pageNum) {
             document.getElementById('page-num').textContent = pageNum;
             document.getElementById('page-count').textContent = totalPages;
             isRendering = false;
-            console.log(`Rendered page ${pageNum}.`);
         }).catch(function(renderError) {
             if (renderError.name === 'RenderingCancelledException') {
-                console.log(`Rendering for page ${pageNum} was cancelled.`);
+                console.error(`Rendering for page ${pageNum} was cancelled.`);
             } else {
                 console.error("Rendering error:", renderError);
             }
@@ -323,6 +322,17 @@ function setupInteractiveElements() {
 
 // Register event handlers for UI elements
 function registerEventHandlers() {
+    let scrollToTopBtn = $('#scrollToTopBtn');
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 20) {
+            scrollToTopBtn.removeClass('hide').addClass('show');
+        } else {
+            scrollToTopBtn.removeClass('show').addClass('hide');
+        }
+    });
+
     
     $('.flash-messages').empty();
     $('.flash-messages .alert').each(function() {
@@ -338,7 +348,6 @@ function registerEventHandlers() {
         updateStatus(bookingNumber, status, function() {
             saveButtonState(bookingNumber, status);
             toggleButtons(bookingNumber, status);
-            location.reload();
         });
     });
 
@@ -387,11 +396,17 @@ function registerEventHandlers() {
         var guestId = $(this).data('id');
         openEditModal(guestId);
     });
+
     
     $('#saveChangesButton').click(function() {
         submitGuestEdit();
     });
     
+    // When the user clicks on the button, scroll to the top of the document
+    $(document).on('click', '#scrollToTopBtn', function() {
+        $('html, body').animate({ scrollTop: 0 }, 'slow');
+    });
+
     $('.input-group').on('submit', 'form', function(event) {
         event.preventDefault();  // Prevent the default form submission behavior
         const form = $(this);
@@ -509,7 +524,7 @@ function openEditModal(guestId) {
     $('#editGuestForm').data('guestId', guestId);
     // Fetch guest details from the server
     $.get(`/get_guest_details/${guestId}`, function(data) {
-        const editableFields = ['comments', 'arrival_time', 'arriving_date', 'booking', 'departure_from', 'flight_number', 'transportation'];
+        const editableFields = ['comments', 'arrival_time', 'arriving_date', 'booking', 'departure_from'];
         const form = $('#editGuestForm');
         const modalTitle = $('#editGuestModalLabel');
 
@@ -519,32 +534,6 @@ function openEditModal(guestId) {
 
         // Today's date in YYYY-MM-DD format
         const today = new Date().toISOString().split('T')[0];
-
-        Object.entries(data).forEach(([key, value]) => {
-            if (editableFields.includes(key)) {
-                let inputType = 'text';
-                let inputValue = value;
-
-                // Check if the key is 'arriving_date' and set input type to 'date'
-                if (key === 'arriving_date') {
-                    inputType = 'date';
-                    inputValue = value || today; // Use provided value or today's date if not set
-                } 
-                // Check if the key is 'arrival_time' and set input type to 'time'
-                else if (key === 'arrival_time') {
-                    inputType = 'time';
-                    // Assume value is in a suitable format ('HH:MM'), adjust if necessary
-                    // If value is not provided or invalid, don't set a default
-                    inputValue = value || ''; 
-                }
-
-                // Append form group with label and input
-                form.append(`<div class="form-group">
-                    <label for="${key}">${key.charAt(0).toUpperCase() + key.slice(1)}</label>
-                    <input type="${inputType}" class="form-control" name="${key}" id="${key}" value="${inputValue}">
-                </div>`);
-            }
-        });
 
         // Flight selection input with datalist
         form.append(`
@@ -556,6 +545,46 @@ function openEditModal(guestId) {
                 </datalist>
             </div>
         `);
+
+        Object.entries(data).forEach(([key, value]) => {
+            if (editableFields.includes(key)) {
+                let inputType = 'text';
+                let inputValue = value;
+
+                // Check if the key is 'arriving_date' and set input type to 'date'
+                if (key === 'arriving_date') {
+                    inputType = 'date';
+                    inputValue = value ? formatDate(value) : today; // Format to YYYY-MM-DD or use today's date
+                } 
+                // Check if the key is 'arrival_time' and set input type to 'time'
+                else if (key === 'arrival_time') {
+                    inputType = 'time';
+                    inputValue = value ? formatTime(value) : ''; // Format to HH:MM or use an empty string
+                }
+                
+
+                // Append form group with label and input
+                form.append(`<div class="form-group">
+                    <label for="${key}">${key.charAt(0).toUpperCase() + key.slice(1)}</label>
+                    <input type="${inputType}" class="form-control" name="${key}" id="${key}" value="${inputValue}">
+                </div>`);
+            }
+        });
+
+        // Handle transportation separately if it's an array
+        if (Array.isArray(data.transportations)) {
+            data.transportations.forEach((transport, index) => {
+                form.append(`<div class="form-group">
+                    <label for="transportation_${index}_type">Transportation Type</label>
+                    <input type="text" class="form-control" name="transportation_${index}_type" id="transportation_${index}_type" value="${transport.transport_type}">
+                </div>`);
+                form.append(`<div class="form-group">
+                    <label for="transportation_${index}_details">Transportation Details</label>
+                    <input type="text" class="form-control" name="transportation_${index}_details" id="transportation_${index}_details" value="${transport.transport_details}">
+                </div>`);
+            });
+        }
+        
 
         // Fetch and populate flight options
         $.get(`/get_flights`, function(flights) {
@@ -572,21 +601,36 @@ function openEditModal(guestId) {
     });
 }
 
-function submitGuestEdit() {
-    // Retrieve the guest ID stored earlier
-    var guestId = $('#editGuestForm').data('guestId');
-    var formData = $('#editGuestForm').serialize();
-    formData += '&id=' + encodeURIComponent(guestId); // Append the guestId to formData
+function formatDate(dateString) {
+    try {
+        const date = new Date(dateString);
+        if (!isNaN(date)) {
+            return date.toISOString().split('T')[0]; // Format to YYYY-MM-DD
+        } else {
+            return ''; // Return empty string if date is invalid
+        }
+    } catch (e) {
+        console.error('Invalid date:', dateString);
+        return ''; // Return empty string if date is invalid
+    }
+}
 
-    $.post('/update_guest_details', formData)
-        .done(function(response) {
-            $('#editGuestModal').modal('hide');
-            // refresh the page or update the UI as needed
-            location.reload();
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            console.error("Error with request: ", textStatus, errorThrown);
-        });
+function formatTime(timeString) {
+    try {
+        // Ensure the time string is in a valid format (HH:MM)
+        const timeParts = timeString.split(':');
+        if (timeParts.length === 2) {
+            const hours = parseInt(timeParts[0], 10);
+            const minutes = parseInt(timeParts[1], 10);
+            if (!isNaN(hours) && !isNaN(minutes) && hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60) {
+                return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+            }
+        }
+        return ''; // Return empty string if time is invalid
+    } catch (e) {
+        console.error('Invalid time:', timeString);
+        return ''; // Return empty string if time is invalid
+    }
 }
 
 function submitGuestEdit() {
@@ -605,7 +649,6 @@ function submitGuestEdit() {
             console.error("Error with request: ", textStatus, errorThrown);
         });
 }
-
 
 // Update status and handle UI feedback
 function updateStatus(bookingNumber, status, callback) {
@@ -680,7 +723,7 @@ function updateActivitiesList() {
         type: 'GET',
         success: function(data) {
             if (!Array.isArray(data)) {
-                console.error('Expected an array but got:', data);
+                console.error('Error in Activity with expected array');
                 return;
             }
             let activitiesHtml = '';
