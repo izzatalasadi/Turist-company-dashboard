@@ -618,13 +618,6 @@ span.count {
   transform: translateX(-50%);
   z-index: 1100; 
   background-color: #fff;/* Show bottom navigation and toggle button on tablets and mobile devices */
-  @media (max-width: 425px) {
-    .navbar-toggler-custom {
-      bottom: 27%;
-    }
-  
-  }
-  
   border: none;
   border-radius: 50%;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -634,10 +627,11 @@ span.count {
 /* Show bottom navigation and toggle button on tablets and mobile devices */
 @media (max-width: 425px) {
   .navbar-toggler-custom {
-    bottom: 27%;
+    bottom: 14%;
   }
 
 }
+
 
 .navbar-toggler-custom.collapsed {
   bottom: 10px; /* Adjusted for space above the bar when collapsed */
