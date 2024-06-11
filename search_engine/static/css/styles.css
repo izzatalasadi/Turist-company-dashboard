@@ -71,10 +71,10 @@
 
 /* Flight Filter Button */
 .flight-filter-btn {
-  transition: background-color 0.3s ease;
+  transition: #28a745 0.3s ease;
 }
 .flight-filter-btn:hover {
-  background-color: #0062cc;
+  background-color: #28a745;
   color: #fff;
 }
 
@@ -550,95 +550,103 @@ span.count {
   }
 }
 
-/* Default hide bottom navigation */
-.navbar.fixed-bottom {
+/* Hide the bottom navigation bar by default */
+.navbar-bottom-custom, .navbar-toggler-custom {
   display: none;
 }
 
-/* Show bottom navigation on tablets and mobile devices */
+/* Show bottom navigation and toggle button on tablets and mobile devices */
 @media (max-width: 767.98px) {
-  .navbar.fixed-bottom {
+  .navbar-bottom-custom, .navbar-toggler-custom {
     display: flex;
   }
 
-  .sidebar-offcanvas {
-    display: none;
-  }
-  .navbar-toggler {
-    padding:0px
-  }
-  .navbar-toggler.span {
+  .navbar-toggler  {
     display: none;
   }
 }
 
-.navbar.fixed-bottom {
-  box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.1);
+
+.navbar-bottom-custom {
+  position: fixed;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  justify-content: space-around;
+  align-items: center;
+  width: calc(100% - 10px);
+  max-width: 600px;
+  padding: 1px 1px;
+  background-color: #fff;
+  border-radius: 25px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  z-index: 1000; /* Ensures the bar is above other elements */
 }
 
-.navbar .nav-item {
+.navbar-bottom-custom.collapsed {
+  transform: translateX(-50%) translateY(50px);
+  opacity: 0;
+}
+
+.navbar-bottom-custom .nav-item {
   flex: 1;
   text-align: center;
 }
 
-.navbar .nav-link {
+.navbar-bottom-custom .nav-link {
   display: flex;
   flex-direction: column;
   align-items: center;
   color: #555;
+  transition: color 0.3s ease-in-out;
 }
 
-.navbar .nav-link .menu-icon {
+.navbar-bottom-custom .nav-link .menu-icon {
   font-size: 24px;
+  margin-bottom: 5px;
 }
 
-.navbar .nav-link .menu-title {
-  font-size: 12px;
+.navbar-bottom-custom .nav-item.active .nav-link {
+  color: #28a745; /* Active color - green */
 }
 
-.navbar .nav-item.active .nav-link {
-  color: #007bff;
+.navbar-toggler-custom {
+  position:fixed;
+  bottom: 12%; 
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1100; 
+  background-color: #fff;/* Show bottom navigation and toggle button on tablets and mobile devices */
+  @media (max-width: 425px) {
+    .navbar-toggler-custom {
+      bottom: 27%;
+    }
+  
+  }
+  
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  padding: 10px;
+  transition: transform 0.3s ease-in-out, top 0.3s ease-in-out;
+}
+/* Show bottom navigation and toggle button on tablets and mobile devices */
+@media (max-width: 425px) {
+  .navbar-toggler-custom {
+    bottom: 27%;
+  }
+
 }
 
-/* Center and animate toggle button */
-.navbar-toggler {
-  transition: transform 0.3s ease;
+.navbar-toggler-custom.collapsed {
+  bottom: 10px; /* Adjusted for space above the bar when collapsed */
 }
 
-.navbar-toggler.collapsed i {
-  transform: rotate(0);
+.navbar-toggler-custom i {
+  transition: transform 0.3s ease-in-out;
 }
 
-.navbar-toggler i {
+.navbar-toggler-custom.collapsed i {
   transform: rotate(180deg);
-}
-
-.collapse {
-  animation: slideDown 0.3s ease-out;
-}
-
-.collapse.show {
-  animation: slideUp 0.3s ease-in;
-}
-
-@keyframes slideDown {
-  from {
-    height: 0;
-    opacity: 0;
-  }
-  to {
-    height: auto;
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    height: auto;
-    opacity: 1;
-  }
-  to {
-    height: 0;
-    opacity: 0;
-  }
 }

@@ -51,17 +51,21 @@ $(document).ready(function () {
 });
 
 function navtoggler() {
-    document.querySelectorAll('.navbar-toggler').forEach(function (toggler) {
-        toggler.addEventListener('click', function () {
-          const icon = toggler.querySelector('i');
-          if (toggler.getAttribute('aria-expanded') === 'true') {
-            icon.classList.remove('mdi-chevron-up');
-            icon.classList.add('mdi-chevron-down');
-          } else {
-            icon.classList.remove('mdi-chevron-down');
-            icon.classList.add('mdi-chevron-up');
-          }
-        });
+    document.querySelector('.navbar-toggler-custom').addEventListener('click', function () {
+        const navbar = document.querySelector('.navbar-bottom-custom');
+        const togglerIcon = this.querySelector('i');
+        navbar.classList.toggle('collapsed');
+        this.classList.toggle('collapsed');
+        if (navbar.classList.contains('collapsed')) {
+            this.setAttribute('aria-expanded', 'true');
+            togglerIcon.classList.add('mdi-chevron-down');
+            togglerIcon.classList.remove('mdi-chevron-up');
+
+        } else {
+            this.setAttribute('aria-expanded', 'false');
+            togglerIcon.classList.remove('mdi-chevron-up');
+            togglerIcon.classList.add('mdi-chevron-down');
+        }
       });
   };
 

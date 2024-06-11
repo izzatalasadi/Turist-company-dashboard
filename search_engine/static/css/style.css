@@ -9762,7 +9762,7 @@ textarea.form-control {
   font-weight: var(--bs-nav-link-font-weight);
   color: var(--bs-nav-link-color);
   text-decoration: none;
-  background: none;
+  color: #28a745;
   border: 0;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
@@ -9793,7 +9793,7 @@ textarea.form-control {
 
 .navbar {
   --bs-navbar-padding-x: 0;
-  --bs-navbar-padding-y: 0.5rem;
+  --bs-navbar-padding-y: 0;
   --bs-navbar-color: rgba(var(--bs-emphasis-color-rgb), 0.65);
   --bs-navbar-hover-color: rgba(var(--bs-emphasis-color-rgb), 0.8);
   --bs-navbar-disabled-color: rgba(var(--bs-emphasis-color-rgb), 0.3);
@@ -13429,8 +13429,6 @@ ol li {
   -moz-transition-duration: 0.25s;
   -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  transition-property: background;
-  -webkit-transition-property: background;
 }
 .sidebar .nav .nav-item .collapse {
   z-index: 999;
@@ -13448,8 +13446,6 @@ ol li {
   -moz-transition-duration: 0.45s;
   -o-transition-duration: 0.45s;
   transition-duration: 0.45s;
-  transition-property: color;
-  -webkit-transition-property: color;
   font-weight: 400;
 }
 @media (max-width: 991px) {
@@ -13498,14 +13494,14 @@ ol li {
 }
 .sidebar .nav .nav-item.active > .nav-link i,
 .sidebar .nav .nav-item.active > .nav-link .menu-title {
-  color: #1F3BB3;
+  color: #28a745;
 }
 .sidebar .nav .nav-item.active > .nav-link .menu-title {
   font-size: 13px;
 }
 .sidebar .nav .nav-item:hover > .nav-link i,
 .sidebar .nav .nav-item:hover > .nav-link .menu-title {
-  color: #1F3BB3;
+  color: #28a745;
 }
 .sidebar .nav .nav-item.nav-category {
   color: #404040;
@@ -13538,7 +13534,7 @@ ol li {
 .sidebar .nav:not(.sub-menu) > .nav-item > .nav-link[aria-expanded=true] {
   border-radius: 8px 8px 0 0;
   background: #fff;
-  color: #1F3BB3;
+  color: #28a745;
 }
 .sidebar .nav:not(.sub-menu) > .nav-item.active {
   background: transparent;
@@ -13576,7 +13572,7 @@ ol li {
   color: #000;
 }
 .sidebar .nav.sub-menu .nav-item .nav-link.active {
-  color: #1F3BB3;
+  color: #28a745;
   background: transparent;
 }
 .sidebar .nav.sub-menu .nav-item:hover {
@@ -14266,7 +14262,7 @@ ol li {
     margin-right: 0;
     margin-left: 0;
     margin-bottom: 0;
-    color: rgba(31, 59, 179, 0.7);
+    color: #28a750;
   }
   .sidebar-dark.sidebar-icon-only .sidebar .nav .nav-item .nav-link i.menu-icon {
     color: rgba(31, 59, 179, 0.7);
@@ -14351,10 +14347,10 @@ ol li {
     height: 100%;
     top: 0;
     left: 0;
-    background: #1F3BB3;
+    background: #28a745;
   }
   .sidebar-icon-only .sidebar .nav .nav-item.active .nav-link i.menu-icon {
-    color: #1F3BB3;
+    color: #28a800;
   }
   .sidebar-icon-only .sidebar .nav:not(.sub-menu) .nav-item.active {
     border-radius: 0;
@@ -14662,7 +14658,7 @@ ol li {
   left: 10px;
   height: 45px;
   width: 45px;
-  background: #1F3BB3;
+  background: #28a745;
   z-index: 99;
   display: -webkit-flex;
   display: flex;
