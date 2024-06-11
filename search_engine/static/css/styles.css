@@ -71,6 +71,7 @@
 
 /* Flight Filter Button */
 .flight-filter-btn {
+  position: fixed;
   transition: #28a745 0.3s ease;
 }
 .flight-filter-btn:hover {
@@ -576,6 +577,7 @@ span.count {
   align-items: center;
   width: calc(100% - 10px);
   max-width: 600px;
+  min-width: 375px;
   padding: 1px 1px;
   background-color: #fff;
   border-radius: 25px;
@@ -587,6 +589,7 @@ span.count {
 .navbar-bottom-custom.collapsed {
   transform: translateX(-50%) translateY(50px);
   opacity: 0;
+  pointer-events: none;
 }
 
 .navbar-bottom-custom .nav-item {
@@ -613,10 +616,10 @@ span.count {
 
 .navbar-toggler-custom {
   position:fixed;
-  bottom: 14%; 
+  bottom: 16%; 
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1100; 
+  z-index: 1200; 
   background-color: #fff;/* Show bottom navigation and toggle button on tablets and mobile devices */
   border: none;
   border-radius: 50%;
@@ -625,22 +628,22 @@ span.count {
   transition: transform 0.3s ease-in-out, top 0.3s ease-in-out;
 }
 /* Show bottom navigation and toggle button on tablets and mobile devices */
-@media (max-width: 767.99px) {
+@media (min-width: 460px) and (max-width: 767.99px) {
   .navbar-toggler-custom {
-    bottom: 7%;
+    bottom: 10%;
   }
 
 }
 /* Show bottom navigation and toggle button on tablets and mobile devices */
-@media (max-width: 459.99px) {
+@media (min-width: 230px) and (max-width: 459.99px) {
   .navbar-toggler-custom {
-    bottom: 14%;
+    bottom: 22%;
   }
 
 }
 
 .navbar-toggler-custom.collapsed {
-  bottom: 10px; /* Adjusted for space above the bar when collapsed */
+  bottom: 5px; /* Adjusted for space above the bar when collapsed */
 }
 
 .navbar-toggler-custom i {
