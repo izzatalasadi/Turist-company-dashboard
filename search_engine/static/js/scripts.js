@@ -3,6 +3,11 @@ let pdfDoc = null, currentPage = 1, totalPages = 0, scale = 1.1;
 let isRendering = false, renderTask = null, renderDebounceTimeout;
 let lastExecuted = Date.now();
 const throttlePeriod = 300; // Time in milliseconds between allowed executions
+// Global variables to store chart instances
+let guestsChart; 
+let transportChart;
+let predictionChartInstance;
+
 
 $(document).ready(function () {
     // Check if the activities list container exists before trying to update it
@@ -37,11 +42,10 @@ $(document).ready(function () {
     // Handle interactive UI elements
     setupInteractiveElements();
 
-    // Load user details initially
-    loadUserDetails();
-
     // Event handlers for buttons and other UI interactions
     registerEventHandlers();
+    
+    initializeFloatingChat();
 
     // Bootstrap Offcanvas and Collapse Initialization
     initializeBootstrapComponents();
@@ -54,6 +58,9 @@ function navtoggler() {
     document.querySelector('.navbar-toggler-custom').addEventListener('click', function () {
         const navbar = document.querySelector('.navbar-bottom-custom');
         const togglerIcon = this.querySelector('i');
+        let isDragging = false;
+        let startX, startY, initialX, initialY;
+
         navbar.classList.toggle('collapsed');
         this.classList.toggle('collapsed');
         if (navbar.classList.contains('collapsed')) {
@@ -148,13 +155,166 @@ function fetchSearchResults(query) {
     });
 }
 
-// Load user details on startup
-function loadUserDetails() {
-    $.get('/users', function(data) {
+function initializeFloatingChat() {
+    // Load user details on startup
+    loadUserDetails();
+  
+    function loadUserDetails() {
+      $.get('/users', function(data) {
         $('#userContainer').html(data);
+      });
+    }
+  
+    // Movable Chat Window
+    const chatHeader = document.querySelector('.chat-header');
+    const chatWindow = document.querySelector('.floating-chat');
+    const chatIcon = document.querySelector('.floating-chat-icon');
+    const userChatIconsContainer = document.getElementById('userChatIconsContainer');
+    let isDragging = false;
+    let offsetX, offsetY;
+  
+    chatHeader.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offsetX = e.clientX - chatWindow.getBoundingClientRect().left;
+      offsetY = e.clientY - chatWindow.getBoundingClientRect().top;
     });
-}
-
+  
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        chatWindow.style.left = `${e.clientX - offsetX}px`;
+        chatWindow.style.top = `${e.clientY - offsetY}px`;
+      }
+    });
+  
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+  
+    // Show Chat Window
+    chatIcon.addEventListener('click', () => {
+      chatWindow.style.display = 'block';
+    });
+  
+    // Close Chat Window
+    document.querySelector('.close-chat').addEventListener('click', () => {
+      chatWindow.style.display = 'none';
+    });
+  
+    // Open user chat icon
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.user-card')) {
+        const userCard = e.target.closest('.user-card');
+        const username = userCard.getAttribute('data-username');
+        const userId = userCard.getAttribute('data-userid');
+        const userPic = userCard.getAttribute('data-userpic');
+  
+        const userChatIcon = document.createElement('div');
+        userChatIcon.classList.add('floating-user-chat-icon');
+        userChatIcon.innerHTML = `<img class="img-sm rounded-circle" src="${userPic}" alt="${username}'s profile picture">`;
+  
+        userChatIconsContainer.appendChild(userChatIcon);
+  
+        // Handle click on user chat icon to open chat
+        userChatIcon.addEventListener('click', () => {
+          // Open the chat window for the user
+          openUserChat(userId, username, userPic);
+        });
+      }
+    });
+  
+    function openUserChat(userId, username, userPic) {
+      // Create a chat window for the user
+      const chatWindow = document.createElement('div');
+      chatWindow.classList.add('floating-chat');
+      chatWindow.innerHTML = `
+        <div class="chat-header">
+          <span>${username}</span>
+          <button class="close-chat">&times;</button>
+        </div>
+        <div class="chat-body">
+          <div id="messages-${userId}" class="messages"></div>
+          <form action="/send_message/${userId}" method="POST" class="message-form">
+            <input type="hidden" name="csrf_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
+            <input type="text" class="form-control message-input" name="message_content" placeholder="Write your message..." required>
+            <button type="submit" class="btn btn-light">
+              <i class="mdi mdi-send mdi-24px"></i>
+            </button>
+          </form>
+        </div>
+      `;
+      document.body.appendChild(chatWindow);
+  
+      // Handle form submission
+      $(chatWindow).find('.message-form').on('submit', function(event) {
+        event.preventDefault();
+        const form = $(this);
+        const url = form.attr('action');
+        const data = form.serialize();
+  
+        $.ajax({
+          url: url,
+          type: 'POST',
+          data: data,
+          success: function(response) {
+            displayFlashMessage('Message sent successfully!', 'success');
+            form.find('input[type="text"]').val('');
+          },
+          error: function(xhr, status, error) {
+            displayFlashMessage('Failed to send message', 'danger');
+          }
+        });
+      });
+  
+      // Make the chat window movable
+      const chatHeader = chatWindow.querySelector('.chat-header');
+      chatHeader.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        offsetX = e.clientX - chatWindow.getBoundingClientRect().left;
+        offsetY = e.clientY - chatWindow.getBoundingClientRect().top;
+      });
+  
+      document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+          chatWindow.style.left = `${e.clientX - offsetX}px`;
+          chatWindow.style.top = `${e.clientY - offsetY}px`;
+        }
+      });
+  
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+  
+      // Close Chat Window
+      chatWindow.querySelector('.close-chat').addEventListener('click', () => {
+        chatWindow.remove();
+      });
+  
+      // Load previous messages
+      loadMessages(userId);
+    }
+  
+    function loadMessages(userId) {
+      $.get(`/api/messages?receiver_id=${userId}`, function(messages) {
+        const messagesContainer = document.getElementById(`messages-${userId}`);
+        if (Array.isArray(messages)) {
+          messages.forEach(message => {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.innerHTML = `
+              <strong>${message.sender}</strong>: ${message.body} <small>${message.timestamp}</small>
+            `;
+            messagesContainer.appendChild(messageElement);
+          });
+        } else {
+          console.error('Messages data is not an array:', messages);
+        }
+      });
+    }
+  
+  }
+  
+  
+  
 // Function to save the state of a button to local storage
 function saveButtonState(bookingNumber, status) {
     const buttonStates = JSON.parse(localStorage.getItem('buttonStates') || '{}');
@@ -748,14 +908,20 @@ function updateActivitiesList() {
         url: '/api/activities',  // Adjust if the route differs
         type: 'GET',
         success: function(data) {
-           
+
+            // Check if data is an array
+            if (!Array.isArray(data)) {
+                console.error('Expected an array but got:', data);
+                return;
+            }
+
             let activitiesHtml = '';
             data.forEach(function(activity) {
                 activitiesHtml += `
                     <li>
                         <div class="d-flex justify-content-between">
                             <div>
-                                <span class="text-light-green">${activity.username}</span></br>
+                                <span class="text-light-green">${activity.username}</span><br>
                                 ${activity.event}: ${activity.description}
                             </div>
                             <p>${activity.timestamp}</p>
@@ -769,6 +935,7 @@ function updateActivitiesList() {
         }
     });
 }
+
 
 // Function to initialize Bootstrap Offcanvas and Collapse components
 function initializeBootstrapComponents() {
@@ -797,6 +964,146 @@ function initializeBootstrapComponents() {
         });
     });
 }
+// Initialize the charts
+const guestsChartCtx = document.getElementById('guestsChart').getContext('2d');
+const transportChartCtx = document.getElementById('transportChart').getContext('2d');
+
+guestsChart = new Chart(guestsChartCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Total Guests', 'Checked In', 'Not Arrived'],
+    datasets: [{
+        label: 'Guests',
+        data: [0, 0, 0],
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false
+  }
+});
+
+transportChart = new Chart(transportChartCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Buses Needed', '5-Seater Cars Needed', '8-Seater Cars Needed'],
+    datasets: [{
+      label: 'Transport',
+      data: [0, 0, 0],
+      backgroundColor: ['#ffc107', '#17a2b8', '#6f42c1'],
+      hoverBackgroundColor: ['#ffc107', '#17a2b8', '#6f42c1']
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false
+  }
+});
+
+// Function to fetch statistics from the server
+function fetchStatistics(date = null) {
+  let url = '/dashboard_stats';
+  if (date) {
+    url += `?date=${date}`;
+  }
+  
+  $.ajax({
+    url: url,
+    method: 'GET',
+    success: function(data) {
+      const totalGuests = data.total_guests;
+      const checkedInGuests = data.total_checked;
+      const notArrivedGuests = data.total_unchecked;
+      
+      const busesNeeded = calculateBusesNeeded(totalGuests);
+      const smallCarsNeeded = calculateCarsNeeded(totalGuests, 5);
+      const largeCarsNeeded = calculateCarsNeeded(totalGuests, 8);
+
+      const remainingGuests = totalGuests - busesNeeded * 32;
+      
+      // Update the Guests Chart
+      guestsChart.data.datasets[0].data = [totalGuests, checkedInGuests, notArrivedGuests];
+      guestsChart.update();
+
+      // Update the Transport Chart
+      transportChart.data.datasets[0].data = [busesNeeded, smallCarsNeeded, largeCarsNeeded];
+      transportChart.update();
+
+      // Predictions for the next years (dummy example)
+      const nextYearsData = predictNextYears(totalGuests);
+      updatePredictionChart(nextYearsData);
+    }
+  });
+}
+
+// Function to calculate buses needed
+function calculateBusesNeeded(guestCount) {
+  const busCapacity = 34; // Assume each bus can hold 32 guests
+  return Math.ceil(guestCount / busCapacity);
+}
+
+// Function to calculate cars needed
+function calculateCarsNeeded(guestCount, carCapacity) {
+  return Math.ceil(guestCount / carCapacity);
+}
+
+// Function to predict next years' data
+function predictNextYears(currentGuestCount) {
+  // Dummy prediction logic
+  const years = [2024, 2025, 2026, 2027, 2028];
+  const growthRate = 0.05; // 5% growth rate
+  return years.map((year, index) => ({
+    year: year,
+    guests: Math.ceil(currentGuestCount * Math.pow(1 + growthRate, index + 1))
+  }));
+}
+
+function updatePredictionChart(data) {
+    const labels = data.map(d => d.year);
+    const guestCounts = data.map(d => d.guests);
+  
+    const ctx = document.getElementById('predictionChart').getContext('2d');
+  
+    // Destroy the existing chart instance if it exists
+    if (predictionChartInstance) {
+      predictionChartInstance.destroy();
+    }
+  
+    // Create a new chart instance and store it in the global variable
+    predictionChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Predicted Guests',
+          data: guestCounts,
+          backgroundColor: 'rgba(0, 123, 255, 0.5)',
+          borderColor: '#007bff',
+          fill: true,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+// Event listener for date change
+document.getElementById('selectDate').addEventListener('change', function() {
+  const selectedDate = this.value;
+  fetchStatistics(selectedDate);
+});
 
 
+// Initial fetch of statistics
+
+fetchStatistics();
 setInterval(updateActivitiesList, 3000);

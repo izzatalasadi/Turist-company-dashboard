@@ -1,42 +1,32 @@
-<div class="col-lg-12 col-md-12 col-sm-8 grid-margin">
-  <div class="card card-rounded">
-    <div class="card-body">
-      <div class="row flex-grow-1">
-        <div class="col-lg-12">
-          <h4 class="card-title card-title-dash">Users</h4>
-          <div class="mt-3">
-            {% for user in users %}
-            <div class="user-card d-flex align-items-center justify-content-between py-2 border-bottom">
-              <div class="d-flex align-items-center">
-                <div class="user-avatar position-relative">
-                  <img class="img-sm rounded-circle" src="{{ url_for('static', filename='images/faces/' + (user.profile_picture|default('face1.jpeg', true))) }}" alt="{{ user.username }}'s profile picture">
-                  <span class="status-indicator {% if user.is_online() %}bg-success{% else %}bg-secondary{% endif %}"></span>
-                </div>
-                <div class="ms-3">
-                  <strong>{{ user.username }}</strong>
-                  <div class="text-muted text-small">
-                    {% if user.is_online() %}
-                    <span>Online</span>
-                    {% else %}
-                    Last seen: {{ user.last_seen.strftime('%Y-%m-%d %H:%M') }}
-                    {% endif %}
-                  </div>
-                </div>
-              </div>
-              <div class="ms-auto">
-                <form action="{{ url_for('app.send_message', user_id=user.id) }}" method="POST" class="d-flex align-items-center">
-                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                  <input type="text" class="form-control message-input" name="message_content" placeholder="Write your message..." required>
-                  <button type="submit" class="btn btn-light">
-                    <i class="mdi mdi-send mdi-24px"></i>
-                  </button>
-                </form>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
+<div class="mt-3">
+  {% for user in users %}
+  <div
+    class="user-card d-flex align-items-center justify-content-between py-2 border-bottom"
+    data-username="{{ user.username }}"
+    data-userid="{{ user.id }}"
+    data-userpic="{{ url_for('static', filename='images/faces/' + (user.profile_picture|default('face1.jpeg', true))) }}"
+  >
+    <div class="d-flex align-items-center">
+      <div class="user-avatar position-relative">
+        <img
+          class="img-sm rounded-circle"
+          src="{{ url_for('static', filename='images/faces/' + (user.profile_picture|default('face1.jpeg', true))) }}"
+          alt="{{ user.username }}'s profile picture"
+        />
+        <span
+          class="status-indicator {% if user.is_online() %}bg-success{% else %}bg-secondary{% endif %}"
+        ></span>
+      </div>
+      <div class="ms-3">
+        <strong>{{ user.username }}</strong>
+        <div class="text-muted text-small">
+          {% if user.is_online() %}
+          <span>Online</span>
+          {% else %} Last seen: {{ user.last_seen.strftime('%Y-%m-%d %H:%M') }}
+          {% endif %}
         </div>
       </div>
     </div>
   </div>
+  {% endfor %}
 </div>

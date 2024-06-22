@@ -198,13 +198,22 @@
   transform: translate3d(0,0,0);
   will-change: transform;
 }
-.pdf-canvas, canvas {
+.pdf-canvas {
   position: absolute;
   pointer-events: none;
 }
 canvas {
+  
   pointer-events: all;
+  width: 100% !important;
+  height: 200px !important; /* Adjust the height as needed */
 }
+#transportChart, #guestsChart, #predictionChart {
+  width: 100% !important;
+  height: auto;
+}
+
+
 .pdf-toolbar button {
   min-width: 44px;
   min-height: 44px;
@@ -567,7 +576,6 @@ span.count {
   }
 }
 
-
 .navbar-bottom-custom {
   position: fixed;
   bottom: 0px;
@@ -603,6 +611,8 @@ span.count {
   align-items: center;
   color: #555;
   transition: color 0.3s ease-in-out;
+  background-color: transparent !important;
+  border: none; /* Optional: Remove border if any */
 }
 
 .navbar-bottom-custom .nav-link .menu-icon {
@@ -611,35 +621,36 @@ span.count {
 }
 
 .navbar-bottom-custom .nav-item.active .nav-link {
-  color: #28a745; /* Active color - green */
+  color: inherit; /* Maintain the text color */
+}
+
+.nav-link:hover, .nav-link:focus {
+  background-color: rgba(255, 255, 255, 0.1); /* Optional: Add a slight hover effect */
 }
 
 .navbar-toggler-custom {
-  position:fixed;
-  bottom: 16%; 
+  position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1200; 
-  background-color: #fff;/* Show bottom navigation and toggle button on tablets and mobile devices */
+  z-index: 1200;
+  background-color: transparent; /* Make background transparent */
   border: none;
   border-radius: 50%;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: none; /* Remove box shadow */
   padding: 10px;
-  transition: transform 0.3s ease-in-out, top 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, bottom 0.3s ease-in-out;
 }
-/* Show bottom navigation and toggle button on tablets and mobile devices */
+
 @media (min-width: 460px) and (max-width: 767.99px) {
   .navbar-toggler-custom {
-    bottom: 10%;
+    bottom: 8%;
   }
-
 }
-/* Show bottom navigation and toggle button on tablets and mobile devices */
+
 @media (min-width: 230px) and (max-width: 459.99px) {
   .navbar-toggler-custom {
-    bottom: 22%;
+    bottom: 19%;
   }
-
 }
 
 .navbar-toggler-custom.collapsed {
@@ -652,4 +663,114 @@ span.count {
 
 .navbar-toggler-custom.collapsed i {
   transform: rotate(180deg);
+}
+
+/* Dragging functionality */
+.navbar-toggler-custom {
+  cursor: grab;
+}
+
+.navbar-toggler-custom:active {
+  cursor: grabbing;
+}
+
+.navbar-toggler-custom.draggable {
+  position: absolute;
+  bottom: auto; /* Adjusted for draggable position */
+  left: auto;
+}
+
+.navbar-toggler-custom.draggable:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.navbar-bottom-custom .nav-link:hover, 
+.navbar-bottom-custom .nav-link:focus, 
+.navbar-bottom-custom .nav-link.active {
+  color: green; /* Change text color to green on hover or when active */
+}
+
+.navbar-bottom-custom .nav-link:hover .menu-icon, 
+.navbar-bottom-custom .nav-link:focus .menu-icon, 
+.navbar-bottom-custom .nav-link.active .menu-icon {
+  color: green; /* Change icon color to green on hover or when active */
+}
+/* the floating chat and icons  */
+.floating-chat-icon {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: green;
+  color: white;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.floating-chat {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 300px;
+  max-height: 400px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  display: none; /* Initially hidden */
+}
+
+.chat-header {
+  padding: 10px;
+  background-color: green;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: move;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.chat-body {
+  padding: 10px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.close-chat {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.user-card {
+  margin-bottom: 10px;
+}
+
+.floating-user-chat-icon {
+  position: fixed;
+  bottom: 80px;
+  right: 80px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 1000;
 }

@@ -150,7 +150,11 @@ def api_activities():
 @main_bp.route('/api/messages')
 @login_required
 def api_messages():
-    messages = Message.query.filter_by(receiver_id=current_user.id).order_by(Message.timestamp.desc()).all()
+    receiver_id = request.args.get('receiver_id')
+    if receiver_id is None:
+        return jsonify({'error': 'Receiver ID is required'}), 400
+    
+    messages = Message.query.filter_by(receiver_id=receiver_id).order_by(Message.timestamp.desc()).all()
     messages_data = [{
         'sender': message.sender.username,
         'body': message.content,
@@ -556,13 +560,21 @@ def update_guest_details():
     flash('Guest details updated successfully', 'success')
     return jsonify({'status': 'success', 'message': f'"{guest.last_name}, {guest.first_name}" has been updated successfully'})
 
-@app_bp.route('/dashboard_stats')
+@app_bp.route('/dashboard_stats', methods=['GET'])
 @login_required
 def dashboard_stats():
-    total_guests = Guest.query.count()
-    total_checked = Guest.query.filter_by(status='Checked').count()
-    total_unchecked = total_guests - total_checked
+    # Retrieve the date parameter if provided
+    date_str = request.args.get('date')
+    if date_str:
+        selected_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        guests = Guest.query.filter(Guest.date == selected_date).all()
+    else:
+        guests = Guest.query.all()
 
+    total_guests = len(guests)
+    total_checked = sum(1 for guest in guests if guest.status == 'Checked')
+    total_unchecked = total_guests - total_checked
+    
     stats = {
         'total_guests': total_guests,
         'total_checked': total_checked,
@@ -570,7 +582,6 @@ def dashboard_stats():
     }
     
     return jsonify(stats)
-
 @app_bp.route('/search-results')
 @login_required
 def search_results():
@@ -785,12 +796,9 @@ def send_message(user_id):
         db.session.add(message)
         db.session.commit()
         
-
-        flash('Message been sent.', 'success')
-        return redirect(url_for('main.home'))
+        return jsonify({'message': 'Message sent successfully!'}), 200
     else:
-        flash('Message not been sent.', 'warning')
-        return redirect(url_for('main.home'))
+        return jsonify({'error': 'Failed to send message'}), 400
 
 @app_bp.route('/delete_message/<int:message_id>', methods=['POST'])
 @login_required
