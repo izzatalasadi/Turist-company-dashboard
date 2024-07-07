@@ -19,7 +19,6 @@ const urlsToCache = [
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
-      console.log('Opened cache');
       return cache.addAll(urlsToCache);
     }).catch(function(error) {
       console.error('Caching failed:', error);
@@ -30,7 +29,6 @@ self.addEventListener('install', function(event) {
   event.waitUntil(
     fetch('/api/guests')
       .then(response => {
-        console.log('Guest data response:', response);
         if (!response.ok) {
           throw new Error('Failed to fetch guests data');
         }
@@ -43,7 +41,7 @@ self.addEventListener('install', function(event) {
         });
       })
       .then(guests => {
-        console.log('Parsed guest data:', guests);
+        
         if (!Array.isArray(guests)) {
           throw new Error('Guest data is not an array');
         }
@@ -71,7 +69,7 @@ self.addEventListener('install', function(event) {
   event.waitUntil(
     fetch('/api/pdfs')
       .then(response => {
-        console.log('PDF data response:', response);
+        
         if (!response.ok) {
           throw new Error('Failed to fetch PDFs data');
         }
@@ -84,7 +82,7 @@ self.addEventListener('install', function(event) {
         });
       })
       .then(pdfs => {
-        console.log('Parsed PDF data:', pdfs);
+        
         if (!Array.isArray(pdfs)) {
           throw new Error('PDF data is not an array');
         }

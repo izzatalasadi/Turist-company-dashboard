@@ -215,7 +215,14 @@ canvas {
   height: auto;
 }
 
-
+/* Graph */
+.graph {
+  position: absolute;
+  width: 953.53px;
+  height: 420px;
+  left: 365px;
+  top: 273px;
+}
 .pdf-toolbar button {
   min-width: 44px;
   min-height: 44px;
@@ -645,13 +652,13 @@ span.count {
 
 @media (min-width: 460px) and (max-width: 767.99px) {
   .navbar-toggler-custom {
-    bottom: 8%;
+    bottom: 12%;
   }
 }
 
 @media (min-width: 230px) and (max-width: 459.99px) {
   .navbar-toggler-custom {
-    bottom: 19%;
+    bottom: 25%;
   }
 }
 

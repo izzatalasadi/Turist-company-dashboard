@@ -14,7 +14,7 @@ $(document).ready(function () {
     if ($('.bullet-line-list').length > 0) {
         updateActivitiesList();
     }
-
+   
     // Additional setup calls
     var socket = setupSocketIO(); // Setup socket and store reference for further use
     let deferredPrompt; // For install prompt handling
@@ -964,47 +964,66 @@ function initializeBootstrapComponents() {
         });
     });
 }
-// Initialize the charts
-const guestsChartCtx = document.getElementById('guestsChart').getContext('2d');
-const transportChartCtx = document.getElementById('transportChart').getContext('2d');
-
-guestsChart = new Chart(guestsChartCtx, {
-  type: 'doughnut',
-  data: {
-    labels: ['Total Guests', 'Checked In', 'Not Arrived'],
-    datasets: [{
-        label: 'Guests',
-        data: [0, 0, 0],
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false
-  }
-});
-
-transportChart = new Chart(transportChartCtx, {
-  type: 'doughnut',
-  data: {
-    labels: ['Buses Needed', '5-Seater Cars Needed', '8-Seater Cars Needed'],
-    datasets: [{
-      label: 'Transport',
-      data: [0, 0, 0],
-      backgroundColor: ['#ffc107', '#17a2b8', '#6f42c1'],
-      hoverBackgroundColor: ['#ffc107', '#17a2b8', '#6f42c1']
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false
-  }
-});
-
 // Function to fetch statistics from the server
 function fetchStatistics(date = null) {
-  let url = '/dashboard_stats';
+    let url = '/dashboard_stats';
+    // Initialize the charts
+    const guestsChartCtx = document.getElementById('guestsChart').getContext('2d');
+    const transportChartCtx = document.getElementById('transportChart').getContext('2d');
+
+    guestsChart = new Chart(guestsChartCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Total Guests', 'Checked In', 'Not Arrived'],
+        datasets: [{
+            label: 'Guests',
+            data: [0, 0, 0],
+            backgroundColor: ['pink', 'blue', 'yellow'],
+            hoverBackgroundColor: ['pink', 'blue', 'yellow']
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+        legend: {
+            position: 'left', // Position the legend to the right of the chart
+            labels: {
+            boxWidth: 15,
+            padding: 10,
+            }
+        }
+        }
+    }
+    });
+
+    transportChart = new Chart(transportChartCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Buses All guests', 'Buses Not Arrived guests', '5-Seater Cars Needed', '8-Seater Cars Needed'],
+        datasets: [{
+        label: 'Transports',
+        data: [0, 0, 0, 0],
+        backgroundColor: ['green', 'pink', 'orange', 'lightblue'],
+        hoverBackgroundColor: ['green', 'pink', 'orange', 'lightblue']
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+        legend: {
+            position: 'left', // Position the legend to the right of the chart
+            labels: {
+            boxWidth: 15,
+            padding: 10,
+            }
+        }
+        }
+    }
+});
+
+
   if (date) {
     url += `?date=${date}`;
   }
@@ -1018,8 +1037,9 @@ function fetchStatistics(date = null) {
       const notArrivedGuests = data.total_unchecked;
       
       const busesNeeded = calculateBusesNeeded(totalGuests);
-      const smallCarsNeeded = calculateCarsNeeded(totalGuests, 5);
-      const largeCarsNeeded = calculateCarsNeeded(totalGuests, 8);
+      const busesNeededNotArrived = calculateBusesNeeded(notArrivedGuests);
+      const smallCarsNeededNotArrived = calculateCarsNeeded(notArrivedGuests, 5);
+      const largeCarsNeededNotArrived = calculateCarsNeeded(notArrivedGuests, 8);
 
       const remainingGuests = totalGuests - busesNeeded * 32;
       
@@ -1028,7 +1048,7 @@ function fetchStatistics(date = null) {
       guestsChart.update();
 
       // Update the Transport Chart
-      transportChart.data.datasets[0].data = [busesNeeded, smallCarsNeeded, largeCarsNeeded];
+      transportChart.data.datasets[0].data = [busesNeeded,busesNeededNotArrived, smallCarsNeededNotArrived, largeCarsNeededNotArrived];
       transportChart.update();
 
       // Predictions for the next years (dummy example)
@@ -1037,6 +1057,8 @@ function fetchStatistics(date = null) {
     }
   });
 }
+
+
 
 // Function to calculate buses needed
 function calculateBusesNeeded(guestCount) {
@@ -1053,7 +1075,7 @@ function calculateCarsNeeded(guestCount, carCapacity) {
 function predictNextYears(currentGuestCount) {
   // Dummy prediction logic
   const years = [2024, 2025, 2026, 2027, 2028];
-  const growthRate = 0.05; // 5% growth rate
+  const growthRate = 0.0105; // 1.5% growth rate
   return years.map((year, index) => ({
     year: year,
     guests: Math.ceil(currentGuestCount * Math.pow(1 + growthRate, index + 1))

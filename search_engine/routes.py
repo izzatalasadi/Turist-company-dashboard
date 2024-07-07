@@ -582,6 +582,7 @@ def dashboard_stats():
     }
     
     return jsonify(stats)
+
 @app_bp.route('/search-results')
 @login_required
 def search_results():
@@ -642,7 +643,6 @@ def search():
     total_guests = Guest.query.count()
     total_checked = Guest.query.filter_by(status='Checked').count()
     
-    
     flight_details = {
         'count': total_guests,
         'total_items': len(filtered_data),
@@ -672,8 +672,10 @@ def search():
                             arrival_time_colors=arrival_time_colors, 
                             departure_from_colors=departure_from_colors,
                             transportation_colors=transportation_colors, 
-                            pdf_files=pdf_files_urls)
-    
+                            pdf_files=pdf_files_urls,
+                            total_guests=total_guests, 
+                            total_checked=total_checked)
+   
 @app_bp.route('/update_status', methods=['POST'])
 @login_required
 def update_status():

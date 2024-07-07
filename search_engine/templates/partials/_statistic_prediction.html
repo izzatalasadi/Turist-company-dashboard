@@ -1,29 +1,24 @@
-<div class="col-lg-12 col-md-12 col-sm-12">
-  <div class="card card-rounded">
-    <div class="card-body">
-      <div class="mb-3">
-        <label for="selectDate" class="card-title card-title-dash">Statistics</label>
-      </div>
-      <div class="row justify-content-center mb-3">
-        <div id="calendar" class="col-12">
-          <label for="selectDate">Select a Date</label>
-          <input type="date" id="selectDate" class="form-control" />
-        </div>
-      </div>
-      <div class="row justify-content-center mb-3">
-        <div id="transport" class="col-lg-6 col-md-12 mb-3">
-          <label for="transportChart">Transport needed:</label>
-          <canvas id="transportChart"></canvas>
-        </div>
-        <div id="guests" class="col-lg-6 col-md-12 mb-3">
-          <label for="guestsChart">Guests status</label>
-          <canvas id="guestsChart"></canvas>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div id="prediction" class="col-12">
-          <label for="predictionChart" class="form-label">Predictions</label>
-          <canvas id="predictionChart"></canvas>
+<div class="container-fluid">
+  <div class="row justify-content-start">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="card card-rounded">
+        <div class="card-body">
+          <div class="mb-3">
+            <label for="selectDate" class="card-title card-title-dash">Statistics</label>
+          </div>
+          <div class="row align-items-center justify-content-between mb-3">
+            <div id="calendar" class="col-12">
+              <label for="selectDate">Select a Date</label>
+              <input type="date" id="selectDate" class="form-control" />
+            </div>
+          </div>
+          <div class="row align-items-center justify-content-between mb-3">
+            {% include 'stats_partials/transports_chart.html' %}
+            {% include 'stats_partials/guests_chart.html' %}
+          </div>
+          <div class="row mb-3">
+            {% include 'preds_partials/yearly_guests.html' %}
+          </div>
         </div>
       </div>
     </div>

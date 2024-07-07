@@ -11651,7 +11651,7 @@ code {
 }
 
 .home-tab .btn {
-  padding: 8px 15px;
+  padding: 7px 15px;
   border: 1px solid #CADDFF;
   box-sizing: border-box;
   border-radius: 6px;
@@ -11664,7 +11664,7 @@ code {
 }
 @media (max-width: 991px) {
   .home-tab .btn {
-    padding: 8px 12px;
+    padding: 7px 12px;
   }
 }
 .home-tab .btn i {
@@ -14262,7 +14262,7 @@ ol li {
     margin-right: 0;
     margin-left: 0;
     margin-bottom: 0;
-    color: #28a750;
+    color: black;
   }
   .sidebar-dark.sidebar-icon-only .sidebar .nav .nav-item .nav-link i.menu-icon {
     color: rgba(31, 59, 179, 0.7);

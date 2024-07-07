@@ -28,61 +28,25 @@
             
         <div class="main-panel">
           <div class="content-wrapper">
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="home-tab">
-                    {% block notification %}
-                    <div class="flash-container position-fixed w-100">
-                        <div class="container">
-                            <div class="row justify-content-end">
-                                <div class="col-12">
-                                    <div class="flash-messages" aria-live="assertive" aria-atomic="true">
-                                        {% with messages = get_flashed_messages(with_categories=true) %}
-                                        {% if messages %}
-                                        <ul class="flashes list-unstyled mt-2">
-                                            {% for category, message in messages %}
-                                            <li class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                                                {{ message }}
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                        {% endif %}
-                                        {% endwith %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endblock %}
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="home-tab">
+                  {% block notification %}
+                    {% include 'partials/_notification.html' %}
+                  {% endblock %}
 
-                    {% block body %}{% endblock %}
-                  </div>
+                  {% block body %}{% endblock %}
                 </div>
-              </div> 
-            </div>
+              </div>
+            </div> 
           </div>
         </div>
+        {% include 'partials/_chat.html' %}
       </div>
-      <!-- Floating Chat Icon -->
-      <div class="floating-chat-icon">
-        <i class="mdi mdi-chat mdi-36px"></i>
-      </div>
-
-      <!-- Floating Chat -->
-      <div class="floating-chat">
-        <div class="chat-header">
-          <span>Chat</span>
-          <button class="close-chat">&times;</button>
-        </div>
-        <div id="userContainer" class="chat-body"></div>
-      </div>
-
-      <!-- Container for User Chat Icons -->
-      <div id="userChatIconsContainer"></div>
     </div>
     {% endif %}
     {% endblock %}
-    
+
     {% include 'plugins/scripts.html' %}
   </body>
   </html>

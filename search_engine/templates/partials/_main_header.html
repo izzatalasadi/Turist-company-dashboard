@@ -1,22 +1,16 @@
 <div class="row grow">
   <div class="col-sm-12">
-    <div
-      class="statistics-details d-flex align-items-center justify-content-between"
-    >
+    <div class="statistics-details d-flex align-items-center justify-content-between">
       <div>
         <p class="statistics-title">Total</p>
-        <h3 class="rate-percentage" id="total_guests">
-          {{ flight_details['total_items'] | default(0, true) }}
-        </h3>
+        <h3 class="rate-percentage" id="total_guests">{{ flight_details['total_items'] | default(0, true) }}</h3>
       </div>
       <div>
-        <p class="statistics-title"></p>
+        <canvas id="gaugeChart" width="200" height="200"></canvas>
       </div>
       <div>
         <p class="statistics-title">Checked</p>
-        <h3 class="rate-percentage" id="total_checked">
-          {{ flight_details['total_checked'] | default(0, true) }}
-        </h3>
+        <h3 class="rate-percentage" id="total_checked">{{ flight_details['total_checked'] | default(0, true) }}</h3>
       </div>
     </div>
   </div>
