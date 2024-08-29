@@ -21,6 +21,8 @@ Dashboard is a web application designed to manage and monitor various activities
 - Guest import from Excel files and export to Excel
 - Activity logging and display
 - CSRF protection, user view limitation, permissions and rate limiting
+- Check-in system, auto update guest flight time, and easy edit guest details in real time.
+- Sort and search with all guest details such: name, flight, arriving time ..etc 
 - PDF viewing and management
 - Responsive design with Bootstrap
 
