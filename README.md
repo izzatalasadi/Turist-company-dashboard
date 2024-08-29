@@ -35,7 +35,7 @@ Dashboard is a web application designed to manage and monitor various activities
 ### Installation
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/DMC_dashboard.git
+    git clone https://github.com/izzatalasadi/DMC_dashboard.git
     cd DMC_dashboard
     ```
 
