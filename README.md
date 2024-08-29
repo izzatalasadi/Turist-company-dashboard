@@ -149,6 +149,7 @@ _ **Check-in system**
 <img width="1136" alt="Screenshot 2024-08-29 at 12 46 39" src="https://github.com/user-attachments/assets/c4efdaa7-ca2a-4e5c-829a-73b84b110a4d">
 
 **mobile, tablet view**
+
 <img width="744" alt="Screenshot 2024-08-29 at 13 05 41" src="https://github.com/user-attachments/assets/de412b41-309e-4d68-a8da-9e25eeabc1fc">
 
 
