@@ -119,12 +119,12 @@ To deploy the application on Heroku, follow these steps:
 
 - **Guest Management**: Import guest details from Excel, update statuses, and export to Excel.
 <img width="266" alt="image" src="https://github.com/user-attachments/assets/743917fd-1516-4c82-8152-b864a25b9c92">
-    **Import guests to database**
-      <img width="1423" alt="image" src="https://github.com/user-attachments/assets/6189203e-cb23-478b-9f30-571b2d0c71cc">
-    **Export guests status to Excel file**
-      <img width="1425" alt="image" src="https://github.com/user-attachments/assets/9c514df6-0bd0-434f-874a-7f635ea5377c">
-    **Delete guests data from Database**
-      <img width="1438" alt="image" src="https://github.com/user-attachments/assets/fe6265b3-4ea9-4e66-b9bf-a5c6c84e14fd">
+**Import guests to database**
+<img width="1423" alt="image" src="https://github.com/user-attachments/assets/6189203e-cb23-478b-9f30-571b2d0c71cc">
+**Export guests status to Excel file**
+<img width="1425" alt="image" src="https://github.com/user-attachments/assets/9c514df6-0bd0-434f-874a-7f635ea5377c">
+**Delete guests data from Database**
+<img width="1438" alt="image" src="https://github.com/user-attachments/assets/fe6265b3-4ea9-4e66-b9bf-a5c6c84e14fd">
 
 - **Messages**: Send and receive real-time messages.
 <img width="1416" alt="image" src="https://github.com/user-attachments/assets/80fca924-17c9-4afe-8ba3-8897388c89bb">
@@ -134,6 +134,7 @@ To deploy the application on Heroku, follow these steps:
 
 - **PDF Management**: Upload, view, and delete PDF documents.
 <img width="1431" alt="image" src="https://github.com/user-attachments/assets/8a0fe803-2306-4ebc-9f0b-a7e4ff4409d6">
+
 _ **Check-in system**
 <img width="1435" alt="Screenshot 2024-08-29 at 12 39 22" src="https://github.com/user-attachments/assets/d75db2f5-fc69-4971-b357-377fcb626070">
 <img width="1430" alt="Screenshot 2024-08-29 at 12 44 50" src="https://github.com/user-attachments/assets/a1ba6182-0539-4fe4-8f26-4f6ac23d1b3c">
