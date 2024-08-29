@@ -143,7 +143,7 @@ To deploy the application on Heroku, follow these steps:
 - **PDF Management**: Upload, view, and delete PDF documents.
 <img width="1431" alt="image" src="https://github.com/user-attachments/assets/8a0fe803-2306-4ebc-9f0b-a7e4ff4409d6">
 
-_ **Check-in system**
+- **Check-in system**
 <img width="1435" alt="Screenshot 2024-08-29 at 12 39 22" src="https://github.com/user-attachments/assets/d75db2f5-fc69-4971-b357-377fcb626070">
 <img width="1430" alt="Screenshot 2024-08-29 at 12 44 50" src="https://github.com/user-attachments/assets/a1ba6182-0539-4fe4-8f26-4f6ac23d1b3c">
 <img width="1136" alt="Screenshot 2024-08-29 at 12 46 39" src="https://github.com/user-attachments/assets/c4efdaa7-ca2a-4e5c-829a-73b84b110a4d">
