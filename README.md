@@ -3,6 +3,7 @@
 Dashboard is a web application designed to manage and monitor various activities, guests, and messages. The application provides functionalities such as user management, guest import/export, activity logging, and real-time messaging.
 <img width="1429" alt="image" src="https://github.com/user-attachments/assets/6e272a70-6fac-4060-a9a3-387b19f21652">
 
+
 ## Table of Contents
 - [Features](#features)
 - [Getting Started](#getting-started)
@@ -25,6 +26,7 @@ Dashboard is a web application designed to manage and monitor various activities
 - Sort and search with all guest details such: name, flight, arriving time ..etc 
 - PDF viewing and management
 - Responsive design with Bootstrap
+- Mobile version
 
 ## Getting Started
 
@@ -145,6 +147,10 @@ _ **Check-in system**
 <img width="1435" alt="Screenshot 2024-08-29 at 12 39 22" src="https://github.com/user-attachments/assets/d75db2f5-fc69-4971-b357-377fcb626070">
 <img width="1430" alt="Screenshot 2024-08-29 at 12 44 50" src="https://github.com/user-attachments/assets/a1ba6182-0539-4fe4-8f26-4f6ac23d1b3c">
 <img width="1136" alt="Screenshot 2024-08-29 at 12 46 39" src="https://github.com/user-attachments/assets/c4efdaa7-ca2a-4e5c-829a-73b84b110a4d">
+
+**mobile, tablet view**
+<img width="744" alt="Screenshot 2024-08-29 at 13 05 41" src="https://github.com/user-attachments/assets/de412b41-309e-4d68-a8da-9e25eeabc1fc">
+
 
 ## Contributing
 Contributions are welcome! Please follow these steps to contribute:
