@@ -108,11 +108,14 @@ To deploy the application on Heroku, follow these steps:
 <img width="605" alt="image" src="https://github.com/user-attachments/assets/bf36cba5-6e28-45bf-9371-f1276c41a8c7">
 
 - **Manage Users**: Admins can add, delete, and update user profiles.
+
 **User profile**
 <img width="244" alt="image" src="https://github.com/user-attachments/assets/665e5cae-af55-4b80-b43b-3feb1bc57488">
 <img width="1424" alt="image" src="https://github.com/user-attachments/assets/fcf3f923-56e7-4342-a7fb-8a84c4426d18">
+
 **Add users**
 <img width="1433" alt="image" src="https://github.com/user-attachments/assets/1a8f53d2-7803-4924-93e7-115b45b243d8">
+
 **delete users**
 <img width="1438" alt="image" src="https://github.com/user-attachments/assets/205aedc9-9ce7-4a5d-8a12-702ffebfcf63">
 
