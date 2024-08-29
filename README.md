@@ -119,12 +119,14 @@ To deploy the application on Heroku, follow these steps:
 
 - **Guest Management**: Import guest details from Excel, update statuses, and export to Excel.
 <img width="266" alt="image" src="https://github.com/user-attachments/assets/743917fd-1516-4c82-8152-b864a25b9c92">
-**Import guests to database**
-<img width="1423" alt="image" src="https://github.com/user-attachments/assets/6189203e-cb23-478b-9f30-571b2d0c71cc">
-**Export guests status to Excel file**
-<img width="1425" alt="image" src="https://github.com/user-attachments/assets/9c514df6-0bd0-434f-874a-7f635ea5377c">
-**Delete guests data from Database**
-<img width="1438" alt="image" src="https://github.com/user-attachments/assets/fe6265b3-4ea9-4e66-b9bf-a5c6c84e14fd">
+    Import guests to database
+    <img width="1423" alt="image" src="https://github.com/user-attachments/assets/6189203e-cb23-478b-9f30-571b2d0c71cc">
+
+    Export guests status to Excel file
+    <img width="1425" alt="image" src="https://github.com/user-attachments/assets/9c514df6-0bd0-434f-874a-7f635ea5377c">
+
+    Delete guests data from Database
+    <img width="1438" alt="image" src="https://github.com/user-attachments/assets/fe6265b3-4ea9-4e66-b9bf-a5c6c84e14fd">
 
 - **Messages**: Send and receive real-time messages.
 <img width="1416" alt="image" src="https://github.com/user-attachments/assets/80fca924-17c9-4afe-8ba3-8897388c89bb">
