@@ -145,7 +145,6 @@ To deploy the application on Heroku, follow these steps:
 
 - **Check-in system**
 <img width="1435" alt="Screenshot 2024-08-29 at 12 39 22" src="https://github.com/user-attachments/assets/d75db2f5-fc69-4971-b357-377fcb626070">
-<img width="1430" alt="Screenshot 2024-08-29 at 12 44 50" src="https://github.com/user-attachments/assets/a1ba6182-0539-4fe4-8f26-4f6ac23d1b3c">
 <img width="1136" alt="Screenshot 2024-08-29 at 12 46 39" src="https://github.com/user-attachments/assets/c4efdaa7-ca2a-4e5c-829a-73b84b110a4d">
 
 **mobile, tablet view**
