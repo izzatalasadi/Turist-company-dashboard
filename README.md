@@ -1,4 +1,4 @@
-# Turist Dashboard
+# Turist company Dashboard
 
 Dashboard is a web application designed to manage and monitor various activities, guests, and messages. The application provides functionalities such as user management, guest import/export, activity logging, and real-time messaging.
 <img width="1429" alt="image" src="https://github.com/user-attachments/assets/6e272a70-6fac-4060-a9a3-387b19f21652">
